@@ -1,8 +1,8 @@
 //
 //  ContentView.swift
-//  AppleAcademyChallenge6App
+//  Findew
 //
-//  Created by Apple Coding machine on 10/20/25.
+//  Created by Apple Coding machine on 10/21/25.
 //
 
 import SwiftUI
