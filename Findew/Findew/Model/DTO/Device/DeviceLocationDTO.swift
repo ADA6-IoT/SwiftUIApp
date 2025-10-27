@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DeviceLocationResquest: Codable {
+struct DeviceLocationRequest: Codable {
     let wifiInfo: WifiInfo
     let valueInfo: ValueInfo
     let location: Location

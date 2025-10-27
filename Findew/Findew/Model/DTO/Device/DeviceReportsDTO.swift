@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DeviceReportsResquest: Codable {
+struct DeviceReportsRequest: Codable {
     let reports: Reports
 }
 

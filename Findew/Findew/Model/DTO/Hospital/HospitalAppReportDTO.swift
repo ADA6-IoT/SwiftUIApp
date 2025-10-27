@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct HospitalAppReportResquest: Codable {
+struct HospitalAppReportRequest: Codable {
     let reportContent: String
     let imageIds: Data?
 }
