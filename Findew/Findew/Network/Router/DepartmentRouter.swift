@@ -1,6 +1,6 @@
 //
 //  DepartmentRouter.swift
-//  AppleAcademyChallenge6App
+//  Findew
 //
 //  Created by 내꺼다 on 10/22/25.
 //

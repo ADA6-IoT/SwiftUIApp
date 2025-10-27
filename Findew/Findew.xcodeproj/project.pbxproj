@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2B591EB92EAB8143001F2602 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 2B591EB82EAB8143001F2602 /* CombineMoya */; };
+		2B591EBB2EAB8143001F2602 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 2B591EBA2EAB8143001F2602 /* Moya */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		5C9C9CD52EA7613200AB8663 /* Findew.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Findew.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B591EBB2EAB8143001F2602 /* Moya in Frameworks */,
+				2B591EB92EAB8143001F2602 /* CombineMoya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,8 @@
 			);
 			name = Findew;
 			packageProductDependencies = (
+				2B591EB82EAB8143001F2602 /* CombineMoya */,
+				2B591EBA2EAB8143001F2602 /* Moya */,
 			);
 			productName = Findew;
 			productReference = 5C9C9CD52EA7613200AB8663 /* Findew.app */;
@@ -107,6 +116,9 @@
 			);
 			mainGroup = 5C9C9CCC2EA7613200AB8663;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2B591EB72EAB8143001F2602 /* XCRemoteSwiftPackageReference "Moya" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5C9C9CD62EA7613200AB8663 /* Products */;
 			projectDirPath = "";
@@ -349,6 +361,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2B591EB72EAB8143001F2602 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2B591EB82EAB8143001F2602 /* CombineMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B591EB72EAB8143001F2602 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = CombineMoya;
+		};
+		2B591EBA2EAB8143001F2602 /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B591EB72EAB8143001F2602 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5C9C9CCD2EA7613200AB8663 /* Project object */;
 }
