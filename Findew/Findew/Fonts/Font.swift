@@ -44,10 +44,6 @@ extension Font {
         return .pretend(type: .semibold, size: 24)
     }
     
-    static var head5: Font {
-        return .system(size: 14, weight: .semibold)
-    }
-    
     // MARK: - Body
     static var body1: Font {
         return .pretend(type: .regular, size: 17)
@@ -63,10 +59,6 @@ extension Font {
     
     static var body4: Font {
         return .pretend(type: .medium, size: 16)
-    }
-    
-    static var body6: Font {
-        return .system(size: 10, weight: .bold)
     }
     
     static var body7: Font {
