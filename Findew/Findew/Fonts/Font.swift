@@ -10,27 +10,18 @@ import SwiftUI
 
 extension Font {
     enum Pretend {
-        case extraBold
-        case bold
         case semibold
         case medium
         case regular
-        case light
         
         var value: String {
             switch self {
-            case .extraBold:
-                return "PretendardVariable-ExtraBold"
-            case .bold:
-                return "PretendardVariable-Bold"
             case .semibold:
                 return "PretendardVariable-SemiBold"
             case .medium:
                 return "PretendardVariable-Medium"
             case .regular:
                 return "PretendardVariable-Regular"
-            case .light:
-                return "PretendardVariable-Light"
             }
         }
     }
@@ -40,32 +31,32 @@ extension Font {
     }
     
     // MARK: - Head
-    static var head4: Font {
+    static var h4: Font {
         return .pretend(type: .semibold, size: 24)
     }
     
     // MARK: - Body
-    static var body1: Font {
+    static var b1: Font {
         return .pretend(type: .regular, size: 17)
     }
     
-    static var body2: Font {
+    static var b2: Font {
         return .pretend(type: .medium, size: 24)
     }
     
-    static var body3: Font {
+    static var b3: Font {
         return .pretend(type: .medium, size: 17)
     }
     
-    static var body4: Font {
+    static var b4: Font {
         return .pretend(type: .medium, size: 16)
     }
     
-    static var body7: Font {
+    static var b7: Font {
         return .pretend(type: .semibold, size: 17)
     }
     
-    static var body8: Font {
+    static var b8: Font {
         return .pretend(type: .medium, size: 15)
     }
     
