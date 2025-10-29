@@ -7,7 +7,13 @@
 
 import Foundation
 
+/// 소속과 전체 조회
 struct DepartmentListResponse: Codable {
-    let departmentId: [String]
-    let departmentName: [String]
+    let totalCount: Int
+    let departments: [DepartmentDTO]
+    
+    enum CodingKeys: String, CodingKey {
+        case totalCount = "total_count"
+        case departments
+    }
 }

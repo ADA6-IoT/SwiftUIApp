@@ -7,22 +7,24 @@
 
 import Foundation
 
+/// 기기 신고
 struct DeviceReportsResquest: Codable {
-    let reports: Reports
+    let deviceIds: [Int]
+    
+    enum CodingKeys: String, CodingKey {
+        case deviceIds = "device_ids"
+    }
 }
 
-struct Reports: Codable {
-    let serialNumber: String
-    let reportContent: [String]
-}
-
+/// Device Reports Response
 struct DeviceReportsResponse: Codable {
+    let deviceId: UUID
     let serialNumber: String
-    let reports: [Report]  // 변수명 괜찮겠찌?
-}
-
-struct Report: Codable {
-    let reportID: String
-    let reportContent: String
-    let createdAt: Date
+    let status: String
+    
+    enum CodingKeys: String, CodingKey {
+        case deviceId = "device_id"
+        case serialNumber = "serial_number"
+        case status
+    }
 }

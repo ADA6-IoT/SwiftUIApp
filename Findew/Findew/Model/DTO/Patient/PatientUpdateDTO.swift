@@ -7,6 +7,11 @@
 
 import Foundation
 
+/// 환자 수정
+struct PatientUpdatePath: Codable {
+    let id: UUID
+}
+
 struct PatientUpdateResquest: Codable {
     let name: String?
     let ward: Int?
@@ -14,13 +19,4 @@ struct PatientUpdateResquest: Codable {
     let departmentId: String?
     let deviceSerial: String?
     let memo: String?
-}
-
-struct PtientUpdateResponse: Codable {
-    let patidentId: Int
-    let name: String
-    let departmentId: String
-    let currentLocation: CurrentLocation // Add부분에 있음
-    let deviceSerial: String
-    let memo: String
 }
