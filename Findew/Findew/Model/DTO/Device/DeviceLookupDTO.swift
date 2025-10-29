@@ -7,16 +7,24 @@
 
 import Foundation
 
-// 서버에 등록된 기기 중 환자한테 할당된 기기는 제외
-struct DeviceLookupResponse: Codable {
-    let result: [DeviceLookupInfo]
+/// 미배정 기기 조회
+struct DeivceLookupRequest: Codable {
+    let excludeMalFunctioning: Bool?
+    let minBattery: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case excludeMalFunctioning = "exclude_malfunctioning" // 고장 기기 제외(기본: false)
+        case minBattery = "min_battery"  // 최소 배터리 레벨 필터(기본: 0)
+    }
 }
 
-struct DeviceLookupInfo: Codable {
-    let serialNumber: String
-    let deviceName: String
-    let isAssigned: Bool
-    let isMalfunction: Bool
-    let batteryLevel: Int
-    let wifiSignalStrength: Int
+/// Device Lookup Response
+struct DeviceLookupResponse: Codable {
+    let totalCount: Int
+    let devices: [DeviceDTO]
+    
+    enum CodingKeys: String, CodingKey {
+        case totalCount = "total_count"
+        case devices
+    }
 }

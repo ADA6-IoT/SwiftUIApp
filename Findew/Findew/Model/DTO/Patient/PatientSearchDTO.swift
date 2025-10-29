@@ -7,19 +7,19 @@
 
 import Foundation
 
-struct PatientSearchParam: Encodable {
+/// 환자 검색
+struct PatientSearchPath: Encodable {
     let keyword: String
 }
 
 struct PatientSearchResponse: Codable {
-    let result: [Patient]
-}
-
-struct Patient: Codable {
-    let patientId: Int
-    let name: String
-    let departmentName: String
-    let deviceSerial: String
-    let ward: Int
-    let bed: Int
+    let keyword: String
+    let totalCount: Int
+    let patients: [PatientsList]
+  
+    enum CodingKeys: String, CodingKey {
+        case keyword
+        case totalCount = "total_count"
+        case patients
+    }
 }

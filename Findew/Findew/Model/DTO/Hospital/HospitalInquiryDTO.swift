@@ -7,14 +7,9 @@
 
 import Foundation
 
+/// 앱 문의
 struct HospitalInquiryRequest: Codable {
-    let inquiryContent: String
-    let image: Data? // 이미지는 전부 데이터로 받고 
-}
-
-struct HospicatInquiryResponse: Codable {
-    let inquiryId: String
-    let inquiryContent: String
-    let imageUrls: [String]?
-    let createdAt: String
+    let contents: String
+    let email: String
+    let images: [Data]?
 }

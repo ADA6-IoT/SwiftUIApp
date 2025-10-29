@@ -7,10 +7,9 @@
 
 import Foundation
 
+/// 소속과 생성
 struct DepartmentGenerateRequest: Codable {
-    let departmentName: [String]
-}
-
-struct DepartmentGenerateResponse: Codable {
-    let departmentName: [String]
+    let name: String
+    let code: String
+    let description: String?
 }
