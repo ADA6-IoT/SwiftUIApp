@@ -31,8 +31,16 @@ extension Font {
     }
     
     // MARK: - Head
+    static var h3: Font {
+        return .system(size: 24, weight: .semibold)
+    }
+    
     static var h4: Font {
         return .pretend(type: .semibold, size: 24)
+    }
+    
+    static var h5: Font {
+        return .system(size: 14, weight: .semibold)
     }
     
     // MARK: - Body
@@ -52,12 +60,20 @@ extension Font {
         return .pretend(type: .medium, size: 16)
     }
     
-    static var b7: Font {
-        return .pretend(type: .semibold, size: 17)
+    static var b6: Font {
+        return .system(size: 10, weight: .bold)
     }
     
-    static var b8: Font {
-        return .pretend(type: .medium, size: 15)
+    static var symbolText01: Font {
+        return .system(size: 19, weight: .semibold)
     }
     
+    static var symbolText02: Font {
+        return .system(size: 15, weight: .medium)
+    }
+    
+    // MARK: - Etc
+    static var title01: Font {
+        return .pretend(type: .medium, size: 32)
+    }
 }
