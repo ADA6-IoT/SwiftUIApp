@@ -9,5 +9,5 @@ import Foundation
 
 enum TabCase: String, CaseIterable {
     case location = "위치"
-    case device = "기기"
+    case device = "기기" 
 }
