@@ -8,11 +8,11 @@
 import Foundation
 import SwiftUI
 
-enum ReportType {
+enum ContactType {
     case inquiry
     case report
     
-    var components: [ContactEnum] {
+    var components: [ContactComponetsEnum] {
         switch self {
         case .inquiry:
             return [.title(type: self), .email, .contents(type: self), .addPhoto, .photos]
@@ -22,21 +22,21 @@ enum ReportType {
     }
 }
 
-enum ContactEnum {
-    case title(type: ReportType)
+enum ContactComponetsEnum {
+    case title(type: ContactType)
     case email
-    case contents(type: ReportType)
+    case contents(type: ContactType)
     case addPhoto
     case photos
     
     var contactFont: Font? {
         switch self {
         case .title:
-            return Font.b2
+            return .b2
         case .email, .contents:
-            return Font.b1
+            return .b1
         case .addPhoto:
-            return Font.b6
+            return .b6
         default:
             return nil
         }
@@ -100,6 +100,17 @@ enum ContactEnum {
             }
         case .addPhoto, .photos:
             return 104
+        default:
+            return nil
+        }
+    }
+    
+    var contactKeyboardType: UIKeyboardType? {
+        switch self {
+        case .email:
+            return .emailAddress
+        case .contents:
+            return .default
         default:
             return nil
         }

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum LoginFieldType {
+enum LoginFieldEnum {
     case id
     case password(onOff: Bool)
     
@@ -30,7 +30,7 @@ enum LoginFieldType {
     }
     
     var loginFieldFont: Font {
-        return Font.b3
+        return .b3
     }
     
     var loginFieldFontColor: Color {

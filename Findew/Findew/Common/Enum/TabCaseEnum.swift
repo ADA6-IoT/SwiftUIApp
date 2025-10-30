@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 
-enum TabCase: String, CaseIterable {
+enum TabCaseEnum: String, CaseIterable {
     case location = "위치"
-    case device = "기기" 
+    case device = "기기"
+    
+    var tabTitle: String { rawValue }
 }

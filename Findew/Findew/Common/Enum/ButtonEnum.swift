@@ -57,7 +57,7 @@ enum ButtonEnum {
     }
     
     var buttonFont: Font {
-        return Font.symbolText01
+        return .symbolText01
     }
     
     var buttonFontColor: Color {
