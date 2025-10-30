@@ -8,7 +8,7 @@
 import Foundation
 
 /// 환자 전체 조회
-struct PatientListRequest: Codable {
+struct PatientListQuery: Codable {
     let floor: Int?
     let ward: Int?
 }

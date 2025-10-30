@@ -8,7 +8,7 @@
 import Foundation
 
 /// 앱 신고
-struct HospitalAppReportResquest: Codable {
-    let contents: String
+struct HospitalAppReportRequest:ReportsData,  Codable {
+    let content: String
     let images: [Data]?
 }

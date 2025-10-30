@@ -8,7 +8,7 @@
 import Foundation
 
 /// 미배정 기기 조회
-struct DeivceLookupRequest: Codable {
+struct DeviceLookupQuery: Codable {
     let excludeMalFunctioning: Bool?
     let minBattery: Int?
     

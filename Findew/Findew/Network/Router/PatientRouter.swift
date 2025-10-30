@@ -10,63 +10,67 @@ import Moya
 import Alamofire
 
 enum PatientRouter {
-    case list
-    case floor(floor: Int, ward: Int)
-    case search(keyword: String)
-    case delete(patientId: Int) // !!!: - 확인
-    case add(param: PatientAddRequest)
-    case update(patientId: Int, param: PatientUpdateRequest)
+    /// 환자 전체 조희
+    case getList(query: PatientListQuery)
+    /// 환자 검색
+    case getSearch(path: PatientSearchPath)
+    /// 환자 삭제
+    case Deletepatient(path: PatientDeletPath)
+    /// 환자 등록
+    case postGenerate(generate: PatientGenerateRequest)
+    /// 환자 수정
+    case putUpdate(path: PatientUpdatePath, update: PatientUpdateRequest)
+    /// 환자 상세 조회
+    case getDetale(path: PatientDetailPath)
 }
 
 extension PatientRouter: APITargetType {
     var path: String {
         switch self {
-        case .list:
+        case .getList:
             return "/api/patients/all"
-        case .floor(let floor, _):   // floor 은 pathVariable
-            return "/api/patients/floor/\(floor)"
-        case .search:
-            return "/api/patients/search"
-        case .delete(let patientId):     // patientId pathVariable
-            return "/api/patients/\(patientId)"
-        case .add:
+        case .getSearch(let path):
+            return "/api/patients/search/\(path.keyword)"
+        case .Deletepatient(let path):
+            return "/api/patients/\(path.id)"
+        case .postGenerate:
             return "/api/patients/add"
-        case .update(let patientId, _):
-            return "/api/patients/\(patientId)"
+        case .putUpdate(let path, _):
+            return "/api/patients/\(path.id)"
+        case .getDetale(let path):
+            return "/api/patients/\(path.id)"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .list, .floor, .search:
+        case .getList, .getSearch, .getDetale:
             return .get
-        case .delete:
+        case .Deletepatient:
             return .delete
-        case .add:
+        case .postGenerate:
             return .post
-        case .update:
+        case .putUpdate:
             return .put
         }
     }
     
     var task: Moya.Task {
         switch self {
-            
-        case .list:
+        case .getList:
             return .requestPlain
-        case .floor(_, let ward):
-            return .requestParameters(parameters: ["ward": ward], encoding: URLEncoding.queryString)
-        case .search(let keyword):
-            return .requestParameters(parameters: ["keyword": keyword], encoding: URLEncoding.queryString)
-        case .delete:
+        case .getSearch:
             return .requestPlain
-        case .add(let param):
-            return .requestJSONEncodable(param)
-        case .update(_, let param):
-            return .requestJSONEncodable(param)
+        case .Deletepatient:
+            return .requestPlain
+        case .postGenerate(let generate):
+            return .requestJSONEncodable(generate)
+        case .putUpdate(_, let update):
+            return .requestJSONEncodable(update)
+        case .getDetale:
+            return .requestPlain
         }
     }
-    
 }
 
 

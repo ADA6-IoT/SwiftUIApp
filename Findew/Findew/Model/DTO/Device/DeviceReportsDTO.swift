@@ -8,7 +8,7 @@
 import Foundation
 
 /// 기기 신고
-struct DeviceReportsResquest: Codable {
+struct DeviceReportsRequest: Codable {
     let deviceIds: [Int]
     
     enum CodingKeys: String, CodingKey {

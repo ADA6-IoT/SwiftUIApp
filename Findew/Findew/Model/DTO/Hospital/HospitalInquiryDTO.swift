@@ -8,8 +8,13 @@
 import Foundation
 
 /// 앱 문의
-struct HospitalInquiryRequest: Codable {
-    let contents: String
+struct HospitalInquiryRequest: ReportsData,  Codable {
+    var content: String
     let email: String
     let images: [Data]?
+}
+
+protocol ReportsData {
+    var content: String { get }
+    var images: [Data]? { get }
 }

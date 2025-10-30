@@ -12,7 +12,7 @@ struct PatientUpdatePath: Codable {
     let id: UUID
 }
 
-struct PatientUpdateResquest: Codable {
+struct PatientUpdateRequest: Codable {
     let name: String?
     let ward: Int?
     let bed: Int?

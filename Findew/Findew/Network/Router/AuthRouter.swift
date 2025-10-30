@@ -7,52 +7,49 @@
 
 import Foundation
 import Moya
-import Alamofire   // !!!: - 이거 안하면 method에서 오류남 왜?? 다른 프로젝트에서는 안그랬는데?
+import Alamofire
 
 // 라우터 enum case로 작성
 enum AuthRouter {
-    case login(param: AuthLoginRequest)
-    case reissue
-    case signup(param: AuthSignUpRequest)
-    case delete
+    /// 로그인
+    case postLogin(login: AuthLoginRequest)
+    /// 토큰 갱신
+    case getReissue
+    /// 병원 계정 생성
+    case postSignup(sign: AuthSignUpRequest)
 }
 
 
 // TargetType 프로토콜 채택 작성 - 각 case별 정의
 extension AuthRouter: APITargetType {
-    
     var path: String {
         switch self {
-        case .login:
+        case .postLogin:
             return "/api/auth/login"
-        case .reissue:
+        case .getReissue:
             return "/api/auth/reissue"
-        case .signup:
+        case .postSignup:
             return "/api/app/signup"
-        case .delete:
-            return "/api/app/delete"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .login, .signup:
+        case .postLogin, .postSignup:
             return .post
-        case .reissue:
+        case .getReissue:
             return .get
-        case .delete:
-            return .delete
         }
     }
     
     var task: Moya.Task {
         switch self {
-        case .login(let param):
-            return .requestJSONEncodable(param)
-        case .signup(let param):
-            return .requestJSONEncodable(param)
-        case .reissue, .delete:
+        case .postLogin(let login):
+            return .requestJSONEncodable(login)
+        case .getReissue:
             return .requestPlain
+        case .postSignup(let sign):
+            return .requestJSONEncodable(sign)
         }
     }
 }

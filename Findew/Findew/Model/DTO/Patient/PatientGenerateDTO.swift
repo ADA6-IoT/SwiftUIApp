@@ -8,7 +8,7 @@
 import Foundation
 
 /// 환자 등록
-struct PatientAddRequest: Codable {
+struct PatientGenerateRequest: Codable {
     let name: String
     let ward: Int
     let bed: Int

@@ -8,7 +8,7 @@
 import Foundation
 
 /// 환자이름으로 기기 검색
-struct DeviceSearchParam: Codable {
+struct DeviceSearchQuery: Codable {
     let keyword: String
 }
 

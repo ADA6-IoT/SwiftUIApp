@@ -10,52 +10,71 @@ import Moya
 import Alamofire
 
 enum DeviceRouter {
-    case search(keyword: String)
-    case location(serialNumber: String)  // !!!: - serialNumber 어떻게 넣어줘야 하는지 일단 AI한테 물어봐서 함
-    case lookup
-    case reports(param: DeviceReportsRequest)
-    case list
+    /// 환자 이름으로 기기 검색
+    case getSearch(query: DeviceSearchQuery)
+    /// 미배정 기기 조회
+    case getLookup(query: DeviceLookupQuery)
+    /// 기기 전체 조회
+    case getList
+    /// 기기 등록
+    case postGenerate(generate: DeviceGenerateRequest)
+    /// 기기 수정
+    case putUpdate(path: DevicePutPath, update: DeviceUpdateRequest)
+    /// 기기 삭제
+    case deleteDevice(path: DeviceDeletePath)
+    /// 기기 신고
+    case postReports(report: DeviceReportsRequest)
 }
 
 extension DeviceRouter: APITargetType {
     var path: String {
         switch self {
-        case .search:
+        case .getSearch:
             return "/api/devices/search"
-        case .location(let serialNumber):
-            return "/api/devices/\(serialNumber)/location"
-        case .lookup:
-            return "/api/devices/lookup"
-        case .reports:
-            return "/api/devices/report"
-        case .list:
+        case .getLookup:
+            return "/api/devices/unassigned"
+        case .getList:
             return "/api/devices/all"
+        case .postGenerate:
+            return "/api/devices/add"
+        case .putUpdate(let path, _):
+            return "/api/devices/\(path.id)"
+        case .deleteDevice(let path):
+            return "/api/devices/\(path.id)"
+        case .postReports:
+            return "/api/devices/malfunction"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .search, .lookup, .list:
+        case .getSearch, .getLookup, .getList:
             return .get
-        case .reports:
+        case .postGenerate, .postReports:
             return .post
-        case .location:
-            return .patch
+        case .putUpdate:
+            return .put
+        case .deleteDevice:
+            return .delete
         }
     }
     
     var task: Moya.Task {
         switch self {
-        case .search(let keyword):
-            return .requestParameters(parameters: ["keyword": keyword], encoding: URLEncoding.queryString)
-        case .location:
+        case .getSearch(let query):
+            return query.asQueryTask()
+        case .getLookup(let query):
+            return query.asQueryTask()
+        case .getList:
             return .requestPlain
-        case .lookup:
+        case .postGenerate(let generate):
+            return .requestJSONEncodable(generate)
+        case .putUpdate(_, let update):
+            return .requestJSONEncodable(update)
+        case .deleteDevice:
             return .requestPlain
-        case .reports(let param):
-            return .requestJSONEncodable(param)
-        case .list:
-            return .requestPlain
+        case .postReports(let report):
+            return .requestJSONEncodable(report)
         }
     }
     
