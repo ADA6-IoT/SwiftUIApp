@@ -18,6 +18,7 @@ enum ButtonEnum {
     case select
     case report
     case close
+    case send
     
     var buttonColor: Color? {
         switch self {
@@ -50,6 +51,8 @@ enum ButtonEnum {
             return "기기신고"
         case .close:
             return "취소"
+        case .send:
+            return "보내기"
         }
     }
     
