@@ -53,12 +53,11 @@ enum ButtonEnum {
         }
     }
     
-//    var font: Font {
-//        // TODO: - SF 심볼
-//        return nil
-//    }
+    var buttonFont: Font {
+        return Font.symbolText01
+    }
     
-    var fontColor: Color {
+    var buttonFontColor: Color {
         return .gray08
     }
 }
