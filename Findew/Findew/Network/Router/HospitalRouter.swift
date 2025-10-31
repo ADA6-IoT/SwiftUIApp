@@ -11,33 +11,33 @@ import Alamofire
 
 enum HospitalRouter {
     /// 앱 문의
-    case inquiry(inquiry: HospitalInquiryRequest)
+    case postInquiry(inquiry: HospitalInquiryRequest)
     /// 앱 신고
-    case report(report: HospitalAppReportRequest)
+    case postReport(report: HospitalAppReportRequest)
 }
 
 extension HospitalRouter: APITargetType {
     var path: String {
         switch self {
-        case .inquiry:
+        case .postInquiry:
             return "/api/app/inquiry"
-        case .report:
+        case .postReport:
             return "/api/app/bug"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .inquiry, .report:
+        case .postInquiry, .postReport:
             return .post
         }
     }
     
     var task: Moya.Task {
         switch self {
-        case let .inquiry(inquiry):
+        case let .postInquiry(inquiry):
             return .uploadMultipart(makeMultipartData(for: inquiry))
-        case let .report(report):
+        case let .postReport(report):
             return .uploadMultipart(makeMultipartData(for: report))
         }
     }

@@ -15,7 +15,7 @@ enum PatientRouter {
     /// 환자 검색
     case getSearch(path: PatientSearchPath)
     /// 환자 삭제
-    case Deletepatient(path: PatientDeletPath)
+    case deletePatient(path: PatientDeletPath)
     /// 환자 등록
     case postGenerate(generate: PatientGenerateRequest)
     /// 환자 수정
@@ -31,7 +31,7 @@ extension PatientRouter: APITargetType {
             return "/api/patients/all"
         case .getSearch(let path):
             return "/api/patients/search/\(path.keyword)"
-        case .Deletepatient(let path):
+        case .deletePatient(let path):
             return "/api/patients/\(path.id)"
         case .postGenerate:
             return "/api/patients/add"
@@ -46,7 +46,7 @@ extension PatientRouter: APITargetType {
         switch self {
         case .getList, .getSearch, .getDetale:
             return .get
-        case .Deletepatient:
+        case .deletePatient:
             return .delete
         case .postGenerate:
             return .post
@@ -61,7 +61,7 @@ extension PatientRouter: APITargetType {
             return .requestPlain
         case .getSearch:
             return .requestPlain
-        case .Deletepatient:
+        case .deletePatient:
             return .requestPlain
         case .postGenerate(let generate):
             return .requestJSONEncodable(generate)

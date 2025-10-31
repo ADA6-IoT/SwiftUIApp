@@ -13,7 +13,7 @@ enum DeviceRouter {
     /// 환자 이름으로 기기 검색
     case getSearch(query: DeviceSearchQuery)
     /// 미배정 기기 조회
-    case getLookup(query: DeviceLookupQuery)
+    case getUnassigned
     /// 기기 전체 조회
     case getList
     /// 기기 등록
@@ -31,7 +31,7 @@ extension DeviceRouter: APITargetType {
         switch self {
         case .getSearch:
             return "/api/devices/search"
-        case .getLookup:
+        case .getUnassigned:
             return "/api/devices/unassigned"
         case .getList:
             return "/api/devices/all"
@@ -48,7 +48,7 @@ extension DeviceRouter: APITargetType {
     
     var method: Moya.Method {
         switch self {
-        case .getSearch, .getLookup, .getList:
+        case .getSearch, .getUnassigned, .getList:
             return .get
         case .postGenerate, .postReports:
             return .post
@@ -63,8 +63,8 @@ extension DeviceRouter: APITargetType {
         switch self {
         case .getSearch(let query):
             return query.asQueryTask()
-        case .getLookup(let query):
-            return query.asQueryTask()
+        case .getUnassigned:
+            return .requestPlain
         case .getList:
             return .requestPlain
         case .postGenerate(let generate):

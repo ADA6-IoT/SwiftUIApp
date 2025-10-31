@@ -9,16 +9,6 @@ import Foundation
 import Moya
 import Alamofire
 
-/*
- 1. router case 이름 지정
-    작명의 의미 -> 전체를 담아야 하다. http method 조회, 수정, 생성
- 2. 데이터 넘길 때 어떤 데이터인가?
-    1. path
-    2. query(get)
-    3. param(post, put, patch, delete)
- 
- */
-
 enum DepartmentRouter {
     /// 소속과 전체 조회
     case getList
