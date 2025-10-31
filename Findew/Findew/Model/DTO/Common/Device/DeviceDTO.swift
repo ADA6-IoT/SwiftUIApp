@@ -7,31 +7,34 @@
 
 import Foundation
 
-/// DeviceDTO - 검색, 조회
+/// DeviceDTO
 struct DeviceDTO: Codable {
     let id: UUID
     let serialNumber: String
-    let name: String
     let batteryLevel: Int
-    let signalLevel: Int
-    let currentLocation: CurrentLocation?
     let isMalfunctioning: Bool
-    let isAssigned: Bool
-    let assignedTo: AssignedTo
-    let lastMaintenance: String
+    let patient: Patient?
+    let currentZone: CurrentZone?
+    let lastLocationUpdate: String?
     let createdAt: String
+    let updatedAt: String
     
     enum CodingKeys: String, CodingKey {
         case id
         case serialNumber = "serial_number"
-        case name
         case batteryLevel = "battery_level"
-        case signalLevel = "signal_level"
-        case currentLocation = "current_location"
         case isMalfunctioning = "is_malfunctioning"
-        case isAssigned = "is_assigned"
-        case assignedTo = "assigned_to"
-        case lastMaintenance = "last_maintenance"
+        case patient
+        case currentZone = "current_zone"
+        case lastLocationUpdate = "last_location_update"
         case createdAt = "created_at"
+        case updatedAt = "updated_at"
     }
+}
+
+struct Patient: Codable {
+    let id: UUID
+    let name: String
+    let ward: String
+    let bed: Int
 }

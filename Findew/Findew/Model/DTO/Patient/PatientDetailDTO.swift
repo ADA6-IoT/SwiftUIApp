@@ -12,14 +12,16 @@ struct PatientDetailPath: Codable {
     let id: UUID
 }
 
+/// device 부분이 달라서 작성
 struct PatientDetailResponse: Codable {
     let id: UUID
     let name: String
     let etc: String
-    let ward: PatientWard
-    let bed: PatientBed
-    let department: DepartmentDTO
+    let ward: String
+    let bed: Int
+    let department: Department
     let device: PatientDevice
+    let memo: String
     let createdAt: String
     let updatedAt: String
 
@@ -31,71 +33,43 @@ struct PatientDetailResponse: Codable {
         case bed
         case department
         case device
+        case memo
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
 }
 
-/// PatientWard
-struct PatientWard: Codable {
-    let id: UUID
-    let name: String
-    let floor: Int
-}
-
-/// PatientBed
-struct PatientBed: Codable {
-    let id: UUID
-    let name: String
-    let position: PatientPosition
-}
-
-/// PatientPosition
-struct PatientPosition: Codable {
-    let x: Double
-    let y: Double
-}
-
-/// Device
+/// PatientDevice
 struct PatientDevice: Codable {
     let id: String
     let serialNumber: String
-    let name: String
     let batteryLevel: Int
-    let signalLevel: Int
-    let location: PatientDeviceLocation
     let isMalfunctioning: Bool
-    let isAssigned: Bool
-    let lastMaintenance: String
+    let currentZone: CurrentZone
+    let preciseLocation: PreciseLocation
+    let lastLocationUpdate: String
 
     enum CodingKeys: String, CodingKey {
         case id
         case serialNumber = "serial_number"
-        case name
         case batteryLevel = "battery_level"
-        case signalLevel = "signal_level"
-        case location
         case isMalfunctioning = "is_malfunctioning"
-        case isAssigned = "is_assigned"
-        case lastMaintenance = "last_maintenance"
+        case currentZone = "current_zone"
+        case preciseLocation = "precise_location"
+        case lastLocationUpdate = "last_location_update"
     }
 }
 
-/// Device Location
-struct PatientDeviceLocation: Codable {
-    let currentZone: CurrentZone
-    let isInAssignedWard: Bool
-    let distanceFromAnchor: Double
-    let precisePosition: PrecisePosition
-    let nearbyZones: [NearbyZone]
-    let lastUpdate: String
+/// Current Zone
+struct CurrentZone: Codable {
+    let type: String
+    let name: String
+    let floor: Int
+}
 
-    enum CodingKeys: String, CodingKey {
-        case currentZone = "current_zone"
-        case isInAssignedWard = "is_in_assigned_ward"
-        case distanceFromAnchor = "distance_from_anchor"
-        case precisePosition = "precise_position"
-        case nearbyZones = "nearby_zones"
-        case lastUpdate = "last_update"
-    }
+/// PreciseLocation
+struct PreciseLocation: Codable {
+    let x: Double
+    let y: Double
+    let z: Double?
 }

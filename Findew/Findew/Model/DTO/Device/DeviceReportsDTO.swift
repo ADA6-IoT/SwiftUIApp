@@ -8,23 +8,6 @@
 import Foundation
 
 /// 기기 신고
-struct DeviceReportsResquest: Codable {
-    let deviceIds: [Int]
-    
-    enum CodingKeys: String, CodingKey {
-        case deviceIds = "device_ids"
-    }
-}
-
-/// Device Reports Response
-struct DeviceReportsResponse: Codable {
-    let deviceId: UUID
-    let serialNumber: String
-    let status: String
-    
-    enum CodingKeys: String, CodingKey {
-        case deviceId = "device_id"
-        case serialNumber = "serial_number"
-        case status
-    }
+struct DeviceReportsRequest: Codable {
+    let serialNumber: [String]
 }
