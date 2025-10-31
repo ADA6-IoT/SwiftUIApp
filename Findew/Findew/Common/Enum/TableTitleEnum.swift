@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+// 테이블 제목 Enum
 enum TableTitleEnum: String, CaseIterable {
     case name = "이름"
     case ward = "병동 번호"

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+// 환자 상세보기, 정보 생성, 정보 수정 종류별 Enum
 enum PatientEnum {
     case registration
     case correction
@@ -77,6 +78,7 @@ enum PatientEnum {
     
 }
 
+// 환자 상세보기, 환자 정보 수정, 환자 정보 생성 컴포넌트 Enum
 enum PatientComponentsEnum {
     case name
     case ward

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+// 배터리 아이콘 Enum
 enum BatteryEnum {
     case lowBattery
     case middleBattery

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+// 문의, 신고하기 종류별 Enum
 enum ContactType {
     case inquiry
     case report
@@ -22,6 +23,7 @@ enum ContactType {
     }
 }
 
+// 문의, 신고하기 컴포넌트 Enum
 enum ContactComponetsEnum {
     case title(type: ContactType)
     case email

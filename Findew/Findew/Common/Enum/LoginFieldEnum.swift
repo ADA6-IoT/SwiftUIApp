@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+// 로그인 구역 Enum
 enum LoginFieldEnum {
     case id
     case password(onOff: Bool)

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+// 환자 목록 Enum
 enum PatientInfoEnum {
     case name
     case wardBed

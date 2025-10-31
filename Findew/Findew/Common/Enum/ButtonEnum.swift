@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// 버튼 Enum
 enum ButtonEnum {
     case refresh
     case search
