@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 /// HospitalDTO
 struct HospitalDTO: Codable {
     let id: UUID
@@ -13,11 +14,13 @@ struct HospitalDTO: Codable {
     let content: String
     let email: String?
     let status: String
-    let imageUrls: [String]
-    let hospital: Hospital
+    let images: [String]
+    let adminReply: String?
+    let repliedBy: String?
+    let repliedAt: String?
     let createdAt: String
     let updatedAt: String
-    let adminReply: String?
+
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -25,17 +28,11 @@ struct HospitalDTO: Codable {
         case content
         case email
         case status
-        case imageUrls
-        case hospital
+        case images
+        case adminReply = "admin_reply"
+        case repliedBy = "replied_by"
+        case repliedAt = "replied_at"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-        case adminReply = "admin_reply"
     }
-}
-
-
-/// Hospital
-struct Hospital: Codable {
-    let id: UUID
-    let name: String
 }

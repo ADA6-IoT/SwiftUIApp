@@ -10,10 +10,8 @@ import Foundation
 /// 기기 등록
 struct DeviceGenerateRequest: Codable {
     let serialNumber: String
-    let name: String
     
     enum CodingKeys: String, CodingKey {
         case serialNumber = "serial_number"
-        case name
     }
 }

@@ -13,6 +13,15 @@ struct PatientGenerateRequest: Codable {
     let ward: Int
     let bed: Int
     let departmentId: String
-    let deviceSerial: String
+    let deviceSerial: String?
     let memo: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case ward
+        case bed
+        case departmentId = "department_id"
+        case deviceSerial = "device_serial"
+        case memo
+    }
 }

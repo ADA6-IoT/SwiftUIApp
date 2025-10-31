@@ -21,9 +21,3 @@ struct DeviceUpdateRequest: Codable {
         case isMalfunctioning = "is_malfunctioning"
     }
 }
-
-/// DeviceUpdateResponse
-struct DeviceUpdateResponse: Codable {
-    let name: String
-    let device: DeviceGenerateDTO
-}

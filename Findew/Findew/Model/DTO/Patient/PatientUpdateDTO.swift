@@ -17,6 +17,5 @@ struct PatientUpdateRequest: Codable {
     let ward: Int?
     let bed: Int?
     let departmentId: String?
-    let deviceSerial: String?
     let memo: String?
 }

@@ -8,6 +8,10 @@
 import Foundation
 
 /// 소속과 수정
+struct DepartmentUpdatePath: Codable {
+    let id: UUID
+}
+
 struct DepartmentUpdateRequest: Codable {
     let name: String?
     let code: String?

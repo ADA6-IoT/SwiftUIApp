@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// 공통 Department DTO
+/// Department DTO
 struct DepartmentDTO: Codable {
     let id: String
     let name: String
