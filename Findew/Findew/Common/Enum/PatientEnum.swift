@@ -45,37 +45,6 @@ enum PatientEnum {
     var patientComponents: [PatientComponentsEnum] {
         return [.name, .ward, .bed, .department, .device, .memo]
     }
-    
-    var titleSectionSize: CGSize {
-        switch self {
-        case .registration, .correction:
-            return .init(width: 109, height: 50)
-        case .detail:
-            return .init(width: 93, height: 61)
-        }
-    }
-    
-    var fieldSectionSize: CGSize {
-        switch self {
-        case .registration, .correction:
-            return .init(width: 469, height: 50)
-        case .detail:
-            return .init(width: 180, height: 61)
-        
-        }
-    }
-    
-    var memoFieldSize: CGSize {
-        switch self {
-        case .registration, .correction:
-            return .init(width: 469, height: 120)
-        // TODO: 이게 맞나 싶음...
-        case .detail:
-            return .init(width: 180, height: 264)
-        }
-    }
-    
-    
 }
 
 // 환자 상세보기, 환자 정보 수정, 환자 정보 생성 컴포넌트 Enum

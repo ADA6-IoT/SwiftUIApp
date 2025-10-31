@@ -89,24 +89,6 @@ enum ContactComponetsEnum {
         }
     }
     
-    var contactHeight: CGFloat? {
-        switch self {
-        case .email:
-            return 53
-        case .contents(let type):
-            switch type {
-            case .inquiry:
-                return 174
-            case .report:
-                return 198
-            }
-        case .addPhoto, .photos:
-            return 104
-        default:
-            return nil
-        }
-    }
-    
     var contactKeyboardType: UIKeyboardType? {
         switch self {
         case .email:

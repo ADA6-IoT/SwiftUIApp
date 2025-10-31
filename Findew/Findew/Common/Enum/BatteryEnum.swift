@@ -46,15 +46,8 @@ enum BatteryEnum {
         return CGSize(width: 9, height: 19)
     }
     
-    var batterySize: CGSize {
-        switch self {
-        case .highBattery:
-            return CGSize(width: 78, height: 33)
-        case .middleBattery:
-            return CGSize(width: 39, height: 33)
-        case .lowBattery:
-            return CGSize(width: 14, height: 33)
-        }
+    var batteryHeight: CGFloat {
+        return 33
     }
     
     var iconBatteryColor: Color {
