@@ -17,9 +17,23 @@ extension HospitalRouter {
         var jsonPartData: Data = Data()
         
         if let inquiry = request as? HospitalInquiryRequest {
-            jsonPartData = try! JSONSerialization.data(withJSONObject: ["content": inquiry.content, "email": inquiry.email])
+            do {
+                jsonPartData = try JSONSerialization.data(withJSONObject: ["content": inquiry.content, "email": inquiry.email])
+            } catch {
+                #if DEBUG
+                print("실패 (HospitalInquiryRequest): \(error.localizedDescription)")
+                #endif
+                return []
+            }
         } else if let report = request as? HospitalAppReportRequest {
-            jsonPartData = try! JSONSerialization.data(withJSONObject: ["content": report.content])
+            do {
+                jsonPartData = try JSONSerialization.data(withJSONObject: ["content": report.content])
+            } catch {
+                #if DEBUG
+                print("실패 (HospitalAppReportRequest): \(error.localizedDescription)")
+                #endif
+                return []
+            }
         }
         
         multipartData.append(
