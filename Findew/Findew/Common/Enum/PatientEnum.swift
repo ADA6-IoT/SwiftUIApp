@@ -43,7 +43,7 @@ enum PatientEnum {
     }
     
     var patientComponents: [PatientComponentsEnum] {
-        return [.name, .ward, .bed, .department, .device, .memo]
+        return [.name, .ward, .department, .device, .memo]
     }
 }
 

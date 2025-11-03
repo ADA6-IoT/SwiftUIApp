@@ -8,8 +8,12 @@
 import Foundation
 
 @Observable
-class GeneratePatientsViewModel {
-    let patient: PatientGenerateRequest? = nil
+class PatientPopOverViewModel {
+    
+    var patient: PatientGenerateRequest = .init(name: "", ward: "", bed: nil, departmentId: nil, deviceSerial: nil, memo: nil)
+    var departments: [Department] = .init()
+    var devices: [Device] = .init()
+    
     let patientType: PatientEnum
     
     init(patientType: PatientEnum) {

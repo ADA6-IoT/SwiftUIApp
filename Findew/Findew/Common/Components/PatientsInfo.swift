@@ -14,16 +14,19 @@ struct PatientsInfo: View {
     let departments: [Department]
     let devices: [Device]
     
+    // MARK: - Constants
     fileprivate enum PatientsConstant {
         static let wardSpacing: CGFloat = 4
         
-        static let fieldWidth: CGFloat = 100
+        static let titleSize: CGSize = .init(width: 110, height: 50)
+        static let fieldWidth: (CGFloat, CGFloat) = (70,80)
         
         static let namePlaceholder: String = "환자 이름을 작성해주세요"
         static let wardPlaceholder: String = "병동 번호"
         static let bedPlaceholder: String = "침대 번호"
     }
     
+    // MARK: - Init
     init(
         info: PatientComponentsEnum,
         value: Binding<PatientGenerateRequest>,
@@ -39,13 +42,19 @@ struct PatientsInfo: View {
     // MARK: - Body
     var body: some View {
         HStack {
-            Text(info.title)
-                .font(.b5)
+            leftTitle
             Spacer()
             infoContent
         }
     }
+    // MARK: - Left
+    private var leftTitle: some View {
+        Text(info.title)
+            .font(.b5)
+            .frame(width: PatientsConstant.titleSize.width, alignment: .leading)
+    }
     
+    // MARK: - Right
     @ViewBuilder
     private var infoContent: some View {
         switch info {
@@ -53,9 +62,7 @@ struct PatientsInfo: View {
             generateTextField(PatientsConstant.namePlaceholder, value: $value.name)
         case .ward, .bed:
             wardBed
-        case .department:
-            menuContent
-        case .device:
+        case .department, .device:
             menuContent
         case .memo:
             generateOptionalTextField(info.placeholderContents ?? "", value: $value.memo, isEtc: true)
@@ -97,7 +104,7 @@ struct PatientsInfo: View {
     
     @ViewBuilder
     private var menuLabel: some View {
-        HStack {
+        Group {
             if selectedValue {
                 Text(selectedMenuText)
                     .font(.b1)
@@ -108,11 +115,12 @@ struct PatientsInfo: View {
                 }
             }
         }
-        .scenePadding()
+        .padding()
         .background {
             RoundedRectangle(cornerRadius: 296)
                 .fill(.gray01)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var selectedMenuText: String {
@@ -143,17 +151,19 @@ struct PatientsInfo: View {
     
     // MARK: - Ward & Bed
     private var wardBed: some View {
-        HStack(spacing: PatientsConstant.wardSpacing, content: {
+        HStack(alignment: .center, spacing: PatientsConstant.wardSpacing, content: {
             generateTextField(PatientsConstant.wardPlaceholder, value: $value.ward)
-                .frame(width: PatientsConstant.fieldWidth)
+                .frame(width: PatientsConstant.fieldWidth.0)
             
             Text("-")
                 .font(.b1)
                 .foregroundStyle(.black)
+                .padding(.horizontal, 10)
             
             generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed)
-                .frame(width: PatientsConstant.fieldWidth)
+                .frame(width: PatientsConstant.fieldWidth.1)
         })
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     // MARK: - Common
@@ -237,7 +247,7 @@ struct PatientsInfo: View {
         )
         
         PatientsInfo(
-            info: .device,
+            info: .bed,
             value: $text,
             departments: [],
             devices: sampleDevices
