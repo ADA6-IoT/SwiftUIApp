@@ -59,7 +59,7 @@ enum LoginFieldEnum {
         switch self {
         case .id:
             return .emailAddress
-        case .password(let onOff):
+        case .password:
             return .default
         }
     }
