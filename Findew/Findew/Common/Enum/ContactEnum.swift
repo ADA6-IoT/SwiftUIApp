@@ -9,25 +9,25 @@ import Foundation
 import SwiftUI
 
 // 문의, 신고하기 종류별 Enum
-enum ContactType {
+enum ContactType: Hashable {
     case inquiry
     case report
     
     var components: [ContactComponetsEnum] {
         switch self {
         case .inquiry:
-            return [.title(type: self), .email, .contents(type: self), .addPhoto, .photos]
+            return [.title(type: self), .email, .contents, .addPhoto, .photos]
         case .report:
-            return [.title(type: self), .contents(type: self), .addPhoto, .photos]
+            return [.title(type: self), .contents, .addPhoto, .photos]
         }
     }
 }
 
 // 문의, 신고하기 컴포넌트 Enum
-enum ContactComponetsEnum {
+enum ContactComponetsEnum: Hashable {
     case title(type: ContactType)
     case email
-    case contents(type: ContactType)
+    case contents
     case addPhoto
     case photos
     

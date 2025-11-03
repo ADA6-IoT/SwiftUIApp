@@ -35,11 +35,11 @@ struct CustomButton: View {
                     .font(buttonType.buttonFont)
             }
         })
-        .padding(CustomButtonConstant.buttonPadding)
+//        .padding(CustomButtonConstant.buttonPadding)
         .glassEffect(.regular.tint(buttonType.buttonColor).interactive())
     }
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    CustomButton(buttonType: .refresh, action: { print("gg") })
+    CustomButton(buttonType: .report, action: { print("gg") })
 }
