@@ -60,6 +60,10 @@ extension Font {
         return .pretend(type: .medium, size: 16)
     }
     
+    static var b5: Font {
+        return .pretend(type: .medium, size: 18)
+    }
+    
     static var b6: Font {
         return .system(size: 10, weight: .bold)
     }

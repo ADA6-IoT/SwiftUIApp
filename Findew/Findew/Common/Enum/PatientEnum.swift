@@ -71,33 +71,36 @@ enum PatientComponentsEnum {
         }
     }
     
-    var titleFont: Font {
-        return .b3
-    }
-    
-    var inputFont: Font {
-        return .b1
-    }
-    
-    var placeholderColor: Color {
-        return .gray03
-    }
-    
     var placeholderContents: String? {
         switch self {
         case .ward:
             return "병동 호실"
         case .bed:
             return "침대 번호"
-        // TODO: 아이콘 넣고 그걸로 교체
         case .department:
-            return "cross.case"
-        // TODO: 아이콘 넣고 그걸로 교체
+            return nil
         case .device:
-            return "hand.thumbsup"
+            return nil
         case .memo:
             return "환자의 특이 사항을 작성해주세요"
         default:
+            return nil
+        }
+    }
+    
+    var iconImage: ImageResource? {
+        switch self {
+        case .name:
+            return nil
+        case .ward:
+            return nil
+        case .bed:
+            return nil
+        case .department:
+            return .departIcon
+        case .device:
+            return .deviceIcon
+        case .memo:
             return nil
         }
     }

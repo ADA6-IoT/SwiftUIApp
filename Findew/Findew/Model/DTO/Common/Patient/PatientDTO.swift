@@ -40,7 +40,7 @@ struct Department: Codable {
 }
 
 /// Device
-struct Device: Codable {
+struct Device: Codable, Hashable {
     let serialNumber: String
     let batteryLevel: Int
     let isMalfunctioning: Bool
