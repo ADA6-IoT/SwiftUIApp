@@ -20,6 +20,7 @@ struct PatientsInfo: View {
         
         static let titleSize: CGSize = .init(width: 110, height: 50)
         static let fieldWidth: (CGFloat, CGFloat) = (70,80)
+        static let labelPadding: EdgeInsets = .init(top: 3, leading: 10, bottom: 3, trailing: 10)
         
         static let namePlaceholder: String = "환자 이름을 작성해주세요"
         static let wardPlaceholder: String = "병동 번호"
@@ -115,9 +116,9 @@ struct PatientsInfo: View {
                 }
             }
         }
-        .padding()
+        .padding(PatientsConstant.labelPadding)
         .background {
-            RoundedRectangle(cornerRadius: 296)
+            Capsule()
                 .fill(.gray01)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -152,7 +153,7 @@ struct PatientsInfo: View {
     // MARK: - Ward & Bed
     private var wardBed: some View {
         HStack(alignment: .center, spacing: PatientsConstant.wardSpacing, content: {
-            generateTextField(PatientsConstant.wardPlaceholder, value: $value.ward)
+            generateTextField(PatientsConstant.wardPlaceholder, value: $value.ward, type: .numberPad)
                 .frame(width: PatientsConstant.fieldWidth.0)
             
             Text("-")
@@ -168,16 +169,22 @@ struct PatientsInfo: View {
     
     // MARK: - Common
     @ViewBuilder
-    private func generateTextField(_ placeholder: String, value: Binding<String>, isEtc: Bool = false) -> some View {
+    private func generateTextField(_ placeholder: String, value: Binding<String>, isEtc: Bool = false, type: UIKeyboardType = .default) -> some View {
         if isEtc {
             TextField(text: value, axis: .vertical, label: { placeText(placeholder) })
         } else {
             TextField("", text: value, prompt: placeText(placeholder))
                 .font(.b1)
                 .foregroundStyle(.black)
+                .keyboardType(type)
+                .submitLabel(.next)
+                .onSubmit {
+                    <#code#>
+                }
         }
     }
     
+    @ViewBuilder
     private func generateOptionalIntTextField(_ placeholder: String, value: Binding<Int?>) -> some View {
         let binding = Binding<String>(
             get: {
@@ -195,20 +202,21 @@ struct PatientsInfo: View {
             }
         )
         
-        return TextField("", text: binding, prompt: placeText(placeholder))
+        TextField("", text: binding, prompt: placeText(placeholder))
             .keyboardType(.numberPad)
             .textFieldStyle(.plain)
             .font(.b1)
             .foregroundStyle(.black)
     }
     
+    @ViewBuilder
     private func generateOptionalTextField(_ placeholder: String, value: Binding<String?>, isEtc: Bool = false) -> some View {
         let binding = Binding<String>(
             get: { value.wrappedValue ?? "" },
             set: { value.wrappedValue = $0.isEmpty ? nil : $0 }
         )
         
-        return TextField("", text: binding, prompt: placeText(placeholder))
+        TextField("", text: binding, prompt: placeText(placeholder))
     }
     
     private func placeText(_ text: String) -> Text {

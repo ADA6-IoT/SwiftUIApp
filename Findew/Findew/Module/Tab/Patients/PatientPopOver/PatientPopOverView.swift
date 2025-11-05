@@ -24,20 +24,21 @@ struct PatientPopOverView: View {
     }
     
     // MARK: - Init
-    init() {
-        self.viewModel = .init(patientType: .registration)
+    init(patientType: PatientEnum) {
+        self.viewModel = .init(patientType: patientType)
     }
     
     var body: some View {
         VStack(spacing: PatientPopOverConstant.mainVspcing, content: {
             topContents
             middleContent
+            Spacer()
         })
         .padding(PatientPopOverConstant.mainPadding)
         .background {
             RoundedRectangle(cornerRadius: DefaultConstants.corenerRadius)
                 .fill(.white)
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     
@@ -94,8 +95,4 @@ struct PatientPopOverView: View {
         })
     }
     
-}
-
-#Preview {
-    PatientPopOverView()
 }

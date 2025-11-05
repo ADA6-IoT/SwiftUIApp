@@ -49,7 +49,7 @@ extension Font {
     }
     
     static var b2: Font {
-        return .pretend(type: .medium, size: 24)
+        return .pretend(type: .regular, size: 24)
     }
     
     static var b3: Font {
