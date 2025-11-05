@@ -9,4 +9,5 @@ import Foundation
 
 enum DefaultConstants {
     static let corenerRadius: CGFloat = 32
+    static let systemFont: CGFloat = 22
 }

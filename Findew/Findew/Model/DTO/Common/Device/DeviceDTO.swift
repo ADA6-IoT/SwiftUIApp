@@ -13,7 +13,7 @@ struct DeviceDTO: Codable {
     let serialNumber: String
     let batteryLevel: Int
     let isMalfunctioning: Bool
-    let patient: Patient?
+    let patient: DevicePatient?
     let currentZone: CurrentZone?
     let lastLocationUpdate: String?
     let createdAt: String
@@ -30,11 +30,11 @@ struct DeviceDTO: Codable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
-}
-
-struct Patient: Codable {
-    let id: UUID
-    let name: String
-    let ward: String
-    let bed: Int
+    
+    struct DevicePatient: Codable {
+        let id: UUID
+        let name: String
+        let ward: String
+        let bed: Int
+    }
 }
