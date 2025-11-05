@@ -13,6 +13,7 @@ struct PatientsInfo: View {
     @Binding var value: PatientGenerateRequest
     let departments: [Department]
     let devices: [Device]
+    @FocusState var isFocused: PatientComponentsEnum?
     
     // MARK: - Constants
     fileprivate enum PatientsConstant {
@@ -42,7 +43,7 @@ struct PatientsInfo: View {
     
     // MARK: - Body
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             leftTitle
             Spacer()
             infoContent
@@ -52,7 +53,7 @@ struct PatientsInfo: View {
     private var leftTitle: some View {
         Text(info.title)
             .font(.b5)
-            .frame(width: PatientsConstant.titleSize.width, alignment: .leading)
+            .frame(width: PatientsConstant.titleSize.width)
     }
     
     // MARK: - Right
@@ -60,7 +61,7 @@ struct PatientsInfo: View {
     private var infoContent: some View {
         switch info {
         case .name:
-            generateTextField(PatientsConstant.namePlaceholder, value: $value.name)
+            generateTextField(PatientsConstant.namePlaceholder, value: $value.name, equals: .name)
         case .ward, .bed:
             wardBed
         case .department, .device:
@@ -153,7 +154,7 @@ struct PatientsInfo: View {
     // MARK: - Ward & Bed
     private var wardBed: some View {
         HStack(alignment: .center, spacing: PatientsConstant.wardSpacing, content: {
-            generateTextField(PatientsConstant.wardPlaceholder, value: $value.ward, type: .numberPad)
+            generateTextField(PatientsConstant.wardPlaceholder, value: $value.ward, type: .numberPad, equals: .ward)
                 .frame(width: PatientsConstant.fieldWidth.0)
             
             Text("-")
@@ -161,15 +162,15 @@ struct PatientsInfo: View {
                 .foregroundStyle(.black)
                 .padding(.horizontal, 10)
             
-            generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed)
+            generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
                 .frame(width: PatientsConstant.fieldWidth.1)
         })
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    // MARK: - Common
+    // MARK: - TextField
     @ViewBuilder
-    private func generateTextField(_ placeholder: String, value: Binding<String>, isEtc: Bool = false, type: UIKeyboardType = .default) -> some View {
+    private func generateTextField(_ placeholder: String, value: Binding<String>, isEtc: Bool = false, type: UIKeyboardType = .default, equals: PatientComponentsEnum) -> some View {
         if isEtc {
             TextField(text: value, axis: .vertical, label: { placeText(placeholder) })
         } else {
@@ -178,14 +179,15 @@ struct PatientsInfo: View {
                 .foregroundStyle(.black)
                 .keyboardType(type)
                 .submitLabel(.next)
+                .focused($isFocused, equals: equals)
                 .onSubmit {
-                    <#code#>
+                    isFocused = equals.nextField
                 }
         }
     }
     
     @ViewBuilder
-    private func generateOptionalIntTextField(_ placeholder: String, value: Binding<Int?>) -> some View {
+    private func generateOptionalIntTextField(_ placeholder: String, value: Binding<Int?>, equals: PatientComponentsEnum) -> some View {
         let binding = Binding<String>(
             get: {
                 if let intValue = value.wrappedValue {
@@ -207,6 +209,10 @@ struct PatientsInfo: View {
             .textFieldStyle(.plain)
             .font(.b1)
             .foregroundStyle(.black)
+            .focused($isFocused, equals: equals)
+            .onSubmit {
+                isFocused = equals.nextField
+            }
     }
     
     @ViewBuilder
@@ -216,7 +222,7 @@ struct PatientsInfo: View {
             set: { value.wrappedValue = $0.isEmpty ? nil : $0 }
         )
         
-        TextField("", text: binding, prompt: placeText(placeholder))
+        TextField("", text: binding, axis: isEtc ? .vertical : .horizontal)
     }
     
     private func placeText(_ text: String) -> Text {
