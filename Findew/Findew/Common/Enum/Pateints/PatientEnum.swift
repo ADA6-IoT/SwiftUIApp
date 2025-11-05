@@ -104,4 +104,15 @@ enum PatientComponentsEnum {
             return nil
         }
     }
+    
+    var nextField: PatientComponentsEnum? {
+        switch self {
+        case .name:
+            return .ward
+        case .ward:
+            return .bed
+        default:
+            return nil
+        }
+    }
 }
