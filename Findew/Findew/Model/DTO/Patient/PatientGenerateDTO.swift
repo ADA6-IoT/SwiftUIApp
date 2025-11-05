@@ -9,12 +9,12 @@ import Foundation
 
 /// 환자 등록
 struct PatientGenerateRequest: Codable {
-    let name: String
-    let ward: Int
-    let bed: Int
-    let departmentId: String
-    let deviceSerial: String?
-    let memo: String?
+    var name: String
+    var ward: String
+    var bed: Int?
+    var departmentId: UUID?
+    var deviceSerial: String?
+    var memo: String?
     
     enum CodingKeys: String, CodingKey {
         case name
