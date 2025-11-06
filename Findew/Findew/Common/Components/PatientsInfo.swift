@@ -53,7 +53,7 @@ struct PatientsInfo: View {
     private var leftTitle: some View {
         Text(info.title)
             .font(.b5)
-            .frame(width: PatientsConstant.titleSize.width, alignment: .leading)
+            .frame(width: PatientsConstant.titleSize.width)
     }
     
     // MARK: - Right
