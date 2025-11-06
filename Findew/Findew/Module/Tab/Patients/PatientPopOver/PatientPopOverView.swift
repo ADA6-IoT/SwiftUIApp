@@ -24,8 +24,8 @@ struct PatientPopOverView: View {
     }
     
     // MARK: - Init
-    init(patientType: PatientEnum) {
-        self.viewModel = .init(patientType: patientType)
+    init(patientType: PatientEnum, patient: PatientGenerateRequest) {
+        self.viewModel = .init(patientType: patientType, patient: patient)
     }
     
     var body: some View {
@@ -94,5 +94,4 @@ struct PatientPopOverView: View {
             }
         })
     }
-    
 }

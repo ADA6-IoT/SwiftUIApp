@@ -10,4 +10,6 @@ import Foundation
 enum DefaultConstants {
     static let corenerRadius: CGFloat = 32
     static let systemFont: CGFloat = 22
+    static let defaultHorizonPadding: CGFloat = 16
+    static let defaultVerticalPadding: CGFloat = 20
 }

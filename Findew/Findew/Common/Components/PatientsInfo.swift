@@ -11,8 +11,8 @@ struct PatientsInfo: View {
     // MARK: - Property
     let info: PatientComponentsEnum
     @Binding var value: PatientGenerateRequest
-    let departments: [Department]
-    let devices: [Device]
+    var departments: [Department]
+    var devices: [Device]
     @FocusState var isFocused: PatientComponentsEnum?
     
     // MARK: - Constants
@@ -53,7 +53,7 @@ struct PatientsInfo: View {
     private var leftTitle: some View {
         Text(info.title)
             .font(.b5)
-            .frame(width: PatientsConstant.titleSize.width)
+            .frame(width: PatientsConstant.titleSize.width, alignment: .leading)
     }
     
     // MARK: - Right
@@ -86,7 +86,7 @@ struct PatientsInfo: View {
         case .department:
             ForEach(departments, id: \.id) { department in
                 Button(action: {
-                    value.departmentId = department.id
+                    value.department = department
                 }) {
                     Text(department.name)
                 }
@@ -94,7 +94,7 @@ struct PatientsInfo: View {
         case .device:
             ForEach(devices, id: \.self) { device in
                 Button(action: {
-                    value.deviceSerial = device.serialNumber
+                    value.deviceSerial = device
                 }, label: {
                     Text(device.serialNumber)
                 })
@@ -128,10 +128,10 @@ struct PatientsInfo: View {
     private var selectedMenuText: String {
         switch info {
         case .department:
-            return departments.first(where: { $0.id == value.departmentId})?.name ?? ""
+            return departments.first(where: { $0.name == value.department?.name})?.name ?? ""
         case .device:
             if let serial = value.deviceSerial,
-               let found = devices.first(where: {$0.serialNumber == serial }) {
+               let found = devices.first(where: {$0.serialNumber == serial.serialNumber }) {
                 return found.serialNumber
             }
             return ""
@@ -143,9 +143,9 @@ struct PatientsInfo: View {
     private var selectedValue: Bool {
         switch info {
         case .department:
-            return value.departmentId?.uuidString.isEmpty == false
+            return value.department?.name.isEmpty == false
         case .device:
-            return value.deviceSerial?.isEmpty == false
+            return value.deviceSerial?.serialNumber.isEmpty == false
         default:
             return false
         }
@@ -155,7 +155,7 @@ struct PatientsInfo: View {
     private var wardBed: some View {
         HStack(alignment: .center, spacing: PatientsConstant.wardSpacing, content: {
             generateTextField(PatientsConstant.wardPlaceholder, value: $value.ward, type: .numberPad, equals: .ward)
-                .frame(width: PatientsConstant.fieldWidth.0)
+                .frame(maxWidth: PatientsConstant.fieldWidth.0)
             
             Text("-")
                 .font(.b1)
@@ -163,7 +163,7 @@ struct PatientsInfo: View {
                 .padding(.horizontal, 10)
             
             generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
-                .frame(width: PatientsConstant.fieldWidth.1)
+                .frame(maxWidth: PatientsConstant.fieldWidth.1)
         })
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -230,42 +230,4 @@ struct PatientsInfo: View {
             .font(.b1)
             .foregroundStyle(.gray03)
     }
-}
-
-#Preview {
-    @Previewable @State var text: PatientGenerateRequest = .init(
-        name: "",
-        ward: "",
-        bed: nil,
-        departmentId: nil
-    )
-    
-    let sampleDepartments = [
-        Department(id: UUID(), name: "소화기내과", code: "101"),
-        Department(id: UUID(), name: "순환기내과", code: "102"),
-        Department(id: UUID(), name: "정형외과", code: "103")
-    ]
-    
-    let sampleDevices: [Device] = [
-        .init(serialNumber: "11", batteryLevel: 1, isMalfunctioning: false),
-        .init(serialNumber: "121", batteryLevel: 21, isMalfunctioning: false),
-        .init(serialNumber: "131", batteryLevel: 31, isMalfunctioning: false)
-    ]
-    
-    VStack(spacing: 20) {
-        PatientsInfo(
-            info: .department,
-            value: $text,
-            departments: sampleDepartments,
-            devices: []
-        )
-        
-        PatientsInfo(
-            info: .bed,
-            value: $text,
-            departments: [],
-            devices: sampleDevices
-        )
-    }
-    .padding()
 }

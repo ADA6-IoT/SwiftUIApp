@@ -8,19 +8,20 @@
 import Foundation
 
 /// 환자 등록
-struct PatientGenerateRequest: Codable {
+struct PatientGenerateRequest: Codable, Identifiable {
+    var id: UUID = .init()
     var name: String
     var ward: String
     var bed: Int?
-    var departmentId: UUID?
-    var deviceSerial: String?
+    var department: Department?
+    var deviceSerial: Device?
     var memo: String?
     
     enum CodingKeys: String, CodingKey {
         case name
         case ward
         case bed
-        case departmentId = "department_id"
+        case department = "department_id"
         case deviceSerial = "device_serial"
         case memo
     }
