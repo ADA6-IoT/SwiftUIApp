@@ -8,7 +8,7 @@
 import Foundation
 
 /// DeviceDTO
-struct DeviceDTO: Codable {
+struct DeviceDTO: Codable, Identifiable {
     let id: UUID
     let serialNumber: String
     let batteryLevel: Int

@@ -10,13 +10,12 @@ import SwiftUI
 struct DeviceDisplayCard: View {
     // MARK: - Properties
     let device: DeviceDTO
-    let isSelected: Bool
+    @Binding var isSelected: Bool
     var onTap: (() -> Void)?
     
     // MARK: - DeviceDisplayCardConstants
     fileprivate enum DeviceDisplayCardConstants {
-        static let mainHspacing: CGFloat = 34
-        static let cardPadding: EdgeInsets = .init(top: 30, leading: 40, bottom: 29, trailing: 40)
+        static let cardPadding: EdgeInsets = .init(top: 28, leading: 20, bottom: 28, trailing: 20)
         static let middleCardVSpacing: CGFloat = 12
         static let middleCardHSpacing: CGFloat = 5
         static let serialBoxPadding: EdgeInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
@@ -25,7 +24,7 @@ struct DeviceDisplayCard: View {
         static let checkmarkSize: CGFloat = 28
         static let checkmarkIconSize: CGFloat = 20
         
-        static let batterySize: CGSize = .init(width: 78, height: 33)
+        static let batterySize: CGSize = .init(width: 75, height: 33)
         static let batteryPadding: CGFloat = 5
         
         static let cornerRadius: CGFloat = 24
@@ -36,9 +35,9 @@ struct DeviceDisplayCard: View {
     }
     
     // MARK: - Init
-    init(device: DeviceDTO, isSelected: Bool, onTap: (() -> Void)? = nil) {
+    init(device: DeviceDTO, isSelected: Binding<Bool>, onTap: (() -> Void)? = nil) {
         self.device = device
-        self.isSelected = isSelected
+        self._isSelected = isSelected
         self.onTap = onTap
     }
     
@@ -62,8 +61,9 @@ struct DeviceDisplayCard: View {
         Button(action: {
             onTap?()
         }) {
-            HStack(spacing: DeviceDisplayCardConstants.mainHspacing) {
+            HStack(spacing: .zero) {
                 leftContent
+                Spacer()
                 centerContent
                 Spacer()
                 batteryInfoProgress
@@ -82,6 +82,7 @@ struct DeviceDisplayCard: View {
                 }
             }
         }
+        .disabled(onTap == nil)
     }
     
     // MARK: - Left
@@ -103,12 +104,13 @@ struct DeviceDisplayCard: View {
         HStack(spacing: DeviceDisplayCardConstants.middleCardHSpacing) {
             if let patient = device.patient {
                 Text(patient.name)
+                    .font(.b2)
                 Text("(\(patient.ward)-\(patient.bed))")
+                    .font(.b4)
             } else {
                 Text(DeviceDisplayCardConstants.noExistPatient)
             }
         }
-        .font(.b2)
         .foregroundStyle(.gray09)
     }
     
@@ -124,6 +126,7 @@ struct DeviceDisplayCard: View {
         ZStack(alignment: .trailing) {
             RoundedRectangle(cornerRadius: batteryType.iconBatteryRoundness)
                 .fill(.clear)
+                .frame(maxWidth: DeviceDisplayCardConstants.batterySize.width, alignment: .trailing)
             
             GeometryReader { geo in
                 RoundedRectangle(cornerRadius: batteryType.iconBatteryRoundness)
@@ -133,13 +136,14 @@ struct DeviceDisplayCard: View {
                     )
                     .foregroundStyle(batteryType.iconBatteryColor)
             }
+            .frame(maxWidth: DeviceDisplayCardConstants.batterySize.width, alignment: .trailing)
             
             Text("\(device.batteryLevel)%")
                 .font(batteryType.iconFont)
                 .foregroundStyle(.gray06)
 
         }
-        .frame(width: DeviceDisplayCardConstants.batterySize.width, height: DeviceDisplayCardConstants.batterySize.height, alignment: .trailing)
+        .frame(height: DeviceDisplayCardConstants.batterySize.height)
         .padding(DeviceDisplayCardConstants.batteryPadding)
         .overlay(
             RoundedRectangle(cornerRadius: batteryType.iconStrokeBigRoundness)
@@ -166,4 +170,3 @@ struct DeviceDisplayCard: View {
             )
     }
 }
-
