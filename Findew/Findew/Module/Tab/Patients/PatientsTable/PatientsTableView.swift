@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PatientsTableView: View {
     // MARK: - Property
+    @State var tabCase: TabCaseEnum = .location
     @State var viewModel: PatientsTableViewModel
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     @State private var editMode: EditMode = .inactive
@@ -39,8 +40,6 @@ struct PatientsTableView: View {
             SideBarView(viewModel: viewModel)
         }, detail: {
             tableContents
-                .navigationTitle(PatientsTableConstant.navigationTitle)
-                .navigationBarTitleDisplayMode(.large)
                 .toolbar(content: {
                     ToolbarItemGroup(placement: .topBarTrailing, content: {
                         GlassEffectContainer(spacing: PatientsTableConstant.containerSpacing, content: {
@@ -52,6 +51,19 @@ struct PatientsTableView: View {
                     ToolbarItem(placement: .topBarLeading, content: {
                         plusBtn
                     })
+//                    
+//                    ToolbarItem(placement: .principal, content: {
+//                        Picker(selection: $tabCase, content: {
+//                            ForEach(TabCaseEnum.allCases, id: \.rawValue, content: { tab in
+//                                Text(tab.rawValue)
+//                                    .tag(tab)
+//                            })
+//                        }, label: {
+//                            Text("11")
+//                        })
+//                        .pickerStyle(.segmented)
+//                        .frame(width: 200)
+//                    })
                 })
                 .alertPrompt(item: $viewModel.alertPrompt)
                 .sheet(item: $viewModel.editPatient, content: { patient in
@@ -68,6 +80,7 @@ struct PatientsTableView: View {
                     ReportInquiry(contactType: .report)
                 })
         })
+        .navigationSplitViewStyle(.prominentDetail)
     }
     
     // MARK: - Middle
