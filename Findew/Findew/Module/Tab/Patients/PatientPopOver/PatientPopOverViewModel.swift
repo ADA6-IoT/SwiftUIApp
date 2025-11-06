@@ -10,13 +10,14 @@ import Foundation
 @Observable
 class PatientPopOverViewModel {
     
-    var patient: PatientGenerateRequest = .init(name: "", ward: "", bed: nil, departmentId: nil, deviceSerial: nil, memo: nil)
+    var patient: PatientGenerateRequest
     var departments: [Department] = .init()
     var devices: [Device] = .init()
     
     let patientType: PatientEnum
     
-    init(patientType: PatientEnum) {
+    init(patientType: PatientEnum, patient: PatientGenerateRequest) {
         self.patientType = patientType
+        self.patient = patient
     }
 }

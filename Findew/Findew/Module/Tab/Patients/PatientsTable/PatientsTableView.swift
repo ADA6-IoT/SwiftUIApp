@@ -18,7 +18,7 @@ struct PatientsTableView: View {
         static let columnsSize: [CGFloat] = [160, 169, 174, 321, 371]
         static let containerSpacing: CGFloat = 40
         
-        static let placeholder: String = "환자 이름 또는 병동 번호를 작성해주세요"
+        static let placeholder: String = "환자 이름 또는 병동 번호"
         static let notCurrent: String = "위치 정보 없음"
         static let tableColumns: [String] = ["이름", "병동 번호", "소속 과", "현   위치", "기타" ]
         static let refreshImage: String = "arrow.clockwise"
@@ -36,7 +36,7 @@ struct PatientsTableView: View {
     // MARK: - Body
     var body: some View {
         NavigationSplitView(sidebar: {
-            Text("1")
+            SideBarView(viewModel: viewModel)
         }, detail: {
             tableContents
                 .navigationTitle(PatientsTableConstant.navigationTitle)
@@ -54,11 +54,18 @@ struct PatientsTableView: View {
                     })
                 })
                 .alertPrompt(item: $viewModel.alertPrompt)
-                .sheet(isPresented: $viewModel.isShowEdit, content: {
-                    PatientPopOverView(patientType: .correction)
+                .sheet(item: $viewModel.editPatient, content: { patient in
+                    PatientPopOverView(patientType: .correction, patient: patient)
                 })
                 .sheet(isPresented: $viewModel.isShowAdd, content: {
-                    PatientPopOverView(patientType: .registration)
+                    PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: ""))
+                        .presentationDetents([.large])
+                })
+                .sheet(isPresented: $viewModel.isShowInquiry, content: {
+                    ReportInquiry(contactType: .inquiry)
+                })
+                .sheet(isPresented: $viewModel.isShowReport, content: {
+                    ReportInquiry(contactType: .report)
                 })
         })
     }
@@ -223,7 +230,7 @@ struct PatientsTableView: View {
     private func handleContextMenuAction(_ menu: PatientsContextMenu, for patient: PatientDTO) {
         switch menu {
         case .edit:
-            viewModel.isShowEdit.toggle()
+            viewModel.editPatient = viewModel.edit(patient)
         case .detail:
             viewModel.isShowDetail.toggle()
         case .delete:
