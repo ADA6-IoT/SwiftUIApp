@@ -11,9 +11,7 @@ import SwiftUI
 struct FindewApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                DeviceListView()
-            }
+            PatientsTableView()
         }
     }
 }

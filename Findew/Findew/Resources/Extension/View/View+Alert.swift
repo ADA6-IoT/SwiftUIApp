@@ -35,4 +35,41 @@ extension View {
             Text(alert.message)
         }
     }
+    
+    func contactPrompt(item: Binding<ContactAlertPromprt?>) -> some View {
+        self.alert(
+            item.wrappedValue?.title ?? "",
+            isPresented: Binding(
+                get: { item.wrappedValue != nil },
+                set: { if !$0 { item.wrappedValue = nil }}
+            ),
+            presenting: item.wrappedValue) { alert in
+                if alert.type == .report {
+                    TextField(alert.emailPlaceholder, text: Binding(
+                        get: { item.wrappedValue?.email ?? "" },
+                        set: { item.wrappedValue?.email = $0 }
+                    ))
+                    .keyboardType(.emailAddress)
+                }
+
+                TextField(alert.contentPlaceholder, text: Binding(
+                    get: { item.wrappedValue?.content ?? "" },
+                    set: { item.wrappedValue?.content = $0 }
+                ), axis: .vertical)
+                .lineLimit(3...6)
+
+                Button("전송", role: .confirm) {
+                    alert.submitAction?(
+                        item.wrappedValue?.content ?? "",
+                        alert.type == .report ? item.wrappedValue?.email : nil
+                    )
+                }
+                Button("취소", role: .cancel) { }
+
+            } message: { alert in
+                if let message = alert.message {
+                    Text(message)
+                }
+            }
+    }
 }
