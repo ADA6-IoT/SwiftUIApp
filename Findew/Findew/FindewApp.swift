@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct FindewApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            PatientsTableView()
+            
         }
     }
 }

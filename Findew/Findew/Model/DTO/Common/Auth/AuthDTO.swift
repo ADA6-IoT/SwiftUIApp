@@ -9,10 +9,11 @@ import Foundation
 
 /// AuthDTO
 struct AuthDTO: Codable {
-    let accessToken: String
-    let expiresAt: String
-    let expiresIn: Int
-    let hospital: AuthHospital
+    var accessToken: String?
+    var refreshToken: String?
+    var expiresAt: String
+    var expiresIn: Int
+    var hospital: AuthHospital
 }
 
 struct AuthHospital: Codable {
