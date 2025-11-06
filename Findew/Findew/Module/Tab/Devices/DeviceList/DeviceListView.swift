@@ -69,7 +69,7 @@ struct DeviceListView: View {
     // MARK: - Content
     @ViewBuilder
     private var deviceList: some View {
-        let columns = Array(repeating: GridItem(.flexible(), spacing: 28), count: 3)
+        let columns = Array(repeating: GridItem(.flexible()), count: 3)
         
         ScrollView(.vertical, content: {
             LazyVGrid(columns: columns, spacing: 20, content: {
