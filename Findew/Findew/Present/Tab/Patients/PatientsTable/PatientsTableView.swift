@@ -30,8 +30,8 @@ struct PatientsTableView: View {
     }
     
     // MARK: - Init
-    init() {
-        self.viewModel = .init()
+    init(container: DIContainer) {
+        self.viewModel = .init(container: container)
     }
     
     // MARK: - Body
@@ -40,6 +40,9 @@ struct PatientsTableView: View {
             SideBarView(viewModel: viewModel)
         }, detail: {
             tableContents
+                .navigationTitle(navigationTitleText)
+                .navigationBarTitleDisplayMode(.large)
+                .navigationTitle(viewModel.searchText)
                 .toolbar(content: {
                     ToolbarItemGroup(placement: .topBarTrailing, content: {
                         GlassEffectContainer(spacing: PatientsTableConstant.containerSpacing, content: {
@@ -51,19 +54,6 @@ struct PatientsTableView: View {
                     ToolbarItem(placement: .topBarLeading, content: {
                         plusBtn
                     })
-//                    
-//                    ToolbarItem(placement: .principal, content: {
-//                        Picker(selection: $tabCase, content: {
-//                            ForEach(TabCaseEnum.allCases, id: \.rawValue, content: { tab in
-//                                Text(tab.rawValue)
-//                                    .tag(tab)
-//                            })
-//                        }, label: {
-//                            Text("11")
-//                        })
-//                        .pickerStyle(.segmented)
-//                        .frame(width: 200)
-//                    })
                 })
                 .alertPrompt(item: $viewModel.alertPrompt)
                 .sheet(item: $viewModel.editPatient, content: { patient in
@@ -73,14 +63,14 @@ struct PatientsTableView: View {
                     PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: ""))
                         .presentationDetents([.large])
                 })
-                .sheet(isPresented: $viewModel.isShowInquiry, content: {
-                    ReportInquiry(contactType: .inquiry)
-                })
-                .sheet(isPresented: $viewModel.isShowReport, content: {
-                    ReportInquiry(contactType: .report)
-                })
         })
         .navigationSplitViewStyle(.prominentDetail)
+    }
+    
+    @ViewBuilder
+    private var navigationTitleText: Text {
+        let text: String = viewModel.searchText.isEmpty ? "환자 목록" : "\(viewModel.searchText)호"
+        Text(text)
     }
     
     // MARK: - Middle
@@ -161,9 +151,15 @@ struct PatientsTableView: View {
             viewModel._patientsData.sort(using: new)
         })
         .environment(\.editMode, $editMode)
+        .overlay(content: {
+            if viewModel.patientsData.isEmpty {
+                NotPatientsView()
+            }
+        })
     }
     
     // MARK: - Refresh
+    /// 새로고침 또는 취소 버튼
     @ViewBuilder
     private var refreshOrCancelBtn: some View {
         if editMode.isEditing {
@@ -226,14 +222,6 @@ struct PatientsTableView: View {
                 .foregroundStyle(color)
         })
     }
-    
-    private func deleteAction() async {
-        guard !viewModel.selectionPatient.isEmpty else { return }
-        viewModel._patientsData.removeAll { patient in
-            viewModel.selectionPatient.contains(patient.id)
-        }
-        viewModel.selectionPatient.removeAll()
-    }
 
     // MARK: - Context Menu
     /// 컨텍스트 메뉴 액션 핸들러
@@ -272,8 +260,18 @@ struct PatientsTableView: View {
             Image(systemName: PatientsTableConstant.plushImage)
         })
     }
+    
+    // MARK: - Delete
+    /// 환자 삭제 액션
+    private func deleteAction() async {
+        guard !viewModel.selectionPatient.isEmpty else { return }
+        viewModel._patientsData.removeAll { patient in
+            viewModel.selectionPatient.contains(patient.id)
+        }
+        viewModel.selectionPatient.removeAll()
+    }
 }
 
 #Preview {
-    PatientsTableView()
+    PatientsTableView(container: DIContainer())
 }

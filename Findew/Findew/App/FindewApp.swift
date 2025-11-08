@@ -20,7 +20,7 @@ struct FindewApp: App {
             case .login:
                 LoginView(container: container)
             case .home:
-                Text("1")
+                FindUTab()
             }
         }
         .environment(\.appFlow, appFlow)

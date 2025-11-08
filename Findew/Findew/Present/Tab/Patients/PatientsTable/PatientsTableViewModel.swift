@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 @Observable
 class PatientsTableViewModel {
@@ -17,11 +18,13 @@ class PatientsTableViewModel {
     var isShowReport: Bool = false
     
     // MARK: - StoreProperty
-    
+    /// API로부터 가져오는 환자 데이터
     var _patientsData: [PatientDTO] = [
-        .init(id: .init(), name: "정의찬", ward: "202", bed: 1, department: .init(id: .init(), name: "아카데미", code: "1"), device: .init(serialNumber: "S-01", batteryLevel: 20, isMalfunctioning: true), currenetLocation: .init(zoneType: nil, zoneName: "화장실", floor: 2, x: 0.2, y: 0.1, lastUpdate: .now), memo: "버거킹 먹을까?", createdAt: "22", updatedAt: "22"),
-        .init(id: .init(), name: "김부각", ward: "303", bed: 1, department: .init(id: .init(), name: "아카데미", code: "1"), device: .init(serialNumber: "S-01", batteryLevel: 20, isMalfunctioning: true), currenetLocation: .init(zoneType: nil, zoneName: "화장실", floor: 1, x: 0.2, y: 0.1, lastUpdate: .now), memo: "버거킹 먹을까먹을까먹을까먹을까먹을까먹을까먹을까먹을까먹을까먹을까먹을까먹을까먹을까먹을까?", createdAt: "22", updatedAt: "22")
+        .init(id: .init(), name: "김동민", ward: "11", bed: 2, department: .init(id: .init(), name: "ㅈㅈ", code: "!1"), device: .init(serialNumber: "22", batteryLevel: 1, isMalfunctioning: false), currenetLocation: .init(zoneType: nil, zoneName: nil, floor: nil, x: nil, y: nil, lastUpdate: nil), memo: "www", createdAt: "ww", updatedAt: "Ww"),
+        .init(id: .init(), name: "김동민", ward: "11", bed: 2, department: .init(id: .init(), name: "ㅈㅈ", code: "!1"), device: .init(serialNumber: "22", batteryLevel: 1, isMalfunctioning: false), currenetLocation: .init(zoneType: nil, zoneName: nil, floor: nil, x: nil, y: nil, lastUpdate: nil), memo: "www", createdAt: "ww", updatedAt: "Ww"),
+        .init(id: .init(), name: "김동민", ward: "11", bed: 2, department: .init(id: .init(), name: "ㅈㅈ", code: "!1"), device: .init(serialNumber: "22", batteryLevel: 1, isMalfunctioning: false), currenetLocation: .init(zoneType: nil, zoneName: nil, floor: nil, x: nil, y: nil, lastUpdate: nil), memo: "www", createdAt: "ww", updatedAt: "Ww")
     ]
+    /// 필터링된 환자 데이터
     var patientsData: [PatientDTO] {
         var data: [PatientDTO] = _patientsData
         if !searchText.isEmpty {
@@ -35,11 +38,15 @@ class PatientsTableViewModel {
         return data
     }
     
-    
+    /// 정렬기준 값
     var sortOrder: [KeyPathComparator<PatientDTO>] = .init()
+    /// 선택된 환자 값
     var selectionPatient: Set<PatientDTO.ID> = .init()
+    /// 검색 값
     var searchText: String = ""
+    /// Alert 데이터
     var alertPrompt: AlertPrompt?
+    /// 사이드바 층 데이터 API
     var sideFloor: HospitalWardsResponse? = .init(floors: [
         .init(floor: 1, rooms: [
             .init(id: .init(), roomNumber: "102", bedCount: 2, roomType: nil, isAvailable: true),
@@ -57,22 +64,28 @@ class PatientsTableViewModel {
             .init(id: .init(), roomNumber: "304", bedCount: 2, roomType: nil, isAvailable: true),
         ])
     ])
-
-    var selectedRoom: String? = nil
-    var expandedSection: Set<Int> = .init()
+    
+    /// 편집한 환자
     var editPatient: PatientGenerateRequest? = nil
     
-    func edit(_ patient: PatientDTO) -> PatientGenerateRequest {
-        .init(name: patient.name,
-              ward: patient.ward,
-              bed: patient.bed,
-              department: patient.department,
-              deviceSerial: patient.device,
-              memo: patient.memo
-        )
+    // MARK: - SideBar
+    /// 사이드 바 선택한 층
+    var selectedRoom: String? = nil
+    /// 사이드 바 전체 층 섹션
+    var expandedSection: Set<Int> = .init()
+    
+    // MARK: - Dependency
+    private let container: DIContainer
+    private var cancellalbes: Set<AnyCancellable> = .init()
+    
+    // MARK: - Init
+    init(container: DIContainer) {
+        self.container = container
     }
     
     // MARK: - Method
+    /// 환자 삭제 시 액션
+    /// - Parameter patient: 선택한 환자
     func delete(_ patient: PatientDTO) {
         alertPrompt = .init(
             id: .init(),
@@ -89,6 +102,19 @@ class PatientsTableViewModel {
                 self?.alertPrompt = nil
             },
             isPositiveBtnDestructive: true
+        )
+    }
+    
+    /// 환자 편집
+    /// - Parameter patient: 선택한 환자
+    /// - Returns: 편집 데이터
+    func edit(_ patient: PatientDTO) -> PatientGenerateRequest {
+        .init(name: patient.name,
+              ward: patient.ward,
+              bed: patient.bed,
+              department: patient.department,
+              deviceSerial: patient.device,
+              memo: patient.memo
         )
     }
 }

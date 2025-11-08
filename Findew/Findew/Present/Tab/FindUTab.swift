@@ -57,7 +57,7 @@ struct FindUTab: View {
     private func content(_ tab: TabCaseEnum) -> some View {
         switch tabCase {
         case .location:
-            PatientsTableView()
+            PatientsTableView(container: container)
                 .id(tab)
         case .device:
             DeviceListView()

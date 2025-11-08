@@ -12,6 +12,8 @@ struct SideBarView: View {
     // MARK: - Property
     @Bindable var viewModel: PatientsTableViewModel
     @State var contactAlert: ContactAlertPromprt? = nil
+    @Environment(\.appFlow) var appFlow
+    @Namespace var nameSpace
     
     // MARK: - Constant
     fileprivate enum SideBarConstants {
@@ -35,13 +37,7 @@ struct SideBarView: View {
     // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: SideBarConstants.mainVspacing, content: {
-            generateText(SideBarConstants.allText,
-                         isSelected: viewModel.selectedRoom == nil ? true : false,
-                         action: {
-                viewModel.selectedRoom = nil
-                viewModel.searchText.removeAll()
-                viewModel.expandedSection.removeAll()
-            })
+            topContent
             middleContent
             Spacer()
         })
@@ -50,9 +46,28 @@ struct SideBarView: View {
         })
         .safeAreaPadding(.horizontal, DefaultConstants.defaultHorizonPadding)
         .contactPrompt(item: $contactAlert)
+        .sheet(isPresented: $viewModel.isShowInquiry, content: {
+            ReportInquiry(contactType: .inquiry)
+        })
+        .sheet(isPresented: $viewModel.isShowReport, content: {
+            ReportInquiry(contactType: .report)
+        })
+    }
+    
+    // MARK: - Top
+    /// 상단 전체 선택 버튼 영역
+    private var topContent: some View {
+        generateText(SideBarConstants.allText,
+                     isSelected: viewModel.selectedRoom == nil ? true : false,
+                     action: {
+            viewModel.selectedRoom = nil
+            viewModel.searchText.removeAll()
+            viewModel.expandedSection.removeAll()
+        })
     }
     
     // MARK: - Middle
+    /// 중간 층 섹션 및 층별 병실 버튼
     private var middleContent: some View {
         VStack(alignment: .leading, spacing: SideBarConstants.floorSpacing, content: {
             if let floor = viewModel.sideFloor {
@@ -72,6 +87,7 @@ struct SideBarView: View {
     }
     
     // MARK: - BottomContents
+    /// 하단 옵션 도구 모음 버튼
     private var bottomContent: some View {
         Menu(content: {
             VStack(spacing: .zero, content: {
@@ -96,6 +112,9 @@ struct SideBarView: View {
     }
     
     // MARK: - FloorHeader
+    /// 층 섹션 버튼
+    /// - Parameter floor: 층 번호
+    /// - Returns: 층 섹셕 버튼
     private func floorHeaderButton(_ floor: Int) -> some View {
         Button(action: {
             withAnimation {
@@ -110,7 +129,7 @@ struct SideBarView: View {
                 Text("\(floor)층")
                 Spacer()
                 Image(systemName: SideBarConstants.downImage)
-                    .rotationEffect(.degrees(viewModel.expandedSection.contains(floor) ? 0 : -90))
+                    .rotationEffect(.degrees(viewModel.expandedSection.contains(floor) ? -180 : .pi))
             }
             .font(.b3)
             .foregroundStyle(Color.gray07)
@@ -118,6 +137,9 @@ struct SideBarView: View {
         })
     }
     
+    /// 층 내부 병 버튼
+    /// - Parameter room: 병실 번호
+    /// - Returns: 병실 번호
     private func roomButton(room: String) -> some View {
         generateText(room, isSelected: viewModel.selectedRoom == room, action: {
             viewModel.selectedRoom = room
@@ -125,6 +147,12 @@ struct SideBarView: View {
         })
     }
     
+    /// 사이드바 내부 층 섹션 및 병실 텍스트 버튼 생성
+    /// - Parameters:
+    ///   - text: 텍스트 값
+    ///   - isSelected: 선택되었는지 값
+    ///   - action: 버튼 액션
+    /// - Returns: 층/병실 번호 텍스트 버튼
     private func generateText(_ text: String, isSelected: Bool, action: @escaping () -> Void) -> some View{
         Button(action: {
             action()
@@ -137,11 +165,19 @@ struct SideBarView: View {
                 .background {
                     Capsule()
                         .fill(isSelected ? .blue03 : .clear)
+                        .glassEffect(.regular.interactive(), in: .capsule)
+                        .glassEffectUnion(id: text, namespace: nameSpace)
                 }
         })
     }
     
     // MARK: - SystemSetting
+    /// 환경 설정 내부 메뉴 버튼
+    /// - Parameters:
+    ///   - text: 메뉴 버튼 텍스트
+    ///   - role: 버튼 역할
+    ///   - action: 버튼 액션
+    /// - Returns: 내부 메뉴 버튼 반환
     private func generateSystemSetting(_ text: String, role: ButtonRole?, action: @escaping () -> Void) -> some View {
         Button(role: role, action: {
             action()
@@ -152,6 +188,8 @@ struct SideBarView: View {
         })
     }
     
+    /// 내부 메뉴 버튼 액션
+    /// - Parameter menu: 메뉴 버튼
     private func systemAction(_ menu: SystemSettingType) {
         switch menu {
         case .contact:
@@ -159,11 +197,11 @@ struct SideBarView: View {
         case .inquiry:
             viewModel.isShowInquiry.toggle()
         case .logout:
-            print("로그아웃하기")
+            appFlow.logout()
         }
     }
 }
 
 #Preview {
-    SideBarView(viewModel: .init())
+    SideBarView(viewModel: .init(container: DIContainer()))
 }

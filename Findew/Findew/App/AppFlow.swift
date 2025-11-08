@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 @Observable
 class AppFlow {
@@ -26,19 +27,25 @@ class AppFlow {
             _ = try await tokenProvider.refreshToken()
             Logger.logDebug("AppFlow", "유저 정보 존재 - 토큰 유효")
             
-            appState = .home
+            withAnimation(.easeInOut(duration: 0.6)) {
+                appState = .home
+            }
             return .success(true)
             
         } catch TokenError.noRefreshToken {
             Logger.logDebug("AppFlow", "등록된 유저 정보 없음 - 로그인 필요")
             
-            appState = .login
+            withAnimation(.easeInOut(duration: 0.6)) {
+                appState = .login
+            }
             sessionStore.userInfo = nil
             return .success(false)
         } catch {
             Logger.logError("AppFlow", "토큰 갱신 실패: \(error.localizedDescription)")
             
-            appState = .login
+            withAnimation(.easeInOut(duration: 0.6)) {
+                appState = .login
+            }
             sessionStore.userInfo = nil
             return .failure(error)
         }

@@ -174,7 +174,7 @@ struct LoginView: View {
         case .success:
             self.appFlow.loginSuccess()
         case .failure:
-            viewModel.loginFailureAlert()
+            self.viewModel.loginFailureAlert()
         }
     }
 }
