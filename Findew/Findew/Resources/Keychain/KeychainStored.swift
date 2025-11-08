@@ -36,7 +36,7 @@ enum KeychainError: Error, LocalizedError {
 // MARK: - Keychain Stored Property Wrapper
 
 @propertyWrapper
-struct KeychainStored<Value: Codable & Sendable>: @unchecked Sendable {
+struct KeychainStored<Value: Codable>: @unchecked Sendable {
 
     // MARK: Properties
 

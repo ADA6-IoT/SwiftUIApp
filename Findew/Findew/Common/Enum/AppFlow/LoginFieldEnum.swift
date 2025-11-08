@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 // 로그인 구역 Enum
-enum LoginFieldEnum {
+enum LoginFieldEnum: Hashable {
     case id
     case password(onOff: Bool)
     

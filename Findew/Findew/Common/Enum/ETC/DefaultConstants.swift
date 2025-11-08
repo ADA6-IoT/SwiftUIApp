@@ -12,4 +12,5 @@ enum DefaultConstants {
     static let systemFont: CGFloat = 22
     static let defaultHorizonPadding: CGFloat = 16
     static let defaultVerticalPadding: CGFloat = 20
+    static let defaultAnimation: TimeInterval = 0.3
 }

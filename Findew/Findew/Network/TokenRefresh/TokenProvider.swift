@@ -16,17 +16,13 @@ enum TokenError: Error {
 }
 
 // MARK: - Token Provider
-
-@MainActor
 final class TokenProvider: TokenProviding {
 
     // MARK: Properties
-
     @KeychainStored private var userInfo: AuthDTO?
     private let provider = MoyaProvider<AuthRouter>()
 
     // MARK: Public Interface
-
     var accessToken: String? {
         get async {
             userInfo?.accessToken
@@ -44,8 +40,7 @@ final class TokenProvider: TokenProviding {
         return try await requestTokenRefresh()
     }
 
-    // MARK: Private Methods
-
+    // MARK: Private Method
     private func requestTokenRefresh() async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             provider.request(.getReissue) { [weak self] result in
@@ -91,7 +86,6 @@ final class TokenProvider: TokenProviding {
                 return
             }
 
-            // UserInfo 업데이트
             self.userInfo = authDTO
             Logger.logDebug("Debug", "토큰 갱신 성공 - AccessToken: \(newAccessToken)")
 

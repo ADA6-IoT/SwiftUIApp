@@ -1,0 +1,47 @@
+//
+//  Onboarding.swift
+//  Findew
+//
+//  Created by Apple Coding machine on 11/3/25.
+//
+
+import SwiftUI
+
+struct Splash: View {
+    
+    @Environment(\.appFlow) var appFlow
+    @Environment(\.container) var container
+    
+    // MARK: - Splash
+    fileprivate enum SplashConstant {
+        static let bottomPadding: CGFloat = 100
+        static let timer: TimeInterval = 2
+        static let title: String = "Find U"
+    }
+    
+    // MARK: - Body
+    var body: some View {
+        ZStack {
+            Color.blue03.ignoresSafeArea()
+            Image(.logoStick)
+        }
+        .safeAreaInset(edge: .bottom, content: {
+            Text(SplashConstant.title)
+                .font(.h3)
+                .foregroundStyle(.white)
+                .shadow(color: .black, radius: 25, x: 0, y: 2)
+        })
+        .safeAreaPadding(.bottom, SplashConstant.bottomPadding)
+        .task {
+            DispatchQueue.main.asyncAfter(deadline: .now() + SplashConstant.timer , execute: {
+                Task {
+                    await appFlow.checkAppState()
+                }
+            })
+        }
+    }
+}
+
+#Preview {
+    Splash()
+}

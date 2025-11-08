@@ -11,6 +11,8 @@ import SwiftUI
 struct LoginView: View {
     // MARK: - Property
     @State var viewModel: LoginViewModel
+    @FocusState var isFocused: LoginFieldEnum?
+    @Environment(\.appFlow) var appFlow
     
     // MARK: - Costant
     fileprivate enum LoginConstant {
@@ -19,10 +21,11 @@ struct LoginView: View {
         static let mainSpacer: (CGFloat, CGFloat) = (56, 29)
         static let mainPadding: EdgeInsets = .init(top: 90, leading: 76, bottom: 120, trailing: 76)
         static let fieldPadding: EdgeInsets = .init(top: 18, leading: 29, bottom: 18, trailing: 29)
-        static let imageSize: CGSize = .init(width: 68, height: 68)
         static let safePadding: CGFloat = 340
-        
         static let btnVerticalPadding: CGFloat = 8
+        
+        static let imageSize: CGSize = .init(width: 68, height: 68)
+        
         static let corenrRadius: CGFloat = 20
         static let fieldCornerRadius: CGFloat = 10
         
@@ -30,51 +33,82 @@ struct LoginView: View {
     }
     
     // MARK: - Init
-    init() {
-        self.viewModel = .init()
+    init(container: DIContainer) {
+        self.viewModel = .init(container: container)
     }
     
+    // MARK: - Body
     var body: some View {
         ZStack {
-            Color.blue04.ignoresSafeArea()
-            VStack {
-                Image(.logo)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: LoginConstant.imageSize.width, height: LoginConstant.imageSize.height)
-                Spacer().frame(height: LoginConstant.mainSpacer.0)
-                middleContent
-                Spacer().frame(height: LoginConstant.mainSpacer.1)
-                bottomContent
-            }
-            .padding(LoginConstant.mainPadding)
-            .background {
-                RoundedRectangle(cornerRadius: LoginConstant.corenrRadius)
-                    .fill(.white)
-                    .frame(maxWidth: .infinity)
-            }
-            .safeAreaPadding(.horizontal, LoginConstant.safePadding)
+            Color.blue03.ignoresSafeArea()
+            topArea
         }
+        .alertPrompt(item: $viewModel.alertPrompt)
+        .loadingOverlay(viewModel.isLoading, loadingTextType: .loginLoading)
+    }
+    
+    /// 상단 로그인 입력 처리
+    private var topArea: some View {
+        VStack {
+            topContent
+            Spacer().frame(height: LoginConstant.mainSpacer.0)
+            middleContent
+            Spacer().frame(height: LoginConstant.mainSpacer.1)
+            bottomContent
+        }
+        .padding(LoginConstant.mainPadding)
+        .background {
+            RoundedRectangle(cornerRadius: LoginConstant.corenrRadius)
+                .fill(.white)
+                .frame(maxWidth: .infinity)
+        }
+        .safeAreaPadding(.horizontal, LoginConstant.safePadding)
+    }
+    
+    // MARK: - Top
+    /// 상단 로고
+    private var topContent: some View {
+        Image(.logo)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: LoginConstant.imageSize.width, height: LoginConstant.imageSize.height)
     }
     
     // MARK: - Middle
+    /// 중간 아이디 및 비밀번호 입력
     private var middleContent: some View {
         VStack(spacing: LoginConstant.middleVspacing, content: {
-            generateField(type: .id)
-            generateField(type: .password(onOff: viewModel.showPassword))
+            generateField(type: .id, submitLabel: .next) {
+                isFocused = .password(onOff: viewModel.showPassword)
+            }
+            generateField(type: .password(onOff: viewModel.showPassword), submitLabel: .done) {
+                self.loginAction()
+            }
         })
     }
     
-    private func generateField(type: LoginFieldEnum) -> some View {
+    /// 입력 필드 생성 함수
+    /// - Parameters:
+    ///   - type: 입력 필드 타입
+    ///   - submitLabel: 키보드 라벨
+    ///   - action: 입력
+    /// - Returns: 키보드 다음 버튼 액션
+    private func generateField(type: LoginFieldEnum, submitLabel: SubmitLabel, action: @escaping () -> Void) -> some View {
         HStack(spacing: LoginConstant.fieldSpacing, content: {
             textFieldContent(type)
                 .font(type.loginFieldFont)
                 .foregroundStyle(.black)
                 .keyboardType(type.keyboardStyle)
+                .submitLabel(submitLabel)
+                .onSubmit {
+                    action()
+                }
             
             if let image = type.eyeBtnImage {
                 Button(action: {
-                    viewModel.showPassword.toggle()
+                    withAnimation {
+                        viewModel.showPassword.toggle()
+                    }
                 }, label: {
                     image
                         .tint(.black)
@@ -90,6 +124,9 @@ struct LoginView: View {
         
     }
     
+    /// 아이디 및 비밀번호에 해당하는 텍스트 필드 생성
+    /// - Parameter type: 필드 타입
+    /// - Returns: 텍스트 필드 반환 혹은 시큐어 필드 반환
     @ViewBuilder
     private func textFieldContent(_ type: LoginFieldEnum) -> some View {
         switch type {
@@ -104,6 +141,9 @@ struct LoginView: View {
         }
     }
     
+    /// 필드 내부 placeholder
+    /// - Parameter type: 필드 타입
+    /// - Returns: placeholder 텍스트 반환
     private func placeholder(_ type: LoginFieldEnum) -> Text {
         Text(type.placeholder)
             .font(type.loginFieldFont)
@@ -115,7 +155,7 @@ struct LoginView: View {
     /// 로그인 버튼
     private var bottomContent: some View {
         Button(action: {
-            print("로그인")
+            self.loginAction()
         }) {
             Text(LoginConstant.loginText)
                 .font(.b3)
@@ -127,9 +167,19 @@ struct LoginView: View {
         .tint(viewModel.isLoginEnabled ? .blue02 : .gray01)
         .disabled(!viewModel.isLoginEnabled)
     }
-   
+    
+    private func loginAction() {
+        let success = viewModel.loginAction()
+        switch success {
+        case .success:
+            self.appFlow.loginSuccess()
+        case .failure:
+            self.viewModel.loginFailureAlert()
+        }
+    }
 }
 
 #Preview {
-    LoginView()
+    LoginView(container: DIContainer())
+        .environment(AppFlow())
 }
