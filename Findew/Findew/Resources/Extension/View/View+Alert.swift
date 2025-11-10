@@ -43,15 +43,7 @@ extension View {
                 get: { item.wrappedValue != nil },
                 set: { if !$0 { item.wrappedValue = nil }}
             ),
-            presenting: item.wrappedValue) { alert in
-                if alert.type == .report {
-                    TextField(alert.emailPlaceholder, text: Binding(
-                        get: { item.wrappedValue?.email ?? "" },
-                        set: { item.wrappedValue?.email = $0 }
-                    ))
-                    .keyboardType(.emailAddress)
-                }
-
+            presenting: item.wrappedValue) { (alert: ContactAlertPromprt) in
                 TextField(alert.contentPlaceholder, text: Binding(
                     get: { item.wrappedValue?.content ?? "" },
                     set: { item.wrappedValue?.content = $0 }
@@ -61,12 +53,12 @@ extension View {
                 Button("전송", role: .confirm) {
                     alert.submitAction?(
                         item.wrappedValue?.content ?? "",
-                        alert.type == .report ? item.wrappedValue?.email : nil
+                        nil
                     )
                 }
                 Button("취소", role: .cancel) { }
 
-            } message: { alert in
+            } message: { (alert: ContactAlertPromprt) in
                 if let message = alert.message {
                     Text(message)
                 }

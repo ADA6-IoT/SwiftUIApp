@@ -10,15 +10,12 @@ import SwiftUI
 
 // 문의, 신고하기 종류별 Enum
 enum ContactType: String {
-    case inquiry = "문의하기"
-    case report = "신고하기"
+    case inquiry = "앱 문의 및 신고"
     
     var components: [ContactComponetsEnum] {
         switch self {
         case .inquiry:
             return [.title(type: self), .email, .contents(type: self), .addPhoto, .photos]
-        case .report:
-            return [.title(type: self), .contents(type: self), .addPhoto, .photos]
         }
     }
     
@@ -26,8 +23,6 @@ enum ContactType: String {
         switch self {
         case .inquiry:
             return ["이메일을 입력하세요", "서비스 이용 중 궁금하신 점이나 건의사항이 있으신가요?"]
-        case .report:
-            return ["어떤 점이 불편하셨나요?"]
         }
     }
 }
@@ -83,9 +78,7 @@ enum ContactComponetsEnum {
         case .title(let type):
             switch type {
             case .inquiry:
-                return "문의"
-            case .report:
-                return "신고"
+                return "문의 및 신고"
             }
         case .email:
             return "이메일을 입력하세요"

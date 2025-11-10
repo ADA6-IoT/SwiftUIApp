@@ -22,11 +22,7 @@ struct PatientsTableView: View {
         static let placeholder: String = "환자 이름 또는 병동 번호"
         static let notCurrent: String = "위치 정보 없음"
         static let tableColumns: [String] = ["이름", "병동 번호", "소속 과", "현   위치", "기타" ]
-        static let refreshImage: String = "arrow.clockwise"
         static let navigationTitle: String = "환자 목록"
-        static let editBtnImage: String = "circle.grid.2x2.topleft.checkmark.filled"
-        static let trashImage: String = "trash"
-        static let plushImage: String = "plus"
     }
     
     // MARK: - Init
@@ -44,16 +40,13 @@ struct PatientsTableView: View {
                 .navigationBarTitleDisplayMode(.large)
                 .navigationTitle(viewModel.searchText)
                 .toolbar(content: {
-                    ToolbarItemGroup(placement: .topBarTrailing, content: {
-                        GlassEffectContainer(spacing: PatientsTableConstant.containerSpacing, content: {
-                            refreshOrCancelBtn
-                            editBtn
-                        })
-                    })
-                    
-                    ToolbarItem(placement: .topBarLeading, content: {
-                        plusBtn
-                    })
+                    ToolBarCollection.PatientManagementToolbar(
+                        editMode: $editMode,
+                        refreshText: viewModel.lastRefeshTimeText,
+                        refresh: { Task { await viewModel.refresh() } },
+                        add: { viewModel.isShowAdd.toggle() },
+                        trash: { deleteAction() },
+                        cancell: { editMode = .inactive })
                 })
                 .alertPrompt(item: $viewModel.alertPrompt)
                 .sheet(item: $viewModel.editPatient, content: { patient in
@@ -65,6 +58,12 @@ struct PatientsTableView: View {
                 })
         })
         .navigationSplitViewStyle(.prominentDetail)
+        .task {
+            viewModel.onViewAppear()
+        }
+        .onDisappear {
+            viewModel.onViewDisappear()
+        }
     }
     
     @ViewBuilder
@@ -146,7 +145,6 @@ struct PatientsTableView: View {
         .searchable(
             text: $viewModel.searchText,
             prompt: placeholderText)
-        .searchToolbarBehavior(.minimize)
         .onChange(of: viewModel.sortOrder, { _, new in
             viewModel._patientsData.sort(using: new)
         })
@@ -156,71 +154,11 @@ struct PatientsTableView: View {
                 NotPatientsView()
             }
         })
-    }
-    
-    // MARK: - Refresh
-    /// 새로고침 또는 취소 버튼
-    @ViewBuilder
-    private var refreshOrCancelBtn: some View {
-        if editMode.isEditing {
-            self.cancelBtn
-        } else {
-            self.refreshBtn
-        }
-    }
-    
-    /// 새로고침 버튼
-    private var refreshBtn: some View {
-        Button(action: {
-            print("hello")
-        }, label: {
-            Image(systemName: PatientsTableConstant.refreshImage)
-        })
-        .tint(.blue02)
-    }
-    
-    // MARK: - Edit
-    /// 편집 모드 진입 액션
-    private func toggleEdit() {
-        editMode = editMode.isEditing ? .inactive : .active
-    }
-    
-    
-    /// 편집 모드 취소 버튼
-    private var cancelBtn: some View {
-        Button(role: .cancel, action: {
-            withAnimation {
-                self.toggleEdit()
-            }
-        })
-    }
-    
-    /// 편집 전/후 버튼
-    @ViewBuilder
-    private var editBtn: some View {
-        if editMode.isEditing {
-            generateEditBtn(PatientsTableConstant.trashImage, color: .red) {
-                Task {
-                    await self.deleteAction()
-                    self.toggleEdit()
-                }
-            }
-        } else {
-            generateEditBtn(PatientsTableConstant.editBtnImage) {
-                self.toggleEdit()
+        .refreshable {
+            Task {
+                await viewModel.refresh()
             }
         }
-    }
-    private func generateEditBtn(_ image: String, color: Color = .black, action: @escaping () -> Void) -> some View {
-        Button(action: {
-            withAnimation {
-                action()
-            }
-        }, label: {
-            Image(systemName: image)
-                .renderingMode(.template)
-                .foregroundStyle(color)
-        })
     }
 
     // MARK: - Context Menu
@@ -252,18 +190,9 @@ struct PatientsTableView: View {
         Text(text)
     }
     
-    // MARK: - Plus
-    private var plusBtn: some View {
-        Button(action: {
-            viewModel.isShowAdd.toggle()
-        }, label: {
-            Image(systemName: PatientsTableConstant.plushImage)
-        })
-    }
-    
     // MARK: - Delete
     /// 환자 삭제 액션
-    private func deleteAction() async {
+    private func deleteAction() {
         guard !viewModel.selectionPatient.isEmpty else { return }
         viewModel._patientsData.removeAll { patient in
             viewModel.selectionPatient.contains(patient.id)
