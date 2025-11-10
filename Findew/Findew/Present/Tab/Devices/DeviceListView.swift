@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DeviceListView: View {
     @State var viewModel: DeviceListViewModel
-    @State var searchText: String = ""
     
     init() {
         self.viewModel = .init()
@@ -17,63 +16,28 @@ struct DeviceListView: View {
     
     var body: some View {
         deviceList
-            .searchToolbarBehavior(.minimize)
             .searchable(
-                text: $searchText,
+                text: $viewModel.searchText,
                 placement: .toolbar,
                 prompt: "이름 또는 병동 번호를 검색하세요"
             )
-    }
-    
-    // MARK: - Toolbar Content
-    /// TODO: - 툴바 모음 이동
-    @ToolbarContentBuilder
-    private var toolbarContent: some ToolbarContent {
-        ToolbarItem {
-            Button(action: {
-                if viewModel.isSelectionMode {
-                    print("선택된 기기 신고")
-                } else {
-                    viewModel.isSelectionMode = true
-                }
-            }) {
-                Text(viewModel.isSelectionMode ? ButtonEnum.report.buttonContent : ButtonEnum.select.buttonContent)
-                    .font(viewModel.isSelectionMode ? ButtonEnum.report.buttonFont : ButtonEnum.select.buttonFont)
-                    .foregroundColor(viewModel.isSelectionMode ? ButtonEnum.report.buttonFontColor: ButtonEnum.select.buttonFontColor)
-            }
-        }
-        ToolbarSpacer(.flexible)
-        ToolbarItem {
-            Button(action: {
-                if viewModel.isSelectionMode {
-                    viewModel.isSelectionMode = false
-                    viewModel.selectedDeviceIds.removeAll()
-                } else {
-                    print("돋보기 클릭")
-                }
-            }) {
-                if viewModel.isSelectionMode {
-                    Text(ButtonEnum.close.buttonContent)
-                        .font(ButtonEnum.close.buttonFont)
-                        .foregroundColor(ButtonEnum.search.buttonFontColor)
-                    
-                } else {
-                    Image(systemName: ButtonEnum.search.buttonContent)
-                        .font(ButtonEnum.search.buttonFont)
-                        .foregroundColor(ButtonEnum.search.buttonFontColor)
-                }
-            }
-        }
+            .toolbar(content: {
+                ToolBarCollection.DeviceManagementToolbar(
+                    selectedMode: $viewModel.isSelectionMode,
+                    send: { print("기기 신고 완료") },
+                    cancel: { viewModel.isSelectionMode.toggle() }
+                )
+            })
     }
     
     // MARK: - Content
     @ViewBuilder
     private var deviceList: some View {
-        let columns = Array(repeating: GridItem(.flexible()), count: 3)
+        let columns = [GridItem(.adaptive(minimum: 325), spacing:  20)]
         
         ScrollView(.vertical, content: {
             LazyVGrid(columns: columns, spacing: 20, content: {
-                ForEach(viewModel.devices, id: \.id) { device in
+                ForEach(sortedDevices, id: \.id) { device in
                     DeviceDisplayCard(device: device, isSelected: Binding(
                         get: {
                             viewModel.isSelectionMode && viewModel.selectedDeviceIds.contains(device.id)
@@ -88,18 +52,29 @@ struct DeviceListView: View {
                             }
                         }
                     ),
-                    onTap: viewModel.isSelectionMode ? {
+                                      onTap: viewModel.isSelectionMode ? {
                         if viewModel.selectedDeviceIds.contains(device.id) {
                             viewModel.selectedDeviceIds.remove(device.id)
                         } else {
                             viewModel.selectedDeviceIds.insert(device.id)
                         }
                     } : nil
-                )
-            }
+                    )
+                }
+            })
         })
-    })
         .contentMargins(.horizontal, 16, for: .scrollContent)
+    }
+    
+    private var sortedDevices: [DeviceDTO] {
+        viewModel.devices.sorted(by: {
+            if $0.batteryLevel < 5 && $1.batteryLevel >= 5 {
+                return true
+            } else if $0.batteryLevel >= 5 && $1.batteryLevel < 5 {
+                return false
+            }
+            return false
+        })
     }
 }
 

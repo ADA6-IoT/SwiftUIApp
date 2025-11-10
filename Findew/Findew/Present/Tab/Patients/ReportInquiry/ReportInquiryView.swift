@@ -188,5 +188,5 @@ struct ReportInquiry: View {
 }
 
 #Preview {
-    ReportInquiry(contactType: .report)
+    ReportInquiry(contactType: .inquiry)
 }

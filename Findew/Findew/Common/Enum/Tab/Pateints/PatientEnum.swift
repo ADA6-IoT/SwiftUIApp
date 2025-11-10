@@ -78,29 +78,12 @@ enum PatientComponentsEnum {
         case .bed:
             return "침대 번호"
         case .department:
-            return nil
+            return "소속 과"
         case .device:
-            return nil
+            return "기기 번호"
         case .memo:
             return "환자의 특이 사항을 작성해주세요"
         default:
-            return nil
-        }
-    }
-    
-    var iconImage: ImageResource? {
-        switch self {
-        case .name:
-            return nil
-        case .ward:
-            return nil
-        case .bed:
-            return nil
-        case .department:
-            return .departIcon
-        case .device:
-            return .deviceIcon
-        case .memo:
             return nil
         }
     }

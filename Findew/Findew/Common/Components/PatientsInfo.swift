@@ -112,9 +112,7 @@ struct PatientsInfo: View {
                     .font(.b1)
                     .foregroundStyle(.black)
             } else {
-                if let image = info.iconImage {
-                    Image(image)
-                }
+                placeText(info.placeholderContents ?? "")
             }
         }
         .padding(PatientsConstant.labelPadding)

@@ -38,8 +38,7 @@ enum KeychainError: Error, LocalizedError {
 @propertyWrapper
 struct KeychainStored<Value: Codable>: @unchecked Sendable {
 
-    // MARK: Properties
-
+    // MARK: Propertiesx
     private let key: String
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
@@ -51,7 +50,6 @@ struct KeychainStored<Value: Codable>: @unchecked Sendable {
     }
 
     // MARK: Wrapped Value
-
     var wrappedValue: Value? {
         get {
             guard let data = Self.load(key: key) else { return nil }

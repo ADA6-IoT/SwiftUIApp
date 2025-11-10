@@ -49,9 +49,6 @@ struct SideBarView: View {
         .sheet(isPresented: $viewModel.isShowInquiry, content: {
             ReportInquiry(contactType: .inquiry)
         })
-        .sheet(isPresented: $viewModel.isShowReport, content: {
-            ReportInquiry(contactType: .report)
-        })
     }
     
     // MARK: - Top
