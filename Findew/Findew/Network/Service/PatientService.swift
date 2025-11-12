@@ -17,11 +17,10 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
     var callbackQueue: DispatchQueue
     
     init(
-        provider: MoyaProvider<Target> = APIManager.shared.createProvider(for: Target.self),
         decoder: JSONDecoder = APIManager.shared.sharedDecoder,
         callbackQueue: DispatchQueue = .main
     ) {
-        self.provider = provider
+        self.provider = APIManager.shared.createProvider(for: Target.self)
         self.decoder = decoder
         self.callbackQueue = callbackQueue
     }
