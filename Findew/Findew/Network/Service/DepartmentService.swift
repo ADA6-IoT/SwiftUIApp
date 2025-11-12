@@ -1,0 +1,40 @@
+//
+//  DepartmentService.swift
+//  Findew
+//
+//  Created by 내꺼다 on 11/10/25.
+//
+
+import Foundation
+import Combine
+import Moya
+
+class DepartmentService: DepartmentServiceProtocol, BaseAPIService {
+    typealias Target = DepartmentRouter
+    
+    var provider: MoyaProvider<Target>
+    var decoder: JSONDecoder
+    var callbackQueue: DispatchQueue
+    
+    init(
+        provider: MoyaProvider<Target> = APIManager.shared.createProvider(for: Target.self),
+        decoder: JSONDecoder = APIManager.shared.sharedDecoder,
+        callbackQueue: DispatchQueue = .main
+    ) {
+        self.provider = provider
+        self.decoder = decoder
+        self.callbackQueue = callbackQueue
+    }
+    
+    func getList() -> AnyPublisher<ResponseData<[DepartmentDTO]>, MoyaError> {
+        request(.getList)
+    }
+    
+    func postGenerate(generate: DepartmentGenerateRequest) -> AnyPublisher<ResponseData<DepartmentDTO>, MoyaError> {
+        request(.postGenerate(generate: generate))
+    }
+    
+    func putUpdate(path: DevicePutPath, update: DepartmentUpdateRequest) -> AnyPublisher<ResponseData<DepartmentDTO>, MoyaError> {
+        request(.putUpdate(path: path, update: update))
+    }
+}

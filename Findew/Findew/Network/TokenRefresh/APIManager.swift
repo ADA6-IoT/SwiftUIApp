@@ -9,6 +9,7 @@ import Foundation
 import Moya
 import Alamofire
 
+
 class APIManager: @unchecked Sendable {
     static let shared = APIManager()
     

@@ -21,7 +21,7 @@ enum PatientRouter {
     /// 환자 수정
     case putUpdate(path: PatientUpdatePath, update: PatientUpdateRequest)
     /// 환자 상세 조회
-    case getDetale(path: PatientDetailPath)
+    case getDetail(path: PatientDetailPath)
 }
 
 extension PatientRouter: APITargetType {
@@ -37,14 +37,14 @@ extension PatientRouter: APITargetType {
             return "/api/patients/add"
         case .putUpdate(let path, _):
             return "/api/patients/\(path.id)"
-        case .getDetale(let path):
+        case .getDetail(let path):
             return "/api/patients/\(path.id)"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .getList, .getSearch, .getDetale:
+        case .getList, .getSearch, .getDetail:
             return .get
         case .deletePatient:
             return .delete
@@ -67,7 +67,7 @@ extension PatientRouter: APITargetType {
             return .requestJSONEncodable(generate)
         case .putUpdate(_, let update):
             return .requestJSONEncodable(update)
-        case .getDetale:
+        case .getDetail:
             return .requestPlain
         }
     }
