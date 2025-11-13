@@ -9,7 +9,7 @@ import Foundation
 
 /// Department DTO
 struct DepartmentDTO: Codable {
-    let id: String
+    let id: UUID
     let name: String
     let code: String
     let description: String

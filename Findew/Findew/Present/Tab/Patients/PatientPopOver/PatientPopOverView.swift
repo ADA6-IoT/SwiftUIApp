@@ -24,8 +24,8 @@ struct PatientPopOverView: View {
     }
     
     // MARK: - Init
-    init(patientType: PatientEnum, patient: PatientGenerateRequest) {
-        self.viewModel = .init(patientType: patientType, patient: patient)
+    init(patientType: PatientEnum, patient: PatientGenerateRequest, container: DIContainer) {
+        self.viewModel = .init(patientType: patientType, patient: patient, container: container)
     }
     
     var body: some View {
@@ -39,6 +39,11 @@ struct PatientPopOverView: View {
             RoundedRectangle(cornerRadius: DefaultConstants.corenerRadius)
                 .fill(.white)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .onChange(of: viewModel.isAPISuccess) { _, success in
+            if success {
+                dismiss()
+            }
         }
     }
     
@@ -66,7 +71,11 @@ struct PatientPopOverView: View {
             Spacer()
             
             topButton({
-                print("추후 수정")
+                if viewModel.patientType == .registration {
+                    viewModel.generatePatient()
+                } else if viewModel.patientType == .correction {
+                    viewModel.updatePatient(patientId: viewModel.patient.id)
+                }
             }, image: PatientPopOverConstant.check)
         }
     }

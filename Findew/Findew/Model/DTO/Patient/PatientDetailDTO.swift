@@ -41,7 +41,7 @@ struct PatientDetailResponse: Codable {
 
 /// PatientDevice
 struct PatientDevice: Codable {
-    let id: String
+    let id: UUID
     let serialNumber: String
     let batteryLevel: Int
     let isMalfunctioning: Bool

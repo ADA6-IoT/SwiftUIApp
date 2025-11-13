@@ -14,7 +14,7 @@ struct PatientUpdatePath: Codable {
 
 struct PatientUpdateRequest: Codable {
     let name: String?
-    let ward: Int?
+    let ward: String?
     let bed: Int?
     let departmentId: String?
     let memo: String?
