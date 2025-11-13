@@ -17,15 +17,10 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
     var callbackQueue: DispatchQueue
     
     init(
-        isStubbing: Bool = false,
         decoder: JSONDecoder = APIManager.shared.sharedDecoder,
         callbackQueue: DispatchQueue = .main
     ) {
-        if isStubbing {
-            self.provider = APIManager.shared.testProvider(for: Target.self)
-        } else {
-            self.provider = APIManager.shared.createProvider(for: Target.self)
-        }
+        self.provider = APIManager.shared.createProvider(for: Target.self)
         self.decoder = decoder
         self.callbackQueue = callbackQueue
     }

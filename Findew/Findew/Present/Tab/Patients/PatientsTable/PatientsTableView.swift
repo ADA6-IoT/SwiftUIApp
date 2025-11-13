@@ -14,6 +14,8 @@ struct PatientsTableView: View {
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     @State private var editMode: EditMode = .inactive
     
+    let container: DIContainer
+    
     // MARK: - Constant
     fileprivate enum PatientsTableConstant {
         static let columnsSize: [CGFloat] = [160, 169, 174, 321, 371]
@@ -27,6 +29,7 @@ struct PatientsTableView: View {
     
     // MARK: - Init
     init(container: DIContainer) {
+        self.container = container
         self.viewModel = .init(container: container)
     }
     
@@ -50,10 +53,10 @@ struct PatientsTableView: View {
                 })
                 .alertPrompt(item: $viewModel.alertPrompt)
                 .sheet(item: $viewModel.editPatient, content: { patient in
-                    PatientPopOverView(patientType: .correction, patient: patient)
+                    PatientPopOverView(patientType: .correction, patient: patient, container: container)
                 })
                 .sheet(isPresented: $viewModel.isShowAdd, content: {
-                    PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: ""))
+                    PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: ""), container: container)
                         .presentationDetents([.large])
                 })
         })
@@ -194,8 +197,8 @@ struct PatientsTableView: View {
     /// 환자 삭제 액션
     private func deleteAction() {
         guard !viewModel.selectionPatient.isEmpty else { return }
-        viewModel._patientsData.removeAll { patient in
-            viewModel.selectionPatient.contains(patient.id)
+        for patientId in viewModel.selectionPatient {
+            viewModel.deletePatient(id: patientId)
         }
         viewModel.selectionPatient.removeAll()
     }

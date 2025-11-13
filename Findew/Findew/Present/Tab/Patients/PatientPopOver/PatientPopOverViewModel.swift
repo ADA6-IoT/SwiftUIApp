@@ -45,17 +45,18 @@ class PatientPopOverViewModel {
         container.usecaseProvider.patientUseCase
             .executePostGenerate(generate: patient)
             .validateResult()
-            .sink { completion in
+            .sink { [weak self] completion in
+                guard let self else { return }
                 
                 defer { self.isLoading = false }
-                
                 switch completion {
                 case .finished:
                     Logger.logDebug("환자 생성", "요청 완료 (Finished)")
                 case .failure(let error) :
                     Logger.logError("환자 생성", "실패: \(error.localizedDescription)")
                 }
-            } receiveValue: { result in
+            } receiveValue: { [weak self] result in
+                guard let self else { return }
                 Logger.logDebug("환자 생성", "성공: \(result.name)")
                 self.isAPISuccess = true
             }
@@ -79,14 +80,15 @@ class PatientPopOverViewModel {
         container.usecaseProvider.patientUseCase
             .executePutUpdate(path: path, update: updateRequest)
             .validateResult()
-            .sink { completionResult in
-                
+            .sink { [weak self] completionResult in
+                guard let self else { return }
                 defer { self.isLoading = false }
 
                 if case .failure(let error) = completionResult {
                     Logger.logError("환자 수정", "실패: \(error.localizedDescription)")
                 }
-            } receiveValue: { result in
+            } receiveValue: { [weak self] result in
+                guard let self else { return }
                 Logger.logDebug("환자 수정", "성공: \(result.name)")
                 self.isAPISuccess = true
             }
