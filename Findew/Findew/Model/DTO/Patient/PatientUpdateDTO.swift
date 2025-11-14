@@ -16,6 +16,14 @@ struct PatientUpdateRequest: Codable {
     let name: String?
     let ward: String?
     let bed: Int?
-    let departmentId: String?
+    let departmentId: UUID?
     let memo: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case ward
+        case bed
+        case departmentId = "department_id"
+        case memo
+    }
 }

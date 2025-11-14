@@ -11,13 +11,13 @@ import Foundation
 struct AuthSignUpRequest: Codable {
     let email: String
     let password: String
-    let name: String
-    let businessNumber: String
+    let hospitalName: String
+    let businessNumber: String?
     
     enum CodingKeys: String, CodingKey {
         case email
         case password
-        case name
+        case hospitalName = "hospital_name"
         case businessNumber = "business_number"
     }
 }

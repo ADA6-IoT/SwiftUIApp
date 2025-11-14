@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// 앱 문의
+/// 앱 문의 및 신고
 struct HospitalInquiryRequest: ReportsData,  Codable {
     var content: String
     let email: String

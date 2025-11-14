@@ -173,7 +173,7 @@ class PatientsTableViewModel {
             } receiveValue: { [weak self] _ in
                 guard let self else { return }
                 Logger.logDebug("환자 삭제", "성공")
-                self._patientsData.removeAll { $0.id == id }
+                self.listPatient()
             }
             .store(in: &cancellables)
     }

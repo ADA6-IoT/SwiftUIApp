@@ -7,7 +7,6 @@
 
 import Foundation
 
-/// DeviceDTO
 struct DeviceDTO: Codable, Identifiable {
     let id: UUID
     let serialNumber: String
@@ -16,8 +15,8 @@ struct DeviceDTO: Codable, Identifiable {
     let patient: DevicePatient?
     let currentZone: CurrentZone?
     let lastLocationUpdate: String?
-    let createdAt: String
-    let updatedAt: String
+    let createdAt: String?
+    let updatedAt: String?
     
     enum CodingKeys: String, CodingKey {
         case id

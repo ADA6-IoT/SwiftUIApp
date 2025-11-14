@@ -10,7 +10,6 @@ import Foundation
 /// HospitalDTO
 struct HospitalDTO: Codable {
     let id: UUID
-    let type: String
     let content: String
     let email: String?
     let status: String
@@ -18,13 +17,12 @@ struct HospitalDTO: Codable {
     let adminReply: String?
     let repliedBy: String?
     let repliedAt: String?
-    let createdAt: String
-    let updatedAt: String
+    let createdAt: String?
+    let updatedAt: String?
 
     
     enum CodingKeys: String, CodingKey {
         case id
-        case type
         case content
         case email
         case status
