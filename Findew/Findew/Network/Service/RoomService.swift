@@ -1,16 +1,16 @@
 //
-//  HospitalService.swift
+//  RoomService.swift
 //  Findew
 //
-//  Created by 내꺼다 on 11/10/25.
+//  Created by 내꺼다 on 11/14/25.
 //
 
 import Foundation
 import Moya
 import Combine
 
-class HospitalService: HospitalServiceProtocol, BaseAPIService {
-    typealias Target = HospitalRouter
+class RoomService: RoomServiceProtocol, BaseAPIService {
+    typealias Target = RoomRouter
     
     var provider: MoyaProvider<Target>
     var decoder: JSONDecoder
@@ -25,7 +25,7 @@ class HospitalService: HospitalServiceProtocol, BaseAPIService {
         self.callbackQueue = callbackQueue
     }
     
-    func postInquiry(inquiry: HospitalInquiryRequest) -> AnyPublisher<ResponseData<HospitalDTO>, MoyaError> {
-        request(.postInquiry(inquiry: inquiry))
+    func getList() -> AnyPublisher<ResponseData<RoomListResponse>, MoyaError> {
+        request(.getList)
     }
 }

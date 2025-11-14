@@ -20,8 +20,6 @@ enum DeviceRouter {
     case postGenerate(generate: DeviceGenerateRequest)
     /// 기기 수정
     case putUpdate(path: DevicePutPath, update: DeviceUpdateRequest)
-    /// 기기 삭제
-    case deleteDevice(path: DeviceDeletePath)
     /// 기기 신고
     case postReports(report: DeviceReportsRequest)
 }
@@ -39,8 +37,6 @@ extension DeviceRouter: APITargetType {
             return "/api/devices/add"
         case .putUpdate(let path, _):
             return "/api/devices/\(path.id)"
-        case .deleteDevice(let path):
-            return "/api/devices/\(path.id)"
         case .postReports:
             return "/api/devices/malfunction"
         }
@@ -54,8 +50,6 @@ extension DeviceRouter: APITargetType {
             return .post
         case .putUpdate:
             return .put
-        case .deleteDevice:
-            return .delete
         }
     }
     
@@ -71,8 +65,6 @@ extension DeviceRouter: APITargetType {
             return .requestJSONEncodable(generate)
         case .putUpdate(_, let update):
             return .requestJSONEncodable(update)
-        case .deleteDevice:
-            return .requestPlain
         case .postReports(let report):
             return .requestJSONEncodable(report)
         }

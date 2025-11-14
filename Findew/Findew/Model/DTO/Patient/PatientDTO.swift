@@ -30,6 +30,11 @@ struct PatientDTO: Codable, Identifiable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
+    
+    /// 병동-호실 병합
+    var wardBedNumber: String {
+        "\(ward)-\(bed)"
+    }
 }
 
 /// PatientDevice

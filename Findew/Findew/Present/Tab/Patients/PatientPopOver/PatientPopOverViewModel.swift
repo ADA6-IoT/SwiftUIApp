@@ -12,6 +12,7 @@ import Combine
 class PatientPopOverViewModel {
     
     var patient: PatientGenerateRequest
+    var patientId: UUID?
     var departments: [Department] = .init()
     var devices: [Device] = .init()
     
@@ -30,6 +31,7 @@ class PatientPopOverViewModel {
     // MARK: - Init
     init(patientType: PatientEnum,
          patient: PatientGenerateRequest,
+         patientId: UUID? = nil,
          container: DIContainer
     ) {
         self.patientType = patientType
@@ -71,7 +73,7 @@ class PatientPopOverViewModel {
             name: patient.name,
             ward: patient.ward,
             bed: patient.bed,
-            departmentId: patient.department?.id.uuidString,
+            departmentId: patient.departmentId,
             memo: patient.memo
         )
         
@@ -94,5 +96,4 @@ class PatientPopOverViewModel {
             }
             .store(in: &cancellables)
     }
-    
 }

@@ -10,10 +10,8 @@ import Moya
 import Alamofire
 
 enum HospitalRouter {
-    /// 앱 문의
+    /// 앱 문의 및 신고
     case postInquiry(inquiry: HospitalInquiryRequest)
-    /// 앱 신고
-    case postReport(report: HospitalAppReportRequest)
 }
 
 extension HospitalRouter: APITargetType {
@@ -21,14 +19,12 @@ extension HospitalRouter: APITargetType {
         switch self {
         case .postInquiry:
             return "/api/app/inquiry"
-        case .postReport:
-            return "/api/app/bug"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .postInquiry, .postReport:
+        case .postInquiry:
             return .post
         }
     }
@@ -37,8 +33,6 @@ extension HospitalRouter: APITargetType {
         switch self {
         case let .postInquiry(inquiry):
             return .uploadMultipart(makeMultipartData(for: inquiry))
-        case let .postReport(report):
-            return .uploadMultipart(makeMultipartData(for: report))
         }
     }
 }

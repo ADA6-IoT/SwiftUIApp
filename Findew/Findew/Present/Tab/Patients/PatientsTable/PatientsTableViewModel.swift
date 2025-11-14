@@ -38,7 +38,7 @@ class PatientsTableViewModel {
         if !searchText.isEmpty {
             data = _patientsData.filter { patient in
                 patient.name.contains(searchText) ||
-                patient.wardBedNumber.contains(searchText) ||
+//                patient.wardBedNumber.contains(searchText) ||
                 patient.department.name.contains(searchText)
             }
         }
@@ -55,23 +55,7 @@ class PatientsTableViewModel {
     /// Alert 데이터
     var alertPrompt: AlertPrompt?
     /// 사이드바 층 데이터 API
-    var sideFloor: HospitalWardsResponse? = .init(floors: [
-        .init(floor: 1, rooms: [
-            .init(id: .init(), roomNumber: "102", bedCount: 2, roomType: nil, isAvailable: true),
-            .init(id: .init(), roomNumber: "103", bedCount: 2, roomType: nil, isAvailable: true),
-            .init(id: .init(), roomNumber: "104", bedCount: 2, roomType: nil, isAvailable: true),
-        ]),
-        .init(floor: 2, rooms: [
-            .init(id: .init(), roomNumber: "202", bedCount: 2, roomType: nil, isAvailable: true),
-            .init(id: .init(), roomNumber: "203", bedCount: 2, roomType: nil, isAvailable: true),
-            .init(id: .init(), roomNumber: "204", bedCount: 2, roomType: nil, isAvailable: true),
-        ]),
-        .init(floor: 3, rooms: [
-            .init(id: .init(), roomNumber: "302", bedCount: 2, roomType: nil, isAvailable: true),
-            .init(id: .init(), roomNumber: "303", bedCount: 2, roomType: nil, isAvailable: true),
-            .init(id: .init(), roomNumber: "304", bedCount: 2, roomType: nil, isAvailable: true),
-        ])
-    ])
+    var sideFloor: RoomListResponse? = nil
     
     /// 편집한 환자
     var editPatient: PatientGenerateRequest? = nil
@@ -117,12 +101,13 @@ class PatientsTableViewModel {
     /// - Parameter patient: 선택한 환자
     /// - Returns: 편집 데이터
     func edit(_ patient: PatientDTO) -> PatientGenerateRequest {
-        .init(name: patient.name,
-              ward: patient.ward,
-              bed: patient.bed,
-              department: patient.department,
-              deviceSerial: patient.device,
-              memo: patient.memo
+        .init(
+            name: patient.name,
+            ward: patient.ward,
+            bed: patient.bed,
+            departmentId: patient.department.id,
+            deviceSerial: patient.device?.serialNumber,
+            memo: patient.memo
         )
     }
     

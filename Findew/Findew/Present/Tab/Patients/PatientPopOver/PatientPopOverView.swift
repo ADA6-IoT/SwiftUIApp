@@ -24,8 +24,18 @@ struct PatientPopOverView: View {
     }
     
     // MARK: - Init
-    init(patientType: PatientEnum, patient: PatientGenerateRequest, container: DIContainer) {
-        self.viewModel = .init(patientType: patientType, patient: patient, container: container)
+    init(
+        patientType: PatientEnum,
+        patient: PatientGenerateRequest,
+        patientId: UUID? = nil,
+        container: DIContainer
+    ) {
+        self.viewModel = .init(
+            patientType: patientType,
+            patient: patient,
+            patientId: patientId,
+            container: container
+        )
     }
     
     var body: some View {
@@ -74,7 +84,8 @@ struct PatientPopOverView: View {
                 if viewModel.patientType == .registration {
                     viewModel.generatePatient()
                 } else if viewModel.patientType == .correction {
-                    viewModel.updatePatient(patientId: viewModel.patient.id)
+                    guard let patientId = viewModel.patientId else { return }
+                    viewModel.updatePatient(patientId: patientId)
                 }
             }, image: PatientPopOverConstant.check)
         }

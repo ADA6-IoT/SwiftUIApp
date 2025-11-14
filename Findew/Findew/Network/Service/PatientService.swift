@@ -29,10 +29,6 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
         request(.getList(query: query))
     }
     
-    func getSearch(path: PatientSearchPath) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
-        request(.getSearch(path: path))
-    }
-    
     func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
         request(.deletePatient(path: path))
     }
@@ -45,7 +41,7 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
         request(.putUpdate(path: path, update: update))
     }
     
-    func getDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDetailResponse>, MoyaError> {
+    func getDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError> {
         request(.getDetail(path: path))
     }
 }

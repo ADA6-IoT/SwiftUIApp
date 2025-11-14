@@ -25,7 +25,7 @@ class AuthService: AuthServiceProtocol, BaseAPIService {
         self.callbackQueue = callbackQueue
     }
     
-    func postLogin(login: AuthLoginRequest) -> AnyPublisher<ResponseData<AuthDTO>, MoyaError> {
+    func postLogin(login: AuthLoginRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError> {
         request(.postLogin(login: login))
     }
     
@@ -33,7 +33,7 @@ class AuthService: AuthServiceProtocol, BaseAPIService {
         request(.getReissue)
     }
     
-    func postSignup(sign: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthDTO>, MoyaError> {
+    func postSignup(sign: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError> {
         request(.postSignup(sign: sign))
     }
 }

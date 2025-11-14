@@ -20,8 +20,6 @@ protocol DeviceUseCaseProtocol {
     func executePostGenerate(generate: DeviceGenerateRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError>
     /// 기기 수정
     func executePutUpdate(path: DevicePutPath, update: DeviceUpdateRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError>
-    /// 기기 삭제
-    func executeDeleteDevice(path: DeviceDeletePath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
     /// 기기 신고
     func executePostReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError>
 }

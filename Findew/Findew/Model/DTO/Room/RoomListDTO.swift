@@ -26,7 +26,7 @@ struct Room: Codable, Identifiable {
     let floor: Int
     let roomNumber: String
     let bedCount: String
-    let createdAt: String
+    let createdAt: String?
     
     enum CodingKeys: String, CodingKey {
         case id

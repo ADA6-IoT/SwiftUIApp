@@ -45,11 +45,7 @@ class DeviceService: DeviceServiceProtocol, BaseAPIService {
         request(.putUpdate(path: path, update: update))
     }
     
-    func deleteDevice(path: DeviceDeletePath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
-        request(.deleteDevice(path: path))
-    }
-    
-    func postReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError> {
+    func postReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceResponse>, MoyaError> {
         request(.postReports(report: report))
     }
 }

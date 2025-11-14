@@ -20,8 +20,6 @@ protocol DeviceServiceProtocol {
     func postGenerate(generate: DeviceGenerateRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError>
     /// 기기 수정
     func putUpdate(path: DevicePutPath, update: DeviceUpdateRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError>
-    /// 기기 삭제
-    func deleteDevice(path: DeviceDeletePath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
     /// 기기 신고
-    func postReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError>
+    func postReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceResponse>, MoyaError>
 }
