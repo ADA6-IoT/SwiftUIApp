@@ -86,7 +86,7 @@ struct PatientsInfo: View {
         case .department:
             ForEach(departments, id: \.id) { department in
                 Button(action: {
-                    value.department = department
+                    value.departmentId = department.id
                 }) {
                     Text(department.name)
                 }
@@ -94,7 +94,7 @@ struct PatientsInfo: View {
         case .device:
             ForEach(devices, id: \.self) { device in
                 Button(action: {
-                    value.deviceSerial = device
+                    value.deviceSerial = device.serialNumber
                 }, label: {
                     Text(device.serialNumber)
                 })
@@ -126,13 +126,9 @@ struct PatientsInfo: View {
     private var selectedMenuText: String {
         switch info {
         case .department:
-            return departments.first(where: { $0.name == value.department?.name})?.name ?? ""
+            return departments.first(where: { $0.id == value.departmentId})?.name ?? ""
         case .device:
-            if let serial = value.deviceSerial,
-               let found = devices.first(where: {$0.serialNumber == serial.serialNumber }) {
-                return found.serialNumber
-            }
-            return ""
+            return value.deviceSerial ?? ""
         default:
             return ""
         }
@@ -141,9 +137,9 @@ struct PatientsInfo: View {
     private var selectedValue: Bool {
         switch info {
         case .department:
-            return value.department?.name.isEmpty == false
+            return departments.first(where: { $0.id == value.departmentId }) != nil
         case .device:
-            return value.deviceSerial?.serialNumber.isEmpty == false
+            return value.deviceSerial?.isEmpty == false
         default:
             return false
         }
@@ -160,6 +156,7 @@ struct PatientsInfo: View {
                 .foregroundStyle(.black)
                 .padding(.horizontal, 10)
             
+            // !!!: - bed 옵셔널이 아니라 오류가 나는것같은데..
             generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
                 .frame(maxWidth: PatientsConstant.fieldWidth.1)
         })
