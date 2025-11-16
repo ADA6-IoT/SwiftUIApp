@@ -30,7 +30,7 @@ extension PatientRouter: APITargetType {
         case .deletePatient(let path):
             return "/api/patients/\(path.id)"
         case .postGenerate:
-            return "/api/patients/add"
+            return "/api/patients/create"
         case .putUpdate(let path, _):
             return "/api/patients/\(path.id)"
         case .getDetail(let path):

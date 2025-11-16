@@ -10,7 +10,7 @@ import Moya
 import Alamofire
 
 enum RoomRouter {
-    /// 층별 호실 데이터 (API명세서 없이 작성)
+    /// 병실 목록 조회
     case getList
 }
 
@@ -18,7 +18,7 @@ extension RoomRouter: APITargetType {
     var path: String {
         switch self {
         case .getList:
-            return "/api/rooms/list" // 예상으로만 작성
+            return "/api/rooms/all"
         }
     }
     

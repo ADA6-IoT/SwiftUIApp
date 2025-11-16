@@ -24,7 +24,7 @@ extension DepartmentRouter: APITargetType {
         case .getList:
             return "/api/departments/all"
         case .postGenerate:
-            return "/api/departments/add"
+            return "/api/departments/regist"
         case .putUpdate(let path, _):
             return "/api/departments/\(path.id)"
         }

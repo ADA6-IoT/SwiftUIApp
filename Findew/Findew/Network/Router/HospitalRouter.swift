@@ -18,7 +18,7 @@ extension HospitalRouter: APITargetType {
     var path: String {
         switch self {
         case .postInquiry:
-            return "/api/app/inquiry"
+            return "/api/reports/inquiry"
         }
     }
     

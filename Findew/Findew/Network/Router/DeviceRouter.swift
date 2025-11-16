@@ -34,7 +34,7 @@ extension DeviceRouter: APITargetType {
         case .getList:
             return "/api/devices/all"
         case .postGenerate:
-            return "/api/devices/add"
+            return "/api/devices/regist"
         case .putUpdate(let path, _):
             return "/api/devices/\(path.id)"
         case .postReports:
