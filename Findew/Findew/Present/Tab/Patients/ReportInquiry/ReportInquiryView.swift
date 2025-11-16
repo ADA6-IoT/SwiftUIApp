@@ -34,8 +34,8 @@ struct ReportInquiry: View {
     }
     
     // MARK: - Init
-    init(contactType: ContactType) {
-        self.viewModel = .init(contactType: contactType)
+    init(contactType: ContactType, container: DIContainer) {
+        self.viewModel = .init(contactType: contactType, container: container)
     }
     
     // MARK: - Body
@@ -48,6 +48,12 @@ struct ReportInquiry: View {
         .onChange(of: viewModel.selectedImages, {
             viewModel.loadImage()
         })
+        // 성공시 dismiss
+        .onChange(of: viewModel.isSuccess) {_, success in
+            if success {
+                dismiss()
+            }
+        }
         .safeAreaBar(edge: .bottom, alignment: .leading, content: {
             bottomImage
         })
@@ -99,7 +105,7 @@ struct ReportInquiry: View {
             Spacer()
             
             Button(ReportInquiryConstant.sendTitle, action: {
-                print("보내기")
+                viewModel.summitInquiry()
             })
             .buttonStyle(.glass)
         }
@@ -188,5 +194,5 @@ struct ReportInquiry: View {
 }
 
 #Preview {
-    ReportInquiry(contactType: .inquiry)
+    ReportInquiry(contactType: .inquiry, container: DIContainer())
 }
