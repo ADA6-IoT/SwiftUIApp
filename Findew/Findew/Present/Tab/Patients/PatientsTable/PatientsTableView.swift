@@ -126,7 +126,6 @@ struct PatientsTableView: View {
         }, rows: {
             ForEach(viewModel.patientsData) { patient in
                 TableRow(patient)
-//                    .ontapGesture
                     .contextMenu {
                         ForEach(PatientsContextMenu.allCases, id: \.self) { menu in
                             Button(role: menu.role) {
@@ -139,7 +138,6 @@ struct PatientsTableView: View {
                             Divider()
                         }
                     }
-                    
             }
         })
         .font(.b3)
