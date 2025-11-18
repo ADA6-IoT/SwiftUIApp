@@ -26,6 +26,7 @@ class PatientsTableViewModel {
     var isShowInquiry: Bool = false
     var isShowReport: Bool = false
     var isLoading: Bool = false
+    
     // MARK: - StoreProperty
     /// API로부터 가져오는 환자 데이터
     var _patientsData: [PatientDTO] = []
@@ -35,8 +36,7 @@ class PatientsTableViewModel {
         if !searchText.isEmpty {
             data = _patientsData.filter { patient in
                 patient.name.contains(searchText) ||
-//                patient.wardBedNumber.contains(searchText) ||
-                patient.department.name.contains(searchText)
+                patient.ward.contains(searchText)
             }
         }
         
@@ -84,7 +84,10 @@ class PatientsTableViewModel {
             positiveBtnAction: { [weak self] in
                 guard let self else { return }
                 self.alertPrompt = nil
-                self.deletePatient(id: patient.id)
+                
+                Task {
+                    await self.deletePatient(id: patient.id)
+                }
             },
             negativeBtnTitle: "취소하기",
             negativeBtnAction: { [weak self] in
@@ -108,43 +111,39 @@ class PatientsTableViewModel {
         )
     }
     
-    // MARK: - API Method
+    // MARK: - Patient Method
     /// 환자 목록 조회 API 호출
     func listPatient() {
         isLoading = true
         
-        container.usecaseProvider.patientUseCase
-            .executeGetList(query: PatientListQuery(floor: nil, ward: nil))
+        container.usecaseProvider.patientUseCase.executeGetList()
             .validateResult()
             .sink { [weak self] completion in
                 guard let self else { return }
-                
                 defer { self.isLoading = false}
+                
                 switch completion {
                 case .finished:
                     Logger.logDebug("환자 목록 조회", "요청 완료 (finished)")
                 case .failure(let error):
                     Logger.logError("환자 목록 조회", "실패: \(error.localizedDescription)")
                 }
-            } receiveValue: { [weak self]  patientList in
+            } receiveValue: { [weak self] result in
                 guard let self else { return }
-                Logger.logDebug("환자 목록 조회", "성공: \(patientList.count)")
-                self._patientsData = patientList
+                self._patientsData = result
             }
             .store(in: &cancellables)
     }
     
     /// 환자 삭제 API 호출
-    func deletePatient(id: UUID) {
+    func deletePatient(id: UUID) async {
         let path = PatientDeletPath(id: id)
-        isLoading = true
         
         container.usecaseProvider.patientUseCase
             .executeDeletePatient(path: path)
             .validateResult()
             .sink { [weak self] completion in
-            guard let self else { return }
-                
+                guard let self else { return }
                 defer { self.isLoading = false}
                 switch completion {
                 case .finished:
@@ -155,10 +154,12 @@ class PatientsTableViewModel {
             } receiveValue: { [weak self] _ in
                 guard let self else { return }
                 Logger.logDebug("환자 삭제", "성공")
-                self.listPatient()
             }
             .store(in: &cancellables)
     }
+    
+    // MARK: - Room Method
+     func 
     
     // MARK: - Refresh Mthod
     func refresh() async {
@@ -184,7 +185,7 @@ class PatientsTableViewModel {
         autoRefreshTask = nil
     }
     
-    func onViewAppear() {
+    func onViewAppear() async {
         listPatient()
         if refreshManager.shouldRefreshTime {
             Task { await refresh() }

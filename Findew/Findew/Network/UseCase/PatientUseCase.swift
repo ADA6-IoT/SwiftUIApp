@@ -22,7 +22,7 @@ class PatientUseCase: PatientUseCaseProtocol {
     }
 
     /// 환자 삭제
-    func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
+    func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<String>, MoyaError> {
         service.deletePatient(path: path)
     }
 

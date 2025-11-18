@@ -48,7 +48,7 @@ struct PatientsTableView: View {
                         refreshText: viewModel.lastRefeshTimeText,
                         refresh: { Task { await viewModel.refresh() } },
                         add: { viewModel.isShowAdd.toggle() },
-                        trash: { deleteAction() },
+                        trash: { self.multiDeleteAction() },
                         cancell: { editMode = .inactive })
                 })
                 .alertPrompt(item: $viewModel.alertPrompt)
@@ -62,7 +62,8 @@ struct PatientsTableView: View {
         })
         .navigationSplitViewStyle(.prominentDetail)
         .task {
-            viewModel.onViewAppear()
+            await viewModel.onViewAppear()
+            
         }
         .onDisappear {
             viewModel.onViewDisappear()
@@ -199,12 +200,14 @@ struct PatientsTableView: View {
     
     // MARK: - Delete
     /// 환자 삭제 액션
-    private func deleteAction() {
+    private func multiDeleteAction() {
         guard !viewModel.selectionPatient.isEmpty else { return }
-        for patientId in viewModel.selectionPatient {
-            viewModel.deletePatient(id: patientId)
+        Task {
+            for patientId in viewModel.selectionPatient {
+                await viewModel.deletePatient(id: patientId)
+            }
+            await viewModel.refresh()
         }
-        viewModel.selectionPatient.removeAll()
     }
 }
 

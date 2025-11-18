@@ -13,7 +13,7 @@ protocol PatientServiceProtocol {
     /// 환자 전체 조회
     func getList() -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError>
     /// 환자 삭제
-    func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
+    func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<String>, MoyaError>
     /// 환자 등록
     func postGenerate(generate: PatientGenerateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError>
     /// 환자 수정
