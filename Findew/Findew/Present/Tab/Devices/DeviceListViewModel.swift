@@ -25,6 +25,7 @@ class DeviceListViewModel {
     var isSelectionMode: Bool = false
     var selectedDeviceIds: Set<UUID> = []
     var isLoading: Bool = false
+    var alertPrompt: AlertPrompt?
     
     // MARK: - Dependency
     private let container: DIContainer
@@ -63,16 +64,12 @@ class DeviceListViewModel {
     
     /// 기기 신고 API 호출
     func reportDevices() {
-        let serialNumbers = selectedDeviceIds.compactMap { id in
-            _devices.first(where: { $0.id == id })?.serialNumber
-        }
-        
-        guard !serialNumbers.isEmpty else {
+        guard !selectedDeviceIds.isEmpty else {
             Logger.logError("기기 신고", "선택된 기기 없음")
             return
         }
         
-        let request = DeviceReportsRequest(serialNumber: serialNumbers)
+        let request = generateReportRequest()
         isLoading = true
         
         container.usecaseProvider.deviceUseCase
@@ -90,11 +87,57 @@ class DeviceListViewModel {
                 }
             } receiveValue: { [weak self] _ in
                 guard let self else { return }
-                Logger.logDebug("기기 신고", "성공: \(serialNumbers.count)개 신고 완료")
-                self.selectedDeviceIds.removeAll()
-                self.isSelectionMode = false
-                self.listDevices()
+                Logger.logDebug("기기 신고", "성공: \(selectedDeviceIds.count)개 신고 완료")
+                
+                self.handleReportSuccess()
             }
             .store(in: &cancellables)
+    }
+    
+    /// 신고 요청
+    private func generateReportRequest() -> DeviceReportsRequest {
+        let serialNumbers = selectedDeviceIds.compactMap { id in
+            _devices.first(where: { $0.id == id })?.serialNumber
+        }
+        
+        return DeviceReportsRequest(serialNumber: serialNumbers)
+    }
+    
+    /// 신고 성공 후
+    private func handleReportSuccess() {
+        selectedDeviceIds.removeAll()
+        isSelectionMode = false
+        showReportConfirmationAlert()
+    }
+    
+    /// 선택 취소 (cancel 버튼)
+    func cancelSelection() {
+        selectedDeviceIds.removeAll()
+        isSelectionMode = false
+    }
+    
+    /// 기기 선택/해제 토글
+    func toggleDeviceSelection(_ deviceId: UUID) {
+        if selectedDeviceIds.contains(deviceId) {
+            selectedDeviceIds.remove(deviceId)
+        } else {
+            selectedDeviceIds.insert(deviceId)
+        }
+    }
+    
+    /// 신고 확인 Alert - 완료용으로 변경
+    private func showReportConfirmationAlert() {
+        let count = selectedDeviceIds.count
+        
+        alertPrompt = .init(
+            id: .init(),
+            title: "기기 신고 완료",
+            message: "\(count)개 신고 완료되었습니다.",
+            positiveBtnTitle: "확인",
+            positiveBtnAction: { [weak self] in
+                guard let self else { return }
+                self.alertPrompt = nil
+            }
+        )
     }
 }
