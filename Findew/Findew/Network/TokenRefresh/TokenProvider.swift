@@ -17,78 +17,68 @@ enum TokenError: Error {
 
 // MARK: - Token Provider
 final class TokenProvider: TokenProviding {
-
+    
     // MARK: Properties
-    @KeychainStored private var userInfo: AuthReissueResponse?
+    @KeychainStored private var userInfo: UserInfo?
     private let provider = MoyaProvider<AuthRouter>()
-
+    
     // MARK: Public Interface
     var accessToken: String? {
-        get async {
-            userInfo?.accessToken
+        get { userInfo?.accessToken }
+        set {
+            guard var user = userInfo else { return }
+            user.accessToken = newValue
+            userInfo = user
+            
+            Logger.logDebug("유저 액세스 토큰", "토큰 갱신: \(String(describing: newValue))")
         }
     }
-
-    func refreshToken() async throws -> String {
-        guard let currentRefreshToken = userInfo?.refreshToken else {
-            Logger.logError("Error", "Refresh Token이 없습니다.")
-            throw TokenError.noRefreshToken
-        }
-
-        Logger.logDebug("Debug", "토큰 갱신 시작 - RefreshToken: \(currentRefreshToken)")
-
-        return try await requestTokenRefresh()
-    }
-
-    // MARK: Private Method
-    private func requestTokenRefresh() async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            provider.request(.getReissue) { [weak self] result in
-                guard let self = self else {
-                    continuation.resume(throwing: TokenError.refreshFailure)
-                    return
-                }
-                self.handleTokenRefreshResponse(result, continuation: continuation)
-            }
+    
+    var refreshToken: String? {
+        get { userInfo?.refreshToken }
+        set {
+            guard var user = userInfo else { return }
+            user.refreshToken = newValue
+            userInfo = user
+            Logger.logDebug("유저 리프레시 토큰", "토큰 갱신: \(String(describing: newValue))")
         }
     }
-
+    
+    func refreshToken(completion: @escaping (String?, (any Error)?) -> Void) {
+        guard let refreshToken = refreshToken else {
+            return completion(nil, TokenError.refreshFailure)
+        }
+        
+        provider.request(.getReissue(token: refreshToken)) { [weak self] result in
+            self?.handleTokenRefreshResponse(result, completion: completion)
+        }
+    }
+    
     private func handleTokenRefreshResponse(
         _ result: Result<Response, MoyaError>,
-        continuation: CheckedContinuation<String, Error>
+        completion: @escaping (String?, Error?) -> Void
     ) {
         switch result {
         case .success(let response):
-            handleSuccessResponse(response, continuation: continuation)
-
+            handleSuccessResponse(response, completion: completion)
         case .failure(let error):
-            Logger.logError("Error", "토큰 갱신 네트워크 실패: \(error.localizedDescription)")
-            continuation.resume(throwing: TokenError.refreshFailure)
+            completion(nil, error)
         }
     }
-
-    private func handleSuccessResponse(
-        _ response: Response,
-        continuation: CheckedContinuation<String, Error>
-    ) {
+    
+    private func handleSuccessResponse(_ response: Response, completion: @escaping (String?, Error?) -> Void) {
         do {
-            let responseData = try response.map(ResponseData<AuthReissueResponse>.self)
-            guard responseData.isSuccess, let authDTO = responseData.result else {
-                Logger.logError("Error", "토큰 갱신 실패 - API 응답 isSuccess: false")
-                continuation.resume(throwing: TokenError.invalidResponse)
-                return
+            let tokenData = try JSONDecoder().decode(ResponseData<AuthReissueResponse>.self, from: response.data)
+            guard tokenData.isSuccess, let result = tokenData.result else {
+                return completion(nil, TokenError.refreshFailure)
             }
-
-            let newAccessToken = authDTO.accessToken
-
-            self.userInfo = authDTO
-            Logger.logDebug("Debug", "토큰 갱신 성공 - AccessToken: \(newAccessToken)")
-
-            continuation.resume(returning: newAccessToken)
-
-        } catch {
-            Logger.logDebug("Debug", "토큰 갱신 파싱 실패: \(error.localizedDescription)")
-            continuation.resume(throwing: error)
+            
+            self.accessToken = result.accessToken
+            self.refreshToken = result.refreshToken
+            completion(result.accessToken, nil)
+        }
+        catch {
+            completion(nil, error)
         }
     }
 }

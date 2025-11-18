@@ -12,4 +12,11 @@ struct ResponseData<T: Codable>: Codable {
     let code: String
     let message: String
     let result: T?
+
+    enum CodingKeys: String, CodingKey {
+        case isSuccess = "is_success"
+        case code
+        case message
+        case result
+    }
 }

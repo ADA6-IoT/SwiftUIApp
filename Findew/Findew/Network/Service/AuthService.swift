@@ -29,8 +29,8 @@ class AuthService: AuthServiceProtocol, BaseAPIService {
         request(.postLogin(login: login))
     }
     
-    func getReissue() -> AnyPublisher<ResponseData<AuthReissueResponse>, MoyaError> {
-        request(.getReissue)
+    func getReissue(token: String) -> AnyPublisher<ResponseData<AuthReissueResponse>, MoyaError> {
+        request(.getReissue(token: token))
     }
     
     func logout(refreshToken: String) -> AnyPublisher<ResponseData<String>, MoyaError> {

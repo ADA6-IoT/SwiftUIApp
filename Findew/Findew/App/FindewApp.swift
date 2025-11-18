@@ -18,7 +18,7 @@ struct FindewApp: App {
             case .splash:
                 Splash()
             case .login:
-                LoginView(container: container)
+                LoginView(container: container, appFlow: appFlow)
             case .home:
                 FindUTab()
             }

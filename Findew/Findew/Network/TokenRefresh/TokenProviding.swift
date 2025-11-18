@@ -8,7 +8,7 @@
 import Foundation
 
 protocol TokenProviding: Sendable {
-    var accessToken: String? { get async }
-    func refreshToken() async throws -> String
+    var accessToken: String? { get set }
+    func refreshToken(completion: @escaping (String?, Error?) -> Void)
 }
 

@@ -31,11 +31,14 @@ class AccessTokenRefresher: @unchecked Sendable, RequestInterceptor {
     ///   - urlRequest: 원본 URLRequest
     ///   - session: Alamofire 세션
     ///   - completion: 수정된 URLRequest를 전달하는 완료 핸들러
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, any Error>) -> Void) async {
+    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, any Error>) -> Void) {
         var urlRequest = urlRequest
         // 토큰이 존재하면 Bearer 토큰을 헤더에 설정
-        if let accessToken = await tokenProviding.accessToken {
+        if let accessToken = self.tokenProviding.accessToken {
             urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            Logger.logDebug("AccessTokenRefresher", "Authorization 헤더 추가 완료")
+        } else {
+            Logger.logDebug("AccessTokenRefresher", "토큰 없음 - 헤더 추가 안 함")
         }
         completion(.success(urlRequest))
     }
@@ -46,40 +49,41 @@ class AccessTokenRefresher: @unchecked Sendable, RequestInterceptor {
     ///   - session: Alamofire 세션
     ///   - error: 발생한 오류
     ///   - completion: 재시도 여부를 전달하는 핸들러
-    func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) async {
-        
-        guard let response = request.task?.response as? HTTPURLResponse,
-        response.statusCode == 401 else {
-            await Logger.logDebug("Debug: Not 401 error", "재시도 하지 않음")
-            completion(.doNotRetryWithError(error))
-            return
-        }
-        await Logger.logDebug("AccessTokenRefresher", "401 에러 감지 - 토큰 갱신 시도")
-        
-        if isRefreshing {
-            await Logger.logDebug("AccessTokenRefresher", "토큰 갱신 중 - 요청을 대기열에 추가")
-            requestInRetry.append(completion)
-            return
-        }
-        
-        isRefreshing = true
-        requestInRetry.append(completion)
-        await Logger.logDebug("AccessTokenRefresher", "토큰 갱신 시작")
-        
-        await refreshAction()
+    func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
+            guard let response = request.task?.response as? HTTPURLResponse,
+                  response.statusCode == 401 else {
+                Logger.logDebug("Debug: Not 401 error", "재시도 하지 않음")
+                completion(.doNotRetryWithError(error))
+                return
+            }
+            Logger.logDebug("AccessTokenRefresher", "401 에러 감지 - 토큰 갱신 시도")
+            
+            if self.isRefreshing {
+                Logger.logDebug("AccessTokenRefresher", "토큰 갱신 중 - 요청을 대기열에 추가")
+                self.requestInRetry.append(completion)
+                return
+            }
+            
+            self.isRefreshing = true
+            self.requestInRetry.append(completion)
+            Logger.logDebug("AccessTokenRefresher", "토큰 갱신 시작")
+            
+            self.refreshAction()
     }
     
-    private func refreshAction() async {
-        do {
-            let _ = try await tokenProviding.refreshToken()
-            await Logger.logDebug("AccessTokenRefresh", "토큰 갱신 성공 - 대기 중인 요청들 재시도")
-            
-            let request = syncGetAndClearRequest()
-            request.forEach { $0(.retry) }
-        } catch {
-            await Logger.logError("AccessTokenRefresher", "토큰 갱신 실패: \(error.localizedDescription)")
-            let requests = syncGetAndClearRequest()
-            requests.forEach { $0(.doNotRetryWithError(error)) }
+    private func refreshAction() {
+        tokenProviding.refreshToken { [weak self] accessToken, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                Logger.logError("AccessTokenRefresher", "토큰 갱신 실패: \(error.localizedDescription)")
+                let requests = self.syncGetAndClearRequest()
+                requests.forEach { $0(.doNotRetryWithError(error)) }
+            } else {
+                Logger.logDebug("AccessTokenRefresh", "토큰 갱신 성공 - 대기 중인 요청들 재시도")
+                let requests = self.syncGetAndClearRequest()
+                requests.forEach { $0(.retry) }
+            }
         }
     }
     

@@ -62,7 +62,7 @@ struct PatientsTableView: View {
         })
         .navigationSplitViewStyle(.prominentDetail)
         .task {
-            await viewModel.roomList()
+            viewModel.roomList()
             await viewModel.onViewAppear()
             
         }

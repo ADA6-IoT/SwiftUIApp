@@ -13,6 +13,7 @@ struct LoginView: View {
     @State var viewModel: LoginViewModel
     @FocusState var isFocused: LoginFieldEnum?
     @Environment(\.appFlow) var appFlow
+    @Environment(\.horizontalSizeClass) var horizonSize
     
     // MARK: - Costant
     fileprivate enum LoginConstant {
@@ -33,8 +34,8 @@ struct LoginView: View {
     }
     
     // MARK: - Init
-    init(container: DIContainer) {
-        self.viewModel = .init(container: container)
+    init(container: DIContainer, appFlow: AppFlow) {
+        self.viewModel = .init(container: container, appFlow: appFlow)
     }
     
     // MARK: - Body
@@ -82,7 +83,7 @@ struct LoginView: View {
                 isFocused = .password(onOff: viewModel.showPassword)
             }
             generateField(type: .password(onOff: viewModel.showPassword), submitLabel: .done) {
-                self.loginAction()
+                viewModel.loginAction()
             }
         })
     }
@@ -155,7 +156,9 @@ struct LoginView: View {
     /// 로그인 버튼
     private var bottomContent: some View {
         Button(action: {
-            self.loginAction()
+            withAnimation {
+                viewModel.loginAction()
+            }
         }) {
             Text(LoginConstant.loginText)
                 .font(.b3)
@@ -167,21 +170,4 @@ struct LoginView: View {
         .tint(viewModel.isLoginEnabled ? .blue02 : .gray01)
         .disabled(!viewModel.isLoginEnabled)
     }
-    
-    /// 로그인 버튼 함수
-    private func loginAction() {
-        Task {
-            await self.viewModel.loginAction()
-            await rootViewChange()
-        }
-    }
-    
-    private func rootViewChange() async {
-        appFlow.loginSuccess()
-    }
-}
-
-#Preview {
-    LoginView(container: DIContainer())
-        .environment(AppFlow())
 }

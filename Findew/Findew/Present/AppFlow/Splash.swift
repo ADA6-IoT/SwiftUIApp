@@ -34,8 +34,10 @@ struct Splash: View {
         .safeAreaPadding(.bottom, SplashConstant.bottomPadding)
         .task {
             DispatchQueue.main.asyncAfter(deadline: .now() + SplashConstant.timer , execute: {
-                Task {
-                    await appFlow.checkAppState()
+                appFlow.checkAppState { success, error in
+                    if let error = error {
+                        Logger.logError("스플래시 에러", "최초 사용자 혹은 등록된 유저 아님 \(error)")
+                    }
                 }
             })
         }

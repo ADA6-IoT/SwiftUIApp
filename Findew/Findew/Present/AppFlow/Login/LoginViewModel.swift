@@ -34,27 +34,28 @@ class LoginViewModel {
     // MARK: - Dependency
     private let keychainSessionStore: KeychainSessionStore = .init()
     private let container: DIContainer
+    private let appFlow: AppFlow
     private var cancellables: Set<AnyCancellable> = .init()
     
     // MARK: - Init
-    init(container: DIContainer) {
+    init(container: DIContainer, appFlow: AppFlow) {
         self.container = container
+        self.appFlow = appFlow
     }
     
     // MARK: - Login Action Method
     /// 로그인 API 호출
-    /// - Returns: 로그인 성공 실패 여부
-    public func loginAction() async {
+    public func loginAction() {
         self.isLoading = true
-        
+
         container.usecaseProvider.authUseCase.executePostLogin(login: self.generateLoginRequest())
             .validateResult(onFailureAction: {
                 self.loginFailureAlert()
             })
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { [weak self] result in
                 guard let self = self else { return }
                 defer { self.isLoading = false }
-                switch completion {
+                switch result {
                 case .finished:
                     Logger.logDebug("로그인", "로그인 성공")
                 case .failure(let failure):
@@ -63,8 +64,8 @@ class LoginViewModel {
                 }
             }, receiveValue: { [weak self] result in
                 guard let self = self else { return }
-                /* 자동 로그인 위함 */
                 self.keychainSessionStore.userInfo = self.generateKeychainUserInfo(result)
+                appFlow.loginSuccess()
             })
             .store(in: &cancellables)
     }

@@ -161,7 +161,7 @@ class PatientsTableViewModel {
     
     // MARK: - Room Method
     /// 사이드 바 병동 조회
-    public func roomList() async {
+    public func roomList() {
         guard self.sideFloor == nil else { return }
         
         container.usecaseProvider.roomUseCase.executeGetList()

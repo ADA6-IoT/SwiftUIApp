@@ -14,7 +14,7 @@ enum AuthRouter {
     /// 로그인
     case postLogin(login: AuthLoginRequest)
     /// 토큰 갱신
-    case getReissue
+    case getReissue(token: String)
     /// 로그아웃
     case logout(refreshToken: String)
 }
@@ -48,8 +48,10 @@ extension AuthRouter: APITargetType {
         switch self {
         case .postLogin(let login):
             return .requestJSONEncodable(login)
-        case .getReissue:
-            return .requestPlain
+        case .getReissue(let refresh):
+            return .requestParameters(parameters: [
+                "refresh_token": refresh
+            ], encoding: JSONEncoding.default)
         case .logout(let token):
             return .requestParameters(parameters: [
                 "refresh-token": token
