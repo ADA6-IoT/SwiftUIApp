@@ -153,13 +153,32 @@ class PatientsTableViewModel {
                 }
             } receiveValue: { [weak self] _ in
                 guard let self else { return }
+                self._patientsData.removeAll(where: { $0.id == id })
                 Logger.logDebug("환자 삭제", "성공")
             }
             .store(in: &cancellables)
     }
     
     // MARK: - Room Method
-     func 
+    /// 사이드 바 병동 조회
+    public func roomList() async {
+        guard self.sideFloor == nil else { return }
+        
+        container.usecaseProvider.roomUseCase.executeGetList()
+            .validateResult()
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    Logger.logDebug("호실 병동 조회", "층/병실 방 번호 조회 성공")
+                case .failure(let failure):
+                    Logger.logDebug("호실 병동 조회", "층/병실 방 번호 조회 실패 \(failure)")
+                }
+            }, receiveValue: { [weak self] result in
+                guard let self = self else { return }
+                self.sideFloor = result
+            })
+            .store(in: &cancellables)
+    }
     
     // MARK: - Refresh Mthod
     func refresh() async {

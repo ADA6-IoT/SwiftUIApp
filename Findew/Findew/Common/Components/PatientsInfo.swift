@@ -11,8 +11,8 @@ struct PatientsInfo: View {
     // MARK: - Property
     let info: PatientComponentsEnum
     @Binding var value: PatientGenerateRequest
-    var departments: [Department]
-    var devices: [Device]
+    var departments: [DepartmentDTO]
+    var devices: [DeviceDTO]
     @FocusState var isFocused: PatientComponentsEnum?
     
     // MARK: - Constants
@@ -32,8 +32,8 @@ struct PatientsInfo: View {
     init(
         info: PatientComponentsEnum,
         value: Binding<PatientGenerateRequest>,
-        departments: [Department] = [],
-        devices: [Device] = []
+        departments: [DepartmentDTO] = [],
+        devices: [DeviceDTO] = []
     ) {
         self.info = info
         self._value = value
@@ -92,7 +92,7 @@ struct PatientsInfo: View {
                 }
             }
         case .device:
-            ForEach(devices, id: \.self) { device in
+            ForEach(devices, id: \.id) { device in
                 Button(action: {
                     value.deviceSerial = device.serialNumber
                 }, label: {
@@ -156,11 +156,6 @@ struct PatientsInfo: View {
                 .foregroundStyle(.black)
                 .padding(.horizontal, 10)
             
-            // !!!: - bed 옵셔널이 아니라 오류가 나는것같은데..
-//            generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
-//                .frame(maxWidth: PatientsConstant.fieldWidth.1)
-            
-            // 수정용
             generateIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
                 .frame(maxWidth: PatientsConstant.fieldWidth.1)
         })

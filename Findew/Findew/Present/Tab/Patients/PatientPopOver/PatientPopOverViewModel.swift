@@ -13,15 +13,13 @@ class PatientPopOverViewModel {
     
     var patient: PatientGenerateRequest
     var patientId: UUID?
-    var departments: [Department] = .init()
-    var devices: [Device] = .init()
-    
+    var departments: [DepartmentDTO] = .init()
+    var devices: [DeviceDTO] = .init()
     let patientType: PatientEnum
     
-    
     // MARK: - StateProperty
-    var isLoading: Bool = false
-    var isAPISuccess: Bool = false
+    var createLoading: Bool = false
+    var updateLoading: Bool = false
     
     // MARK: - Dependency
     let container: DIContainer
@@ -39,35 +37,33 @@ class PatientPopOverViewModel {
         self.container = container
     }
     
-    // MARK: - Methode
+    // MARK: - Patients Method
     /// 환자 생성 API 호출
-    func generatePatient() {
-        isLoading = true
+    func generatePatient() async {
+        createLoading = true
         
         container.usecaseProvider.patientUseCase
             .executePostGenerate(generate: patient)
             .validateResult()
             .sink { [weak self] completion in
                 guard let self else { return }
+                defer { self.createLoading = false }
                 
-                defer { self.isLoading = false }
                 switch completion {
                 case .finished:
                     Logger.logDebug("환자 생성", "요청 완료 (Finished)")
                 case .failure(let error) :
                     Logger.logError("환자 생성", "실패: \(error.localizedDescription)")
                 }
-            } receiveValue: { [weak self] result in
-                guard let self else { return }
-                Logger.logDebug("환자 생성", "성공: \(result.name)")
-                self.isAPISuccess = true
+            } receiveValue: { result in
+                Logger.logDebug("환자 생성", "성공: \(result)")
             }
             .store(in: &cancellables)
     }
     
     /// 환자 수정 API 호출
-    func updatePatient(patientId: UUID) {
-        isLoading = true
+    func updatePatient(patientId: UUID) async {
+        updateLoading = true
         
         let updateRequest = PatientUpdateRequest(
             name: patient.name,
@@ -84,16 +80,54 @@ class PatientPopOverViewModel {
             .validateResult()
             .sink { [weak self] completionResult in
                 guard let self else { return }
-                defer { self.isLoading = false }
-
+                defer { self.updateLoading = false }
+                
                 if case .failure(let error) = completionResult {
                     Logger.logError("환자 수정", "실패: \(error.localizedDescription)")
                 }
-            } receiveValue: { [weak self] result in
-                guard let self else { return }
-                Logger.logDebug("환자 수정", "성공: \(result.name)")
-                self.isAPISuccess = true
+            } receiveValue: { result in
+                Logger.logDebug("환자 수정", "성공: \(result)")
             }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - Department
+    /// 부서 조회
+    func getDepartments() async {
+        container.usecaseProvider.departmentUseCase.executeGetList()
+            .validateResult()
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    Logger.logDebug("부서 조회", "부서 조회 성공")
+                case .failure(let failure):
+                    Logger.logDebug("부서 조회 실패", "부서 조회 실패 \(failure)")
+                }
+            }, receiveValue: { [weak self] result in
+                guard let self = self else { return }
+                self.departments = result
+            })
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - Device
+    /// 장비 조회
+    func getDeviceList() async {
+        container.usecaseProvider.deviceUseCase.executeGetList()
+            .validateResult()
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    Logger.logDebug("장비 조회", "미할당 장비 조회 성공")
+                case .failure(let failure):
+                    Logger.logDebug("장비 조회", "미할당 장비 조회 실패 \(failure)")
+                }
+                
+            }, receiveValue: { [weak self] result in
+                guard let self = self else { return }
+                let device: [DeviceDTO] = result.filter { $0.patient == nil }
+                self.devices = device
+            })
             .store(in: &cancellables)
     }
 }

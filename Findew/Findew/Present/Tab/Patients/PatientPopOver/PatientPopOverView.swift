@@ -50,11 +50,12 @@ struct PatientPopOverView: View {
                 .fill(.white)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .onChange(of: viewModel.isAPISuccess) { _, success in
-            if success {
-                dismiss()
-            }
+        .task {
+            await viewModel.getDepartments()
+            await viewModel.getDeviceList()
         }
+        .loadingOverlay(viewModel.createLoading, loadingTextType: .createPatients)
+        .loadingOverlay(viewModel.updateLoading, loadingTextType: .updatePatienst)
     }
     
     // MARK: - Top
@@ -82,10 +83,16 @@ struct PatientPopOverView: View {
             
             topButton({
                 if viewModel.patientType == .registration {
-                    viewModel.generatePatient()
+                    Task {
+                        await viewModel.generatePatient()
+                        dismiss()
+                    }
                 } else if viewModel.patientType == .correction {
                     guard let patientId = viewModel.patientId else { return }
-                    viewModel.updatePatient(patientId: patientId)
+                    Task {
+                        await viewModel.updatePatient(patientId: patientId)
+                        dismiss()
+                    }
                 }
             }, image: PatientPopOverConstant.check)
         }
@@ -114,4 +121,8 @@ struct PatientPopOverView: View {
             }
         })
     }
+}
+
+#Preview {
+    PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: "", bed: 0, departmentId: .init()), patientId: .none, container: DIContainer())
 }

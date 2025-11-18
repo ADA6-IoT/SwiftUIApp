@@ -59,7 +59,7 @@ class LoginViewModel {
                     Logger.logDebug("로그인", "로그인 성공")
                 case .failure(let failure):
                     self.loginFailureAlert()
-                    Logger.logDebug("로그인", "로그인 실패")
+                    Logger.logDebug("로그인", "로그인 실패 \(failure)")
                 }
             }, receiveValue: { [weak self] result in
                 guard let self = self else { return }

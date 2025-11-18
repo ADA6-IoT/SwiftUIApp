@@ -10,6 +10,8 @@ import Moya
 import Combine
 
 class PatientService: PatientServiceProtocol, BaseAPIService {
+    
+    
     typealias Target = PatientRouter
     
     var provider: MoyaProvider<Target>
@@ -29,7 +31,7 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
         request(.getList)
     }
     
-    func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
+    func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<String>, Moya.MoyaError> {
         request(.deletePatient(path: path))
     }
     
