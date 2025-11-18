@@ -77,10 +77,10 @@ struct PatientPopOverView: View {
         HStack {
             topButton({
                 dismiss()
-            }, image: PatientPopOverConstant.xmark)
-            
+            }, image: PatientPopOverConstant.xmark, isCheckButton: false)
+
             Spacer()
-            
+
             topButton({
                 if viewModel.patientType == .registration {
                     Task {
@@ -94,19 +94,20 @@ struct PatientPopOverView: View {
                         dismiss()
                     }
                 }
-            }, image: PatientPopOverConstant.check)
+            }, image: PatientPopOverConstant.check, isCheckButton: true)
         }
     }
-    
-    private func topButton(_ action: @escaping () -> Void, image: String) -> some View {
+
+    private func topButton(_ action: @escaping () -> Void, image: String, isCheckButton: Bool) -> some View {
         Button(action: {
             action()
         }, label: {
             Image(systemName: image)
-                .tint(.black)
+                .tint(isCheckButton && !viewModel.isBtnActivity ? .gray07 : .black)
         })
         .padding()
-        .glassEffect(.regular, in: Circle())
+        .glassEffect(.regular.interactive(), in: Circle())
+        .disabled(isCheckButton && !viewModel.isBtnActivity)
     }
     // MARK: - Middle
     private var middleContent: some View {
