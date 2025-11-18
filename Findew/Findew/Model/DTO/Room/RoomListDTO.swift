@@ -16,7 +16,8 @@ struct RoomListResponse: Codable, Identifiable {
     }
 }
 
-struct Floor: Codable {
+struct Floor: Codable, Identifiable {
+    var id: Int { floor }
     let floor: Int
     let rooms: [Room]
 }

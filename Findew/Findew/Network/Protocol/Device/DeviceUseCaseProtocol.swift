@@ -21,5 +21,5 @@ protocol DeviceUseCaseProtocol {
     /// 기기 수정
     func executePutUpdate(path: DevicePutPath, update: DeviceUpdateRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError>
     /// 기기 신고
-    func executePostReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError>
+    func executePostReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceResponse>, MoyaError>
 }

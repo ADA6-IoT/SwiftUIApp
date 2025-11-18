@@ -21,10 +21,10 @@ class PatientUseCase: PatientUseCaseProtocol {
         service.getList(query: query)
     }
 
-    /// 환자 검색
-    func executeGetSearch(path: PatientSearchPath) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
-        service.getSearch(path: path)
-    }
+//    /// 환자 검색
+//    func executeGetSearch(path: PatientSearchPath) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
+//        service.getSearch(path: path)
+//    }
 
     /// 환자 삭제
     func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
@@ -42,7 +42,7 @@ class PatientUseCase: PatientUseCaseProtocol {
     }
 
     /// 환자 상세 조회
-    func executeGetDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDetailResponse>, MoyaError> {
+    func executeGetDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError> {
         service.getDetail(path: path)
     }
 }

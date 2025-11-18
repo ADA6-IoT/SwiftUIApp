@@ -20,9 +20,4 @@ class HospitalUseCase: HospitalUseCaseProtocol {
     func executePostUnquiry(inquiry: HospitalInquiryRequest) -> AnyPublisher<ResponseData<HospitalDTO>, MoyaError> {
         service.postInquiry(inquiry: inquiry)
     }
-    
-    /// 앱 신고
-    func executePostReport(report: HospitalAppReportRequest) -> AnyPublisher<ResponseData<HospitalDTO>, MoyaError> {
-        service.postReport(report: report)
-    }
 }

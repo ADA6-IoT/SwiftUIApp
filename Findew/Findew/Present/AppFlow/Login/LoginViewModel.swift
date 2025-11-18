@@ -45,7 +45,41 @@ class LoginViewModel {
     /// - Returns: 로그인 성공 실패 여부
     public func loginAction() -> Result<Bool, Error> {
         // TODO: - 로그인 Action 작성
-        return .success(true)
+//        return .success(true)
+        isLoading = true
+        defer { isLoading = false }
+        
+        let loginRequest = AuthLoginRequest(
+            email: id,
+            password: password
+        )
+        
+        do {
+            let response = try await withCheckedThrowingContinuation { continuation in
+                container.usecaseProvider.authUseCase
+                    .executePostLogin(login: loginRequest)
+                    .validateResult()
+                    .sink { completion in
+                        if case .failure(let error) = completion {
+                            continuation.resume(throwing: error)
+                        }
+                    } receiveValue: { response in
+                        continuation.resume(returning: response)
+                    }
+                    .store(in: &cancellables)
+            }
+            
+            Logger.logDebug("로그인", "성공")
+            
+            /// 토큰 저장
+            TokenManager.shared.save(response: response)
+            
+            return .success(true)
+        } catch {
+            Logger.logError("로그인", "실패: \(error.localizedDescription)")
+            return .failure(error)
+        }
+        
     }
     
     /// 로그인 실패 시 처리 함수

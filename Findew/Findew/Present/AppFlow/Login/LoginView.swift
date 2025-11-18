@@ -169,12 +169,14 @@ struct LoginView: View {
     }
     
     private func loginAction() {
-        let success = viewModel.loginAction()
-        switch success {
-        case .success:
-            self.appFlow.loginSuccess()
-        case .failure:
-            self.viewModel.loginFailureAlert()
+        Task {
+            let success = await viewModel.loginAction()
+            switch success {
+            case .success:
+                self.appFlow.loginSuccess()
+            case .failure:
+                self.viewModel.loginFailureAlert()
+            }
         }
     }
 }

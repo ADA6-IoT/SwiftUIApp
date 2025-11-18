@@ -67,7 +67,7 @@ class PatientsTableViewModel {
     var expandedSection: Set<Int> = .init()
     
     // MARK: - Dependency
-    private let container: DIContainer
+    let container: DIContainer
     private var cancellables: Set<AnyCancellable> = .init()
     
     // MARK: - Init

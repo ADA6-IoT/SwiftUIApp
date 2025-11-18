@@ -10,8 +10,8 @@ import SwiftUI
 struct DeviceListView: View {
     @State var viewModel: DeviceListViewModel
     
-    init() {
-        self.viewModel = .init()
+    init(container: DIContainer) {
+        self.viewModel = .init(container: container)
     }
     
     var body: some View {
@@ -78,8 +78,8 @@ struct DeviceListView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        DeviceListView()
-    }
-}
+//#Preview {
+//    NavigationStack {
+//        DeviceListView()
+//    }
+//}

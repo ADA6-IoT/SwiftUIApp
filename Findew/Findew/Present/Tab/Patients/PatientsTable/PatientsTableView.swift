@@ -56,7 +56,7 @@ struct PatientsTableView: View {
                     PatientPopOverView(patientType: .correction, patient: patient, container: container)
                 })
                 .sheet(isPresented: $viewModel.isShowAdd, content: {
-                    PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: ""), container: container)
+                    PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: "", bed: 0, departmentId: UUID()), container: container)
                         .presentationDetents([.large])
                 })
         })
@@ -80,49 +80,41 @@ struct PatientsTableView: View {
     private var tableContents: some View {
         Table(of: PatientDTO.self, selection: $viewModel.selectionPatient, sortOrder: $viewModel.sortOrder, columns: {
             /* 이름 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[0]), value: \.name)
-                .width(max: PatientsTableConstant.columnsSize[0])
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[0])) { patient in
+                let selected = viewModel.selectionPatient.contains(patient.id)
+                Text(patient.name)
+                    .foregroundStyle(selected ? .white : .black)
+            }
+            .width(max: PatientsTableConstant.columnsSize[0])
             
             /* 병동번호 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[1]), value: \.wardBedNumber) { patient in
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[1])) { patient in
                 let selected = viewModel.selectionPatient.contains(patient.id)
-                
                 Text(patient.wardBedNumber)
                     .foregroundStyle(selected ? .white : .black)
-                
             }
             .width(max: PatientsTableConstant.columnsSize[1])
             
             /* 소속과 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[2]), value: \.department.name) { patient in
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[2])) { patient in
                 let selected = viewModel.selectionPatient.contains(patient.id)
-                
                 Text(patient.department.name)
                     .foregroundStyle(selected ? .white : .black)
             }
             .width(max: PatientsTableConstant.columnsSize[2])
             
             /* 현 위치 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[3]), value: \.floorZone) { patient in
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[3])) { patient in
                 let selected = viewModel.selectionPatient.contains(patient.id)
-                Group {
-                    if let floor = patient.currenetLocation.floor,
-                       let zone = patient.currenetLocation.zoneName {
-                        Text("\(floor)층 \(zone)")
-                        
-                    } else {
-                        Text("현재 위치 파악 불가")
-                    }
-                }
-                .foregroundStyle(selected ? .white : .black)
+                Text(currentLocationText(for: patient))
+                    .foregroundStyle(selected ? .white : .black)
             }
             .width(ideal: PatientsTableConstant.columnsSize[3])
             
             /* 기타 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[4]), value: \.memo) { patient in
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[4])) { patient in
                 let selected = viewModel.selectionPatient.contains(patient.id)
-                
-                Text(patient.memo)
+                Text(patient.memo ?? "")
                     .foregroundStyle(selected ? .white : .black)
             }
             .width(ideal: PatientsTableConstant.columnsSize[4])
@@ -163,7 +155,7 @@ struct PatientsTableView: View {
             }
         }
     }
-
+    
     // MARK: - Context Menu
     /// 컨텍스트 메뉴 액션 핸들러
     /// - Parameters:
@@ -179,7 +171,7 @@ struct PatientsTableView: View {
             viewModel.delete(patient)
         }
     }
-
+    
     // MARK: - ETC
     /// 검색 placeholder
     private var placeholderText: Text {
@@ -191,6 +183,18 @@ struct PatientsTableView: View {
     /// - Returns: 텍스트 뷰 반환
     private func tableTitle(_ text: String) -> Text {
         Text(text)
+    }
+    
+    /// 현 위치 텍스트 생성 (PatientDTO.device.currentZone 사용)
+    private func currentLocationText(for patient: PatientDTO) -> String {
+        if let zone = patient.device?.currentZone {
+            if let floor = zone.floor {
+                return "\(floor)층 \(zone.name)"
+            } else {
+                return zone.name
+            }
+        }
+        return "현재 위치 파악 불가"
     }
     
     // MARK: - Delete

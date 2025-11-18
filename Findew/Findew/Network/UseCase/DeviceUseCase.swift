@@ -36,7 +36,7 @@ class DeviceUseCase: DeviceUseCaseProtocol {
         service.putUpdate(path: path, update: update)
     }
     /// 기기 신고
-    func executePostReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError> {
+    func executePostReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceResponse>, MoyaError> {
         service.postReports(report: report)
     }
 }

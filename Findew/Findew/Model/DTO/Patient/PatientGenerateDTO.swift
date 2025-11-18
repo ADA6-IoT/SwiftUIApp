@@ -8,7 +8,8 @@
 import Foundation
 
 /// 환자 등록
-struct PatientGenerateRequest: Codable {
+struct PatientGenerateRequest: Codable, Identifiable {
+    var id: UUID = .init()
     var name: String
     var ward: String
     var bed: Int

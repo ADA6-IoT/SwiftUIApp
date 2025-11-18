@@ -157,7 +157,11 @@ struct PatientsInfo: View {
                 .padding(.horizontal, 10)
             
             // !!!: - bed 옵셔널이 아니라 오류가 나는것같은데..
-            generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
+//            generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
+//                .frame(maxWidth: PatientsConstant.fieldWidth.1)
+            
+            // 수정용
+            generateIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
                 .frame(maxWidth: PatientsConstant.fieldWidth.1)
         })
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -225,4 +229,31 @@ struct PatientsInfo: View {
             .font(.b1)
             .foregroundStyle(.gray03)
     }
+    
+    /// 수정용
+    @ViewBuilder
+    private func generateIntTextField(_ placeholder: String, value: Binding<Int>, equals: PatientComponentsEnum) -> some View {
+        let binding = Binding<String>(
+            get: {
+                return String(value.wrappedValue)
+            },
+            set: { newValue in
+                if let intValue = Int(newValue) {
+                    value.wrappedValue = intValue
+                }
+            }
+        )
+        
+        TextField("", text: binding, prompt: placeText(placeholder))
+            .keyboardType(.numberPad)
+            .textFieldStyle(.plain)
+            .font(.b1)
+            .foregroundStyle(.black)
+            .focused($isFocused, equals: equals)
+            .onSubmit {
+                isFocused = equals.nextField
+            }
+    }
+    
+    
 }
