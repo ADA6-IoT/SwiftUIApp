@@ -26,9 +26,6 @@ class PatientsTableViewModel {
     var isShowInquiry: Bool = false
     var isShowReport: Bool = false
     var isLoading: Bool = false
-    /*
-     신경외과 / 신경과 / 정형외과 / 소화기내과 / 순환기내과 / 신장내과 / 외과 / 재활의학과 / 산부인과
-     */
     // MARK: - StoreProperty
     /// API로부터 가져오는 환자 데이터
     var _patientsData: [PatientDTO] = []

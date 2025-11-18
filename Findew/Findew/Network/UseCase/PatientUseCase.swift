@@ -17,14 +17,9 @@ class PatientUseCase: PatientUseCaseProtocol {
     }
 
     /// 환자 전체 조회
-    func executeGetList(query: PatientListQuery) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
-        service.getList(query: query)
+    func executeGetList() -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
+        service.getList()
     }
-
-//    /// 환자 검색
-//    func executeGetSearch(path: PatientSearchPath) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
-//        service.getSearch(path: path)
-//    }
 
     /// 환자 삭제
     func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {

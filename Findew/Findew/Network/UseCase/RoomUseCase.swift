@@ -13,7 +13,7 @@ class RoomUseCase: RoomUseCaseProtocol {
     private let service: RoomServiceProtocol
     
     init(
-    service: RoomServiceProtocol = RoomService()
+        service: RoomServiceProtocol = RoomService()
     ) {
         self.service = service
     }

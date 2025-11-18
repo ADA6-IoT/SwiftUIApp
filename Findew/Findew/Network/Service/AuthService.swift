@@ -33,7 +33,7 @@ class AuthService: AuthServiceProtocol, BaseAPIService {
         request(.getReissue)
     }
     
-    func postSignup(sign: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError> {
-        request(.postSignup(sign: sign))
+    func logout(refreshToken: String) -> AnyPublisher<ResponseData<String>, MoyaError> {
+        request(.logout(refreshToken: refreshToken))
     }
 }

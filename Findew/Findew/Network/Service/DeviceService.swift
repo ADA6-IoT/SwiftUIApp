@@ -25,24 +25,8 @@ class DeviceService: DeviceServiceProtocol, BaseAPIService {
         self.callbackQueue = callbackQueue
     }
     
-    func getSearch(query: DeviceSearchQuery) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError> {
-        request(.getSearch(query: query))
-    }
-    
-    func getUnassigned() -> AnyPublisher<ResponseData<[DeviceDTO]>, MoyaError> {
-        request(.getUnassigned)
-    }
-    
     func getList() -> AnyPublisher<ResponseData<[DeviceDTO]>, MoyaError> {
         request(.getList)
-    }
-    
-    func postGenerate(generate: DeviceGenerateRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError> {
-        request(.postGenerate(generate: generate))
-    }
-    
-    func putUpdate(path: DevicePutPath, update: DeviceUpdateRequest) -> AnyPublisher<ResponseData<DeviceDTO>, MoyaError> {
-        request(.putUpdate(path: path, update: update))
     }
     
     func postReports(report: DeviceReportsRequest) -> AnyPublisher<ResponseData<DeviceResponse>, MoyaError> {

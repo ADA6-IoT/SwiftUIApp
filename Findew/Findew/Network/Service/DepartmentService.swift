@@ -28,12 +28,4 @@ class DepartmentService: DepartmentServiceProtocol, BaseAPIService {
     func getList() -> AnyPublisher<ResponseData<[DepartmentDTO]>, MoyaError> {
         request(.getList)
     }
-    
-    func postGenerate(generate: DepartmentGenerateRequest) -> AnyPublisher<ResponseData<DepartmentDTO>, MoyaError> {
-        request(.postGenerate(generate: generate))
-    }
-    
-    func putUpdate(path: DevicePutPath, update: DepartmentUpdateRequest) -> AnyPublisher<ResponseData<DepartmentDTO>, MoyaError> {
-        request(.putUpdate(path: path, update: update))
-    }
 }

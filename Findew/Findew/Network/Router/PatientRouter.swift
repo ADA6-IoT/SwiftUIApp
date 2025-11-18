@@ -11,7 +11,7 @@ import Alamofire
 
 enum PatientRouter {
     /// 환자 전체 조희
-    case getList(query: PatientListQuery)
+    case getList
     /// 환자 삭제
     case deletePatient(path: PatientDeletPath)
     /// 환자 등록

@@ -25,8 +25,8 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
         self.callbackQueue = callbackQueue
     }
     
-    func getList(query: PatientListQuery) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
-        request(.getList(query: query))
+    func getList() -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
+        request(.getList)
     }
     
     func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
