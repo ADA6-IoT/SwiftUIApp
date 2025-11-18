@@ -11,5 +11,7 @@
 	<array>
 		<string>PretendardVariable.ttf</string>
 	</array>
+	<key>API_URL</key>
+	<string>$(API_URL)</string>
 </dict>
 </plist>

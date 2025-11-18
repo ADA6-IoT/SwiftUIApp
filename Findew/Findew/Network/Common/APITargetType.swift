@@ -12,7 +12,7 @@ protocol APITargetType: TargetType {}
 
 extension APITargetType {
     var baseURL: URL {
-        return URL(string: "http://52.78.98.182:8080/")!
+        return URL(string: Config.baseURL)!
     }
     
     var headers: [String : String]? {
