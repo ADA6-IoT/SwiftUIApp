@@ -28,8 +28,4 @@ class HospitalService: HospitalServiceProtocol, BaseAPIService {
     func postInquiry(inquiry: HospitalInquiryRequest) -> AnyPublisher<ResponseData<HospitalDTO>, MoyaError> {
         request(.postInquiry(inquiry: inquiry))
     }
-    
-    func postReport(report: HospitalAppReportRequest) -> AnyPublisher<ResponseData<HospitalDTO>, MoyaError> {
-        request(.postReport(report: report))
-    }
 }

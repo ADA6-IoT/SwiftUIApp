@@ -23,6 +23,8 @@ struct LoadingOverlay: ViewModifier {
     enum LoadingTextType: String {
         case defaulLoading = "잠시만 기다려주세요"
         case loginLoading = "로그인 중입니다. \n잠시만 기다려주세요"
+        case createPatients = "환자 생성중입니다. \n잠시만 기다려주세요"
+        case updatePatienst = "환자 수정중입니다. \n잠시만 기다려주세요"
     }
     
     // MARK: - Init

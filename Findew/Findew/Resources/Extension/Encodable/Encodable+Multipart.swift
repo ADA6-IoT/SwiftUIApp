@@ -25,15 +25,6 @@ extension HospitalRouter {
                 #endif
                 return []
             }
-        } else if let report = request as? HospitalAppReportRequest {
-            do {
-                jsonPartData = try JSONSerialization.data(withJSONObject: ["content": report.content])
-            } catch {
-                #if DEBUG
-                print("실패 (HospitalAppReportRequest): \(error.localizedDescription)")
-                #endif
-                return []
-            }
         }
         
         multipartData.append(

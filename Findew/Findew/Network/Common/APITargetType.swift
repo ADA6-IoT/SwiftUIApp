@@ -12,7 +12,7 @@ protocol APITargetType: TargetType {}
 
 extension APITargetType {
     var baseURL: URL {
-        return URL(string: "들어갈 주소")!
+        return URL(string: "http://52.78.98.182:8080/")!
     }
     
     var headers: [String : String]? {

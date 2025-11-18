@@ -10,6 +10,8 @@ import Moya
 import Combine
 
 class PatientService: PatientServiceProtocol, BaseAPIService {
+    
+    
     typealias Target = PatientRouter
     
     var provider: MoyaProvider<Target>
@@ -25,15 +27,11 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
         self.callbackQueue = callbackQueue
     }
     
-    func getList(query: PatientListQuery) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
-        request(.getList(query: query))
+    func getList() -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
+        request(.getList)
     }
     
-    func getSearch(path: PatientSearchPath) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError> {
-        request(.getSearch(path: path))
-    }
-    
-    func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
+    func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<String>, Moya.MoyaError> {
         request(.deletePatient(path: path))
     }
     
@@ -45,7 +43,7 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
         request(.putUpdate(path: path, update: update))
     }
     
-    func getDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDetailResponse>, MoyaError> {
+    func getDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError> {
         request(.getDetail(path: path))
     }
 }

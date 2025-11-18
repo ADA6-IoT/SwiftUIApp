@@ -1,16 +1,16 @@
 //
-//  DepartmentService.swift
+//  RoomService.swift
 //  Findew
 //
-//  Created by 내꺼다 on 11/10/25.
+//  Created by 내꺼다 on 11/14/25.
 //
 
 import Foundation
-import Combine
 import Moya
+import Combine
 
-class DepartmentService: DepartmentServiceProtocol, BaseAPIService {
-    typealias Target = DepartmentRouter
+class RoomService: RoomServiceProtocol, BaseAPIService {
+    typealias Target = RoomRouter
     
     var provider: MoyaProvider<Target>
     var decoder: JSONDecoder
@@ -25,7 +25,7 @@ class DepartmentService: DepartmentServiceProtocol, BaseAPIService {
         self.callbackQueue = callbackQueue
     }
     
-    func getList() -> AnyPublisher<ResponseData<[DepartmentDTO]>, MoyaError> {
+    func getList() -> AnyPublisher<ResponseData<RoomListResponse>, MoyaError> {
         request(.getList)
     }
 }

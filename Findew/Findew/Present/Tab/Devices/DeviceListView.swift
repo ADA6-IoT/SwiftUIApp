@@ -10,8 +10,8 @@ import SwiftUI
 struct DeviceListView: View {
     @State var viewModel: DeviceListViewModel
     
-    init() {
-        self.viewModel = .init()
+    init(container: DIContainer) {
+        self.viewModel = .init(container: container)
     }
     
     var body: some View {
@@ -24,10 +24,15 @@ struct DeviceListView: View {
             .toolbar(content: {
                 ToolBarCollection.DeviceManagementToolbar(
                     selectedMode: $viewModel.isSelectionMode,
-                    send: { print("기기 신고 완료") },
-                    cancel: { viewModel.isSelectionMode.toggle() }
+                    isAvailable: viewModel.selectedDeviceIds.count > 0,
+                    send: { viewModel.reportDevices() },
+                    cancel: { viewModel.cancelSelection() }
                 )
             })
+            .alertPrompt(item: $viewModel.alertPrompt)
+            .onAppear {
+                viewModel.listDevices()
+            }
     }
     
     // MARK: - Content
@@ -42,22 +47,12 @@ struct DeviceListView: View {
                         get: {
                             viewModel.isSelectionMode && viewModel.selectedDeviceIds.contains(device.id)
                         },
-                        set: { isSelected in
-                            if viewModel.isSelectionMode {
-                                if isSelected {
-                                    viewModel.selectedDeviceIds.insert(device.id)
-                                } else {
-                                    viewModel.selectedDeviceIds.remove(device.id)
-                                }
-                            }
+                        set: { _ in
+                            // onTap 에서 처리
                         }
                     ),
                                       onTap: viewModel.isSelectionMode ? {
-                        if viewModel.selectedDeviceIds.contains(device.id) {
-                            viewModel.selectedDeviceIds.remove(device.id)
-                        } else {
-                            viewModel.selectedDeviceIds.insert(device.id)
-                        }
+                        viewModel.toggleDeviceSelection(device.id)
                     } : nil
                     )
                 }
@@ -78,8 +73,8 @@ struct DeviceListView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        DeviceListView()
-    }
-}
+//#Preview {
+//    NavigationStack {
+//        DeviceListView()
+//    }
+//}

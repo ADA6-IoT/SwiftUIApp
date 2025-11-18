@@ -168,14 +168,16 @@ struct LoginView: View {
         .disabled(!viewModel.isLoginEnabled)
     }
     
+    /// 로그인 버튼 함수
     private func loginAction() {
-        let success = viewModel.loginAction()
-        switch success {
-        case .success:
-            self.appFlow.loginSuccess()
-        case .failure:
-            self.viewModel.loginFailureAlert()
+        Task {
+            await self.viewModel.loginAction()
+            await rootViewChange()
         }
+    }
+    
+    private func rootViewChange() async {
+        appFlow.loginSuccess()
     }
 }
 

@@ -1,24 +1,24 @@
 //
-//  DepartmentRouter.swift
+//  RoomRouter.swift
 //  Findew
 //
-//  Created by 내꺼다 on 10/22/25.
+//  Created by 내꺼다 on 11/14/25.
 //
 
 import Foundation
 import Moya
 import Alamofire
 
-enum DepartmentRouter {
-    /// 소속과 전체 조회
+enum RoomRouter {
+    /// 병실 목록 조회
     case getList
 }
 
-extension DepartmentRouter: APITargetType {
+extension RoomRouter: APITargetType {
     var path: String {
         switch self {
         case .getList:
-            return "/api/departments/all"
+            return "/api/rooms/all"
         }
     }
     

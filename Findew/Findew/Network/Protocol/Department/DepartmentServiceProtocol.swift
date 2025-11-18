@@ -12,8 +12,4 @@ import Combine
 protocol DepartmentServiceProtocol {
     /// 소속과 전체 조회
     func getList() -> AnyPublisher<ResponseData<[DepartmentDTO]>, MoyaError>
-    /// 소속과 생성
-    func postGenerate(generate: DepartmentGenerateRequest) -> AnyPublisher<ResponseData<DepartmentDTO>, MoyaError>
-    /// 소속과 수정
-    func putUpdate(path: DevicePutPath, update: DepartmentUpdateRequest) -> AnyPublisher<ResponseData<DepartmentDTO>, MoyaError>
 }

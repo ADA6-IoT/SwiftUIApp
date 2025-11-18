@@ -10,8 +10,6 @@ import Moya
 import Combine
 
 protocol HospitalServiceProtocol {
-    /// 앱 문의
+    /// 앱 문의 및 신고
     func postInquiry(inquiry: HospitalInquiryRequest) -> AnyPublisher<ResponseData<HospitalDTO>, MoyaError>
-    /// 앱 신고
-    func postReport(report: HospitalAppReportRequest) -> AnyPublisher<ResponseData<HospitalDTO>, MoyaError>
 }

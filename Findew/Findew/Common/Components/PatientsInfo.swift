@@ -11,8 +11,8 @@ struct PatientsInfo: View {
     // MARK: - Property
     let info: PatientComponentsEnum
     @Binding var value: PatientGenerateRequest
-    var departments: [Department]
-    var devices: [Device]
+    var departments: [DepartmentDTO]
+    var devices: [DeviceDTO]
     @FocusState var isFocused: PatientComponentsEnum?
     
     // MARK: - Constants
@@ -32,8 +32,8 @@ struct PatientsInfo: View {
     init(
         info: PatientComponentsEnum,
         value: Binding<PatientGenerateRequest>,
-        departments: [Department] = [],
-        devices: [Device] = []
+        departments: [DepartmentDTO] = [],
+        devices: [DeviceDTO] = []
     ) {
         self.info = info
         self._value = value
@@ -86,15 +86,15 @@ struct PatientsInfo: View {
         case .department:
             ForEach(departments, id: \.id) { department in
                 Button(action: {
-                    value.department = department
+                    value.departmentId = department.id
                 }) {
                     Text(department.name)
                 }
             }
         case .device:
-            ForEach(devices, id: \.self) { device in
+            ForEach(devices, id: \.id) { device in
                 Button(action: {
-                    value.deviceSerial = device
+                    value.deviceSerial = device.serialNumber
                 }, label: {
                     Text(device.serialNumber)
                 })
@@ -126,13 +126,9 @@ struct PatientsInfo: View {
     private var selectedMenuText: String {
         switch info {
         case .department:
-            return departments.first(where: { $0.name == value.department?.name})?.name ?? ""
+            return departments.first(where: { $0.id == value.departmentId})?.name ?? ""
         case .device:
-            if let serial = value.deviceSerial,
-               let found = devices.first(where: {$0.serialNumber == serial.serialNumber }) {
-                return found.serialNumber
-            }
-            return ""
+            return value.deviceSerial ?? ""
         default:
             return ""
         }
@@ -141,9 +137,9 @@ struct PatientsInfo: View {
     private var selectedValue: Bool {
         switch info {
         case .department:
-            return value.department?.name.isEmpty == false
+            return departments.first(where: { $0.id == value.departmentId }) != nil
         case .device:
-            return value.deviceSerial?.serialNumber.isEmpty == false
+            return value.deviceSerial?.isEmpty == false
         default:
             return false
         }
@@ -160,7 +156,7 @@ struct PatientsInfo: View {
                 .foregroundStyle(.black)
                 .padding(.horizontal, 10)
             
-            generateOptionalIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
+            generateIntTextField(PatientsConstant.bedPlaceholder, value: $value.bed, equals: .bed)
                 .frame(maxWidth: PatientsConstant.fieldWidth.1)
         })
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -228,4 +224,31 @@ struct PatientsInfo: View {
             .font(.b1)
             .foregroundStyle(.gray03)
     }
+    
+    /// 수정용
+    @ViewBuilder
+    private func generateIntTextField(_ placeholder: String, value: Binding<Int>, equals: PatientComponentsEnum) -> some View {
+        let binding = Binding<String>(
+            get: {
+                return String(value.wrappedValue)
+            },
+            set: { newValue in
+                if let intValue = Int(newValue) {
+                    value.wrappedValue = intValue
+                }
+            }
+        )
+        
+        TextField("", text: binding, prompt: placeText(placeholder))
+            .keyboardType(.numberPad)
+            .textFieldStyle(.plain)
+            .font(.b1)
+            .foregroundStyle(.black)
+            .focused($isFocused, equals: equals)
+            .onSubmit {
+                isFocused = equals.nextField
+            }
+    }
+    
+    
 }

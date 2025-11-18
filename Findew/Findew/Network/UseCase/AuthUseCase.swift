@@ -17,7 +17,7 @@ class AuthUseCase: AuthUseCaseProtocol {
     }
     
     /// 로그인
-    func executePostLogin(login: AuthLoginRequest) -> AnyPublisher<ResponseData<AuthDTO>, MoyaError> {
+    func executePostLogin(login: AuthLoginRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError> {
         service.postLogin(login: login)
     }
     /// 토큰 갱신
@@ -25,7 +25,7 @@ class AuthUseCase: AuthUseCaseProtocol {
         service.getReissue()
     }
     /// 병원 계정 생성
-    func executePostSignup(sign: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthDTO>, MoyaError> {
-        service.postSignup(sign: sign)
+    func executeLogout(refreshToken: String) -> AnyPublisher<ResponseData<String>, MoyaError> {
+        service.logout(refreshToken: refreshToken)
     }
 }

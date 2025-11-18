@@ -8,14 +8,14 @@
 import Foundation
 
 /// Department DTO
-struct DepartmentDTO: Codable {
-    let id: String
+struct DepartmentDTO: Codable, Identifiable {
+    let id: UUID
     let name: String
     let code: String
-    let description: String
+    let description: String?
     let patientCount: Int
-    let createdAt: String
-    let updatedAt: String
+    let createdAt: String?
+    let updatedAt: String?
     
     enum CodingKeys: String, CodingKey {
         case id

@@ -135,6 +135,7 @@ struct ToolBarCollection {
     
     struct SendReportButton: ToolbarContent {
         @Binding var selectedMode: Bool
+        let isAvailable: Bool
         let action: () -> Void
         
         var body: some ToolbarContent {
@@ -149,8 +150,9 @@ struct ToolBarCollection {
                 }, label: {
                     Text("보내기")
                         .font(.b3)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(isAvailable ? .black : .gray07)
                 })
+                .disabled(!isAvailable)
             })
         }
     }
@@ -180,13 +182,14 @@ extension ToolBarCollection {
     
     struct DeviceManagementToolbar: ToolbarContent {
         @Binding var selectedMode: Bool
+        let isAvailable: Bool
         let send: () -> Void
         let cancel: () -> Void
         
         var body: some ToolbarContent {
             if selectedMode {
                 CancellButton(action: cancel)
-                SendReportButton(selectedMode: $selectedMode, action: send)
+                SendReportButton(selectedMode: $selectedMode, isAvailable: isAvailable, action: send)
             } else {
                 DeviceReportButton(selectedMode: $selectedMode)
             }

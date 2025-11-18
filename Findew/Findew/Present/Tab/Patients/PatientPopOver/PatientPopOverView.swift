@@ -24,8 +24,18 @@ struct PatientPopOverView: View {
     }
     
     // MARK: - Init
-    init(patientType: PatientEnum, patient: PatientGenerateRequest) {
-        self.viewModel = .init(patientType: patientType, patient: patient)
+    init(
+        patientType: PatientEnum,
+        patient: PatientGenerateRequest,
+        patientId: UUID? = nil,
+        container: DIContainer
+    ) {
+        self.viewModel = .init(
+            patientType: patientType,
+            patient: patient,
+            patientId: patientId,
+            container: container
+        )
     }
     
     var body: some View {
@@ -40,6 +50,12 @@ struct PatientPopOverView: View {
                 .fill(.white)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .task {
+            await viewModel.getDepartments()
+            await viewModel.getDeviceList()
+        }
+        .loadingOverlay(viewModel.createLoading, loadingTextType: .createPatients)
+        .loadingOverlay(viewModel.updateLoading, loadingTextType: .updatePatienst)
     }
     
     // MARK: - Top
@@ -61,25 +77,37 @@ struct PatientPopOverView: View {
         HStack {
             topButton({
                 dismiss()
-            }, image: PatientPopOverConstant.xmark)
-            
+            }, image: PatientPopOverConstant.xmark, isCheckButton: false)
+
             Spacer()
-            
+
             topButton({
-                print("추후 수정")
-            }, image: PatientPopOverConstant.check)
+                if viewModel.patientType == .registration {
+                    Task {
+                        await viewModel.generatePatient()
+                        dismiss()
+                    }
+                } else if viewModel.patientType == .correction {
+                    guard let patientId = viewModel.patientId else { return }
+                    Task {
+                        await viewModel.updatePatient(patientId: patientId)
+                        dismiss()
+                    }
+                }
+            }, image: PatientPopOverConstant.check, isCheckButton: true)
         }
     }
-    
-    private func topButton(_ action: @escaping () -> Void, image: String) -> some View {
+
+    private func topButton(_ action: @escaping () -> Void, image: String, isCheckButton: Bool) -> some View {
         Button(action: {
             action()
         }, label: {
             Image(systemName: image)
-                .tint(.black)
+                .tint(isCheckButton && !viewModel.isBtnActivity ? .gray07 : .black)
         })
         .padding()
-        .glassEffect(.regular, in: Circle())
+        .glassEffect(.regular.interactive(), in: Circle())
+        .disabled(isCheckButton && !viewModel.isBtnActivity)
     }
     // MARK: - Middle
     private var middleContent: some View {
@@ -94,4 +122,8 @@ struct PatientPopOverView: View {
             }
         })
     }
+}
+
+#Preview {
+    PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: "", bed: 0, departmentId: .init()), patientId: .none, container: DIContainer())
 }

@@ -47,7 +47,7 @@ enum PatientColumn: Int, CaseIterable, Identifiable {
         case .department:
             return \.department.name
         case .location:
-            return \.floorZone
+            return \.device?.currentZone
         case .memo:
             return \.memo
         }

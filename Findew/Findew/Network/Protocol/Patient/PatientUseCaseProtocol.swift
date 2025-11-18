@@ -11,15 +11,13 @@ import Combine
 
 protocol PatientUseCaseProtocol {
     /// 환자 전체 조회
-    func executeGetList(query: PatientListQuery) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError>
-    /// 환자 검색
-    func executeGetSearch(path: PatientSearchPath) -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError>
+    func executeGetList() -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError>
     /// 환자 삭제
-    func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
+    func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<String>, MoyaError>
     /// 환자 등록
     func executePostGenerate(generate: PatientGenerateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError>
     /// 환자 수정
     func executePutUpdate(path: PatientUpdatePath, update: PatientUpdateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError>
     /// 환자 상세 조회
-    func executeGetDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDetailResponse>, MoyaError>
+    func executeGetDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError>
 }

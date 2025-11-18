@@ -19,12 +19,4 @@ class DepartmentUseCase: DepartmentUseCaseProtocol {
     func executeGetList() -> AnyPublisher<ResponseData<[DepartmentDTO]>, MoyaError> {
         service.getList()
     }
-    /// 소속과 생성
-    func executePostGenerate(generate: DepartmentGenerateRequest) -> AnyPublisher<ResponseData<DepartmentDTO>, MoyaError> {
-        service.postGenerate(generate: generate)
-    }
-    /// 소속과 수정
-    func executePutUpdate(path: DevicePutPath, update: DepartmentUpdateRequest) -> AnyPublisher<ResponseData<DepartmentDTO>, MoyaError> {
-        service.putUpdate(path: path, update: update)
-    }
 }

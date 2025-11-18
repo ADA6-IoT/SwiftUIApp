@@ -47,7 +47,7 @@ struct SideBarView: View {
         .safeAreaPadding(.horizontal, DefaultConstants.defaultHorizonPadding)
         .contactPrompt(item: $contactAlert)
         .sheet(isPresented: $viewModel.isShowInquiry, content: {
-            ReportInquiry(contactType: .inquiry)
+            ReportInquiry(contactType: .inquiry, container: viewModel.container)
         })
     }
     
