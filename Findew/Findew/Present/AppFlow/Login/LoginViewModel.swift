@@ -32,6 +32,7 @@ class LoginViewModel {
     var alertPrompt: AlertPrompt?
     
     // MARK: - Dependency
+    private let keychainSessionStore: KeychainSessionStore = .init()
     private let container: DIContainer
     private var cancellables: Set<AnyCancellable> = .init()
     
@@ -40,47 +41,45 @@ class LoginViewModel {
         self.container = container
     }
     
-    // MARK: - Method
+    // MARK: - Login Action Method
     /// 로그인 API 호출
     /// - Returns: 로그인 성공 실패 여부
-    public func loginAction() -> Result<Bool, Error> {
-        // TODO: - 로그인 Action 작성
-//        return .success(true)
-        isLoading = true
-        defer { isLoading = false }
+    public func loginAction() async {
+        self.isLoading = true
         
-        let loginRequest = AuthLoginRequest(
-            email: id,
-            password: password
-        )
-        
-        do {
-            let response = try await withCheckedThrowingContinuation { continuation in
-                container.usecaseProvider.authUseCase
-                    .executePostLogin(login: loginRequest)
-                    .validateResult()
-                    .sink { completion in
-                        if case .failure(let error) = completion {
-                            continuation.resume(throwing: error)
-                        }
-                    } receiveValue: { response in
-                        continuation.resume(returning: response)
-                    }
-                    .store(in: &cancellables)
-            }
-            
-            Logger.logDebug("로그인", "성공")
-            
-            /// 토큰 저장
-            TokenManager.shared.save(response: response)
-            
-            return .success(true)
-        } catch {
-            Logger.logError("로그인", "실패: \(error.localizedDescription)")
-            return .failure(error)
-        }
-        
+        container.usecaseProvider.authUseCase.executePostLogin(login: self.generateLoginRequest())
+            .validateResult(onFailureAction: {
+                self.loginFailureAlert()
+            })
+            .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
+                defer { self.isLoading = false }
+                switch completion {
+                case .finished:
+                    Logger.logDebug("로그인", "로그인 성공")
+                case .failure(let failure):
+                    self.loginFailureAlert()
+                    Logger.logDebug("로그인", "로그인 실패")
+                }
+            }, receiveValue: { [weak self] result in
+                guard let self = self else { return }
+                /* 자동 로그인 위함 */
+                self.keychainSessionStore.userInfo = self.generateKeychainUserInfo(result)
+            })
+            .store(in: &cancellables)
     }
+    
+    /// 로그인 액션 모델 생성
+    /// - Returns: 로그인 모델 반환
+    private func generateLoginRequest() -> AuthLoginRequest {
+        .init(email: self.id, password: self.password)
+    }
+    
+    private func generateKeychainUserInfo(_ result: AuthResponse) -> UserInfo {
+        .init(accessToken: result.accessToken, refreshToken: result.refreshToken)
+    }
+    
+    // MARK: - Login Error Method
     
     /// 로그인 실패 시 처리 함수
     private func loginFailure() {
