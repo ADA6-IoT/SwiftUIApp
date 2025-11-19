@@ -27,13 +27,11 @@ struct PatientPopOverView: View {
     init(
         patientType: PatientEnum,
         patient: PatientGenerateRequest,
-        patientId: UUID? = nil,
         container: DIContainer
     ) {
         self.viewModel = .init(
             patientType: patientType,
             patient: patient,
-            patientId: patientId,
             container: container
         )
     }
@@ -51,7 +49,7 @@ struct PatientPopOverView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .task {
-            await viewModel.getDepartments()
+            viewModel.getDepartments()
             await viewModel.getDeviceList()
         }
         .loadingOverlay(viewModel.createLoading, loadingTextType: .createPatients)
@@ -83,14 +81,11 @@ struct PatientPopOverView: View {
 
             topButton({
                 if viewModel.patientType == .registration {
-                    Task {
-                        await viewModel.generatePatient()
+                    viewModel.generatePatient {
                         dismiss()
                     }
                 } else if viewModel.patientType == .correction {
-                    guard let patientId = viewModel.patientId else { return }
-                    Task {
-                        await viewModel.updatePatient(patientId: patientId)
+                    viewModel.updatePatient(patientId: viewModel.patient.id) {
                         dismiss()
                     }
                 }
@@ -103,7 +98,7 @@ struct PatientPopOverView: View {
             action()
         }, label: {
             Image(systemName: image)
-                .tint(isCheckButton && !viewModel.isBtnActivity ? .gray07 : .black)
+                .tint(isCheckButton && !viewModel.isBtnActivity ? .gray03 : .black)
         })
         .padding()
         .glassEffect(.regular.interactive(), in: Circle())
@@ -122,8 +117,4 @@ struct PatientPopOverView: View {
             }
         })
     }
-}
-
-#Preview {
-    PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: "", bed: 0, departmentId: .init()), patientId: .none, container: DIContainer())
 }

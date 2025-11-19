@@ -43,11 +43,12 @@ struct PatientsInfo: View {
     
     // MARK: - Body
     var body: some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .top, spacing: 30) {
             leftTitle
-            Spacer()
             infoContent
+            Spacer()
         }
+        .frame(alignment: .leading)
     }
     // MARK: - Left
     private var leftTitle: some View {
@@ -73,11 +74,13 @@ struct PatientsInfo: View {
     
     // MARK: - Department&Device
     private var menuContent: some View {
-        Menu(content: {
+        Menu(selectedValue ? selectedMenuText : info.placeholderContents ?? "",
+             content: {
             menuItems
-        }, label: {
-            menuLabel
         })
+        .tint(.black)
+        .padding(PatientsConstant.labelPadding)
+        .glassEffect(.regular.interactive(), in: Capsule())
     }
     
     @ViewBuilder
@@ -108,11 +111,20 @@ struct PatientsInfo: View {
     private var menuLabel: some View {
         Group {
             if selectedValue {
-                Text(selectedMenuText)
-                    .font(.b1)
-                    .foregroundStyle(.black)
+                Label(title: {
+                    Text(selectedMenuText)
+                        .font(.b1)
+                        .foregroundStyle(.black)
+                }, icon: {
+                    Image(systemName: "stethoscope")
+                        .tint(.black)
+                })
             } else {
-                placeText(info.placeholderContents ?? "")
+                Label(title: {
+                    placeText(info.placeholderContents ?? "")
+                }, icon: {
+                    
+                })
             }
         }
         .padding(PatientsConstant.labelPadding)
@@ -120,7 +132,6 @@ struct PatientsInfo: View {
             Capsule()
                 .fill(.gray01)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var selectedMenuText: String {
@@ -230,10 +241,12 @@ struct PatientsInfo: View {
     private func generateIntTextField(_ placeholder: String, value: Binding<Int>, equals: PatientComponentsEnum) -> some View {
         let binding = Binding<String>(
             get: {
-                return String(value.wrappedValue)
+                return value.wrappedValue == 0 ? "" : String(value.wrappedValue)
             },
             set: { newValue in
-                if let intValue = Int(newValue) {
+                if newValue.isEmpty {
+                    value.wrappedValue = 0
+                } else if let intValue = Int(newValue) {
                     value.wrappedValue = intValue
                 }
             }

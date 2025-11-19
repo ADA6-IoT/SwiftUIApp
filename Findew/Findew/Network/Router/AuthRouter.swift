@@ -38,12 +38,12 @@ extension AuthRouter: APITargetType {
         case .postLogin:
             return .post
         case .getReissue:
-            return .get
+            return .post
         case .logout:
             return .post
         }
     }
-    
+
     var task: Moya.Task {
         switch self {
         case .postLogin(let login):
@@ -54,8 +54,14 @@ extension AuthRouter: APITargetType {
             ], encoding: JSONEncoding.default)
         case .logout(let token):
             return .requestParameters(parameters: [
-                "refresh-token": token
+                "refresh_token": token
             ], encoding: JSONEncoding.default)
         }
+    }
+    
+    var headers: [String : String]? {
+        return [
+            "Content-Type": "application/json",
+        ]
     }
 }

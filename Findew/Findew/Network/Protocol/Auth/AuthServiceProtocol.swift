@@ -15,5 +15,5 @@ protocol AuthServiceProtocol {
     /// 토큰 갱신
     func getReissue(token: String) -> AnyPublisher<ResponseData<AuthReissueResponse>, MoyaError>
     /// 병원 계정 생성
-    func logout(refreshToken: String) -> AnyPublisher<ResponseData<String>, MoyaError>
+    func logout(refreshToken: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
 }

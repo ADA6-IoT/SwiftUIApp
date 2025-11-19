@@ -62,7 +62,7 @@ class AppFlow {
     }
     
     /// 로그아웃 성공 시 홈 이동
-    func logout() {
+    func logout() async {
           Logger.logDebug("AppFlow", "로그아웃 - 로그인 화면으로 이동")
           
           appState = .login

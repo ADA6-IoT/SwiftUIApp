@@ -35,4 +35,9 @@ extension HospitalRouter: APITargetType {
             return .uploadMultipart(makeMultipartData(for: inquiry))
         }
     }
+    
+    
+    var headers: [String : String]? {
+        return ["Content-Type": "multipart/form-data"]
+    }
 }

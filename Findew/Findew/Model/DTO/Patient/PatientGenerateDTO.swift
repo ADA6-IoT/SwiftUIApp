@@ -27,19 +27,37 @@ struct PatientGenerateRequest: Codable, Identifiable {
     }
 }
 
-struct PatientGenerateResponse: Codable, DeviceInfo {
-    let serialNumber: String
-    let batteryLevel: Int
-    let isMalfunctioning: Bool
+struct PatientGenerateResponse: Codable {
+    let id: UUID
+    let name: String
+    let ward: String
+    let bed: Int
+    let department: Department
+    let device: SimpleDeviceInfo?
+    let memo: String?
+    let createdAt: Date?
+    let updatedAt: Date?
     
     enum CodingKeys: String, CodingKey {
-        case serialNumber = "serial_number"
-        case batteryLevel = "battery_level"
-        case isMalfunctioning = "is_malfunctioning"
+        case id, name, ward, bed, department, device, memo
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+    
+    struct SimpleDeviceInfo: Codable, DeviceInfo {
+        let serialNumber: String
+        let batteryLevel: Int
+        let isMalfunctioning: Bool
+        
+        enum CodingKeys: String, CodingKey {
+            case serialNumber = "serial_number"
+            case batteryLevel = "battery_level"
+            case isMalfunctioning = "is_malfunctioning"
+        }
     }
 }
 
-protocol DeviceInfo {
+protocol DeviceInfo: Codable {
     var serialNumber: String { get }
     var batteryLevel: Int { get }
     var isMalfunctioning: Bool { get }

@@ -47,7 +47,7 @@ extension PatientRouter: APITargetType {
         case .postGenerate:
             return .post
         case .putUpdate:
-            return .put
+            return .patch
         }
     }
     
@@ -64,5 +64,11 @@ extension PatientRouter: APITargetType {
         case .getDetail:
             return .requestPlain
         }
+    }
+    
+    var headers: [String : String]? {
+        return [
+            "Content-Type": "application/json",
+        ]
     }
 }

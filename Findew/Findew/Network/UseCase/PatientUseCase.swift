@@ -22,17 +22,17 @@ class PatientUseCase: PatientUseCaseProtocol {
     }
 
     /// 환자 삭제
-    func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<String>, MoyaError> {
+    func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
         service.deletePatient(path: path)
     }
 
     /// 환자 등록
-    func executePostGenerate(generate: PatientGenerateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError> {
+    func executePostGenerate (generate: PatientGenerateRequest) -> AnyPublisher<ResponseData<PatientGenerateResponse>, MoyaError> {
         service.postGenerate(generate: generate)
     }
 
     /// 환자 수정
-    func executePutUpdate(path: PatientUpdatePath, update: PatientUpdateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError> {
+    func executePutUpdate(path: PatientUpdatePath, update: PatientUpdateRequest) -> AnyPublisher<ResponseData<PatientGenerateResponse>, MoyaError> {
         service.putUpdate(path: path, update: update)
     }
 

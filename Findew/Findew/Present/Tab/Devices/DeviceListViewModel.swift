@@ -23,7 +23,7 @@ class DeviceListViewModel {
     
     var searchText: String = ""
     var isSelectionMode: Bool = false
-    var selectedDeviceIds: Set<UUID> = []
+    var selectedDeviceIds: Set<String> = []
     var isLoading: Bool = false
     var alertPrompt: AlertPrompt?
     
@@ -70,7 +70,6 @@ class DeviceListViewModel {
         }
         
         let request = generateReportRequest()
-        isLoading = true
         
         container.usecaseProvider.deviceUseCase
             .executePostReports(report: request)
@@ -97,7 +96,7 @@ class DeviceListViewModel {
     /// 신고 요청
     private func generateReportRequest() -> DeviceReportsRequest {
         let serialNumbers = selectedDeviceIds.compactMap { id in
-            _devices.first(where: { $0.id == id })?.serialNumber
+            _devices.first(where: { $0.serialNumber == id })?.serialNumber
         }
         
         return DeviceReportsRequest(serialNumber: serialNumbers)
@@ -117,7 +116,7 @@ class DeviceListViewModel {
     }
     
     /// 기기 선택/해제 토글
-    func toggleDeviceSelection(_ deviceId: UUID) {
+    func toggleDeviceSelection(_ deviceId: String) {
         if selectedDeviceIds.contains(deviceId) {
             selectedDeviceIds.remove(deviceId)
         } else {

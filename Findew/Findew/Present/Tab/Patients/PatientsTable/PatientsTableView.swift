@@ -13,7 +13,8 @@ struct PatientsTableView: View {
     @State var viewModel: PatientsTableViewModel
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     @State private var editMode: EditMode = .inactive
-    
+    @State private var isRefreshing: Bool = false
+
     let container: DIContainer
     
     // MARK: - Constant
@@ -52,10 +53,18 @@ struct PatientsTableView: View {
                         cancell: { editMode = .inactive })
                 })
                 .alertPrompt(item: $viewModel.alertPrompt)
-                .sheet(item: $viewModel.editPatient, content: { patient in
+                .sheet(item: $viewModel.editPatient, onDismiss: {
+                    Task {
+                        await viewModel.refresh()
+                    }
+                }, content: { patient in
                     PatientPopOverView(patientType: .correction, patient: patient, container: container)
                 })
-                .sheet(isPresented: $viewModel.isShowAdd, content: {
+                .sheet(isPresented: $viewModel.isShowAdd, onDismiss: {
+                    Task {
+                        await viewModel.refresh()
+                    }
+                }, content: {
                     PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: "", bed: 0, departmentId: UUID()), container: container)
                         .presentationDetents([.large])
                 })
@@ -71,10 +80,17 @@ struct PatientsTableView: View {
         }
     }
     
-    @ViewBuilder
     private var navigationTitleText: Text {
-        let text: String = viewModel.searchText.isEmpty ? "환자 목록" : "\(viewModel.searchText)호"
-        Text(text)
+        let text: String
+        if viewModel.searchText.isEmpty {
+            text = "환자 목록"
+        } else if Int(viewModel.searchText) != nil {
+            text = "\(viewModel.searchText)호"
+        } else {
+            text = "환자 목록"
+        }
+
+        return Text(text)
     }
     
     // MARK: - Middle
@@ -152,10 +168,13 @@ struct PatientsTableView: View {
             }
         })
         .refreshable {
-            Task {
-                await viewModel.refresh()
-            }
+            isRefreshing = true
+            await viewModel.refresh()
+
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            isRefreshing = false
         }
+        .tint(.blue03)
     }
     
     // MARK: - Context Menu
@@ -167,8 +186,8 @@ struct PatientsTableView: View {
         switch menu {
         case .edit:
             viewModel.editPatient = viewModel.edit(patient)
-        case .detail:
-            viewModel.isShowDetail.toggle()
+//        case .detail:
+//            viewModel.isShowDetail.toggle()
         case .delete:
             viewModel.delete(patient)
         }

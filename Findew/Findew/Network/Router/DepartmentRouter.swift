@@ -18,7 +18,7 @@ extension DepartmentRouter: APITargetType {
     var path: String {
         switch self {
         case .getList:
-            return "/api/departments/all"
+            return "/api/department/all"
         }
     }
     
@@ -34,5 +34,11 @@ extension DepartmentRouter: APITargetType {
         case .getList:
             return .requestPlain
         }
+    }
+    
+    var headers: [String : String]? {
+        return [
+            "Content-Type": "application/json",
+        ]
     }
 }

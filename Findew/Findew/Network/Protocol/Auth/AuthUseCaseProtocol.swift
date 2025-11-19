@@ -15,5 +15,5 @@ protocol AuthUseCaseProtocol {
     /// 토큰 갱신
     func executeGetReissue(token: String) -> AnyPublisher<ResponseData<AuthReissueResponse>, MoyaError>
     /// 병원 계정 로그아웃
-    func executeLogout(refreshToken: String) -> AnyPublisher<ResponseData<String>, MoyaError>
+    func executeLogout(refreshToken: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
 }

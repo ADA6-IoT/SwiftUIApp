@@ -15,24 +15,27 @@ struct DeviceListView: View {
     }
     
     var body: some View {
-        deviceList
-            .searchable(
-                text: $viewModel.searchText,
-                placement: .toolbar,
-                prompt: "이름 또는 병동 번호를 검색하세요"
-            )
-            .toolbar(content: {
-                ToolBarCollection.DeviceManagementToolbar(
-                    selectedMode: $viewModel.isSelectionMode,
-                    isAvailable: viewModel.selectedDeviceIds.count > 0,
-                    send: { viewModel.reportDevices() },
-                    cancel: { viewModel.cancelSelection() }
+        NavigationStack {
+            deviceList
+                .searchable(
+                    text: $viewModel.searchText,
+                    placement: .toolbar,
+                    prompt: "이름 또는 병동 번호를 검색하세요"
                 )
-            })
-            .alertPrompt(item: $viewModel.alertPrompt)
-            .onAppear {
-                viewModel.listDevices()
-            }
+                .toolbar(content: {
+                    ToolBarCollection.DeviceManagementToolbar(
+                        selectedMode: $viewModel.isSelectionMode,
+                        isAvailable: viewModel.selectedDeviceIds.count > 0,
+                        send: { viewModel.reportDevices() },
+                        cancel: { viewModel.cancelSelection() }
+                    )
+                })
+                .alertPrompt(item: $viewModel.alertPrompt)
+                .onAppear {
+                    viewModel.listDevices()
+                }
+        }
+        .transition(.identity)
     }
     
     // MARK: - Content
@@ -45,14 +48,14 @@ struct DeviceListView: View {
                 ForEach(sortedDevices, id: \.id) { device in
                     DeviceDisplayCard(device: device, isSelected: Binding(
                         get: {
-                            viewModel.isSelectionMode && viewModel.selectedDeviceIds.contains(device.id)
+                            viewModel.isSelectionMode && viewModel.selectedDeviceIds.contains(device.serialNumber)
                         },
                         set: { _ in
                             // onTap 에서 처리
                         }
                     ),
                                       onTap: viewModel.isSelectionMode ? {
-                        viewModel.toggleDeviceSelection(device.id)
+                        viewModel.toggleDeviceSelection(device.serialNumber)
                     } : nil
                     )
                 }
@@ -63,18 +66,16 @@ struct DeviceListView: View {
     
     private var sortedDevices: [DeviceDTO] {
         viewModel.devices.sorted(by: {
-            if $0.batteryLevel < 5 && $1.batteryLevel >= 5 {
+            let isLowBatteryA = $0.batteryLevel <= 10
+            let isLowBatteryB = $1.batteryLevel <= 10
+            
+            if isLowBatteryA && !isLowBatteryA {
                 return true
-            } else if $0.batteryLevel >= 5 && $1.batteryLevel < 5 {
+            } else if !isLowBatteryA && isLowBatteryB {
                 return false
             }
-            return false
+            
+            return $0.patient?.name ?? "" < $1.patient?.name ?? ""
         })
     }
 }
-
-//#Preview {
-//    NavigationStack {
-//        DeviceListView()
-//    }
-//}

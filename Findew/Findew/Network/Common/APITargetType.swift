@@ -15,11 +15,7 @@ extension APITargetType {
         return URL(string: Config.baseURL)!
     }
     
-    var headers: [String : String]? {
-        // Default JSON headers. Override in routers if needed.
-        return [
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        ]
+    var validationType: ValidationType {
+        return .successCodes
     }
 }

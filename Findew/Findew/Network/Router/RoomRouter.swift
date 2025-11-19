@@ -35,4 +35,10 @@ extension RoomRouter: APITargetType {
             return .requestPlain
         }
     }
+    
+    var headers: [String : String]? {
+        return [
+            "Content-Type": "application/json",
+        ]
+    }
 }

@@ -23,6 +23,7 @@ extension DeviceRouter: APITargetType {
             return "/api/devices/all"
         case .postReports:
             return "/api/devices/malfunction"
+            
         }
     }
     
@@ -44,4 +45,9 @@ extension DeviceRouter: APITargetType {
         }
     }
     
+    var headers: [String : String]? {
+        return [
+            "Content-Type": "application/json",
+        ]
+    }
 }

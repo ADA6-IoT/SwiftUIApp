@@ -31,15 +31,15 @@ class PatientService: PatientServiceProtocol, BaseAPIService {
         request(.getList)
     }
     
-    func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<String>, Moya.MoyaError> {
+    func deletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, Moya.MoyaError> {
         request(.deletePatient(path: path))
     }
     
-    func postGenerate(generate: PatientGenerateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError> {
+    func postGenerate(generate: PatientGenerateRequest) -> AnyPublisher<ResponseData<PatientGenerateResponse>, MoyaError> {
         request(.postGenerate(generate: generate))
     }
     
-    func putUpdate(path: PatientUpdatePath, update: PatientUpdateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError> {
+    func putUpdate(path: PatientUpdatePath, update: PatientUpdateRequest) -> AnyPublisher<ResponseData<PatientGenerateResponse>, MoyaError> {
         request(.putUpdate(path: path, update: update))
     }
     

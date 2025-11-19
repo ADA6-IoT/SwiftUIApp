@@ -28,6 +28,7 @@ class PatientsTableViewModel {
     var isLoading: Bool = false
     
     // MARK: - StoreProperty
+    let keychain: KeychainSessionStore = .init()
     /// API로부터 가져오는 환자 데이터
     var _patientsData: [PatientDTO] = []
     /// 필터링된 환자 데이터
@@ -102,6 +103,7 @@ class PatientsTableViewModel {
     /// - Returns: 편집 데이터
     func edit(_ patient: PatientDTO) -> PatientGenerateRequest {
         .init(
+            id: patient.id,
             name: patient.name,
             ward: patient.ward,
             bed: patient.bed,
@@ -176,6 +178,28 @@ class PatientsTableViewModel {
             }, receiveValue: { [weak self] result in
                 guard let self = self else { return }
                 self.sideFloor = result
+            })
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - LogoutMethod
+    public func logout() {
+        guard let userInfo = keychain.userInfo,
+              let refreshToken = userInfo.refreshToken
+        else { return }
+        
+        container.usecaseProvider.authUseCase.executeLogout(refreshToken: refreshToken)
+            .validateResult()
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    Logger.logDebug("로그아웃", "로그아웃 성공")
+                case .failure(let failure):
+                    Logger.logDebug("로그아웃", "로그아웃 실패: \(failure)")
+                }
+            }, receiveValue: { [weak self] result in
+                self?.keychain.userInfo = nil
+                Logger.logDebug("로그아웃 결과", "\(result)")
             })
             .store(in: &cancellables)
     }

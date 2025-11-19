@@ -12,7 +12,6 @@ import Combine
 class PatientPopOverViewModel {
     
     var patient: PatientGenerateRequest
-    var patientId: UUID?
     var departments: [DepartmentDTO] = .init()
     var devices: [DeviceDTO] = .init()
     let patientType: PatientEnum
@@ -49,19 +48,17 @@ class PatientPopOverViewModel {
     // MARK: - Init
     init(patientType: PatientEnum,
          patient: PatientGenerateRequest,
-         patientId: UUID? = nil,
          container: DIContainer
     ) {
         self.patientType = patientType
         self.patient = patient
-        self.patientId = patientId
         self.originalPatient = patient
         self.container = container
     }
     
     // MARK: - Patients Method
     /// 환자 생성 API 호출
-    func generatePatient() async {
+    func generatePatient(completion: @escaping () -> Void) {
         createLoading = true
         
         container.usecaseProvider.patientUseCase
@@ -79,12 +76,13 @@ class PatientPopOverViewModel {
                 }
             } receiveValue: { result in
                 Logger.logDebug("환자 생성", "성공: \(result)")
+                completion()
             }
             .store(in: &cancellables)
     }
     
     /// 환자 수정 API 호출
-    func updatePatient(patientId: UUID) async {
+    func updatePatient(patientId: UUID, completion: @escaping () -> Void) {
         updateLoading = true
         
         let updateRequest = PatientUpdateRequest(
@@ -109,13 +107,14 @@ class PatientPopOverViewModel {
                 }
             } receiveValue: { result in
                 Logger.logDebug("환자 수정", "성공: \(result)")
+                completion()
             }
             .store(in: &cancellables)
     }
     
     // MARK: - Department
     /// 부서 조회
-    func getDepartments() async {
+    func getDepartments() {
         container.usecaseProvider.departmentUseCase.executeGetList()
             .validateResult()
             .sink(receiveCompletion: { completion in

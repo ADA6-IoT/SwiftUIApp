@@ -150,7 +150,7 @@ struct ToolBarCollection {
                 }, label: {
                     Text("보내기")
                         .font(.b3)
-                        .foregroundStyle(isAvailable ? .black : .gray07)
+                        .foregroundStyle(isAvailable ? .black : .gray03)
                 })
                 .disabled(!isAvailable)
             })

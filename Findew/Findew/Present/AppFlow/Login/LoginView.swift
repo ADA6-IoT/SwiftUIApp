@@ -13,7 +13,6 @@ struct LoginView: View {
     @State var viewModel: LoginViewModel
     @FocusState var isFocused: LoginFieldEnum?
     @Environment(\.appFlow) var appFlow
-    @Environment(\.horizontalSizeClass) var horizonSize
     
     // MARK: - Costant
     fileprivate enum LoginConstant {
@@ -40,28 +39,30 @@ struct LoginView: View {
     
     // MARK: - Body
     var body: some View {
-        ZStack {
-            Color.blue03.ignoresSafeArea()
-            topArea
-        }
-        .alertPrompt(item: $viewModel.alertPrompt)
-        .loadingOverlay(viewModel.isLoading, loadingTextType: .loginLoading)
+        Color.blue03.ignoresSafeArea()
+            .overlay(alignment: .center, content: {
+                topArea
+            })
+            .alertPrompt(item: $viewModel.alertPrompt)
+            .loadingOverlay(viewModel.isLoading, loadingTextType: .loginLoading)
     }
     
     /// 상단 로그인 입력 처리
     private var topArea: some View {
-        VStack {
-            topContent
-            Spacer().frame(height: LoginConstant.mainSpacer.0)
-            middleContent
-            Spacer().frame(height: LoginConstant.mainSpacer.1)
-            bottomContent
-        }
-        .padding(LoginConstant.mainPadding)
-        .background {
-            RoundedRectangle(cornerRadius: LoginConstant.corenrRadius)
-                .fill(.white)
-                .frame(maxWidth: .infinity)
+        ViewThatFits {
+            VStack {
+                topContent
+                Spacer().frame(height: LoginConstant.mainSpacer.0)
+                middleContent
+                Spacer().frame(height: LoginConstant.mainSpacer.1)
+                bottomContent
+            }
+            .padding(LoginConstant.mainPadding)
+            .background {
+                RoundedRectangle(cornerRadius: LoginConstant.corenrRadius)
+                    .fill(.white)
+                    .frame(maxWidth: .infinity)
+            }
         }
         .safeAreaPadding(.horizontal, LoginConstant.safePadding)
     }
@@ -133,11 +134,14 @@ struct LoginView: View {
         switch type {
         case .id:
             TextField("", text: $viewModel.id, prompt: placeholder(type))
+                .focused($isFocused, equals: .id)
         case .password(let onOff):
             if onOff {
                 TextField("", text: $viewModel.password, prompt: placeholder(type))
+                    .focused($isFocused, equals: .password(onOff: onOff))
             } else {
                 SecureField("", text: $viewModel.password, prompt: placeholder(type))
+                    .focused($isFocused, equals: .password(onOff: onOff))
             }
         }
     }

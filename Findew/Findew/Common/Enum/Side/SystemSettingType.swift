@@ -10,7 +10,6 @@ import SwiftUI
 enum SystemSettingType: String, CaseIterable {
     case logout = "로그아웃"
     case inquiry = "문의하기"
-    case contact = "신고하기"
     
     var title: String { rawValue }
     

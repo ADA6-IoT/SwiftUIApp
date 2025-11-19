@@ -60,10 +60,8 @@ struct FindUTab: View {
             PatientsTableView(container: container)
                 .id(tab)
         case .device:
-            NavigationStack {
-                DeviceListView(container: container)
-                    .id(tab)
-            }
+            DeviceListView(container: container)
+                .id(tab)
         }
     }
 }

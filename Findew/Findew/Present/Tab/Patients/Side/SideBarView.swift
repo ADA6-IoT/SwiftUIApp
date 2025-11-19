@@ -189,12 +189,13 @@ struct SideBarView: View {
     /// - Parameter menu: 메뉴 버튼
     private func systemAction(_ menu: SystemSettingType) {
         switch menu {
-        case .contact:
-            viewModel.isShowReport.toggle()
         case .inquiry:
             viewModel.isShowInquiry.toggle()
         case .logout:
-            appFlow.logout()
+            Task {
+                viewModel.logout()
+                await appFlow.logout()
+            }
         }
     }
 }

@@ -21,7 +21,6 @@ class ReportInquiryViewModel {
     var imageData: Data?
     
     var isLoading: Bool = false
-    var isSuccess: Bool = false
     
     // MARK: - Dependency
     private let container: DIContainer
@@ -68,7 +67,7 @@ class ReportInquiryViewModel {
     
     // MARK: - API Method
     /// 문의/신고 API 호출
-    func summitInquiry() {
+    func summitInquiry(completion: @escaping () -> Void) {
         isLoading = true
         
         let imageDataArray: [Data]? = displayedImage.isEmpty ? nil : displayedImage.compactMap { image in
@@ -95,10 +94,9 @@ class ReportInquiryViewModel {
                 case .failure(let error):
                     Logger.logError("문의/신고 제출", "실패: \(error.localizedDescription)")
                 }
-            } receiveValue: { [weak self] _ in
-                guard let self else { return }
-                Logger.logDebug("문의/신고 제출", "성공")
-                self.isSuccess = true
+            } receiveValue: { result in
+                Logger.logDebug("문의/신고 제출", "성공: \(result)")
+                completion()
             }
             .store(in: &cancellables)
     }

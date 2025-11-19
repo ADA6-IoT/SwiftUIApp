@@ -13,11 +13,11 @@ protocol PatientUseCaseProtocol {
     /// 환자 전체 조회
     func executeGetList() -> AnyPublisher<ResponseData<[PatientDTO]>, MoyaError>
     /// 환자 삭제
-    func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<String>, MoyaError>
+    func executeDeletePatient(path: PatientDeletPath) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
     /// 환자 등록
-    func executePostGenerate(generate: PatientGenerateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError>
+    func executePostGenerate(generate: PatientGenerateRequest) -> AnyPublisher<ResponseData<PatientGenerateResponse>, MoyaError>
     /// 환자 수정
-    func executePutUpdate(path: PatientUpdatePath, update: PatientUpdateRequest) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError>
+    func executePutUpdate(path: PatientUpdatePath, update: PatientUpdateRequest) -> AnyPublisher<ResponseData<PatientGenerateResponse>, MoyaError>
     /// 환자 상세 조회
     func executeGetDetail(path: PatientDetailPath) -> AnyPublisher<ResponseData<PatientDTO>, MoyaError>
 }

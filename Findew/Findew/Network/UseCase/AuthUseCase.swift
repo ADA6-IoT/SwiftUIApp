@@ -25,7 +25,7 @@ class AuthUseCase: AuthUseCaseProtocol {
         service.getReissue(token: token)
     }
     /// 병원 계정 생성
-    func executeLogout(refreshToken: String) -> AnyPublisher<ResponseData<String>, MoyaError> {
+    func executeLogout(refreshToken: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
         service.logout(refreshToken: refreshToken)
     }
 }

@@ -48,12 +48,6 @@ struct ReportInquiry: View {
         .onChange(of: viewModel.selectedImages, {
             viewModel.loadImage()
         })
-        // 성공시 dismiss
-        .onChange(of: viewModel.isSuccess) {_, success in
-            if success {
-                dismiss()
-            }
-        }
         .safeAreaBar(edge: .bottom, alignment: .leading, content: {
             bottomImage
         })
@@ -105,7 +99,9 @@ struct ReportInquiry: View {
             Spacer()
             
             Button(ReportInquiryConstant.sendTitle, action: {
-                viewModel.summitInquiry()
+                viewModel.summitInquiry {
+                    dismiss()
+                }
             })
             .buttonStyle(.glass)
         }
