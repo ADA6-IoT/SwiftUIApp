@@ -19,6 +19,7 @@
 		2B591FC22EAF5C01001F2602 /* Exceptions for "Findew" folder in "Findew" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Core/Secret/Secret.xcconfig,
 				Info.plist,
 			);
 			target = 5C9C9CD42EA7613200AB8663 /* Findew */;
