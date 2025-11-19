@@ -38,6 +38,6 @@ extension HospitalRouter: APITargetType {
     
     
     var headers: [String : String]? {
-        return ["Content-Type": "multipart/form-data"]
+        return nil
     }
 }

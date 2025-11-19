@@ -38,7 +38,7 @@ extension HospitalRouter {
             for (index, imageData) in images.enumerated() {
                 let imagePart = MultipartFormData(
                     provider: .data(imageData),
-                    name: "images[]",
+                    name: "images",
                     fileName: "image\(index).jpg",
                     mimeType: "image/jpeg"
                 )
