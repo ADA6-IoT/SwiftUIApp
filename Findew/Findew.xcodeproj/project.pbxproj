@@ -32,6 +32,9 @@
 			exceptions = (
 				2B591FC22EAF5C01001F2602 /* Exceptions for "Findew" folder in "Findew" target */,
 			);
+			explicitFolders = (
+				Model/Domain/IMDF,
+			);
 			path = Findew;
 			sourceTree = "<group>";
 		};
@@ -285,10 +288,12 @@
 				INFOPLIST_FILE = Findew/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "파인듀";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "현재 위치를 기반으로 지도 위치를 이동하기 위해 위치 접근 권한이 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "문의 및 신고를 위해 사진 데이터를 첨부할 수 있습니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -327,10 +332,12 @@
 				INFOPLIST_FILE = Findew/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "파인듀";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "현재 위치를 기반으로 지도 위치를 이동하기 위해 위치 접근 권한이 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "문의 및 신고를 위해 사진 데이터를 첨부할 수 있습니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (

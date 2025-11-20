@@ -46,9 +46,13 @@ struct PatientDetailView: View {
     }
     
     // MARK: - MAP
+    @ViewBuilder
     private var MapSection: some View {
-        Map(initialPosition: .region(region))
-            .frame(minWidth: 600)
+        if let device = patient.device {
+            IndoorMapView(floor: device.currentZone?.floor ?? 1)
+                .equatable()
+                .frame(minWidth: 600)
+        }
     }
     
     // MARK: - INFO

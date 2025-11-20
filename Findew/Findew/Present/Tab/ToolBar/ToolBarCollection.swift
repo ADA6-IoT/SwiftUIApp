@@ -17,6 +17,8 @@ struct ToolBarCollection {
                 Text(text)
                     .font(.caption)
                     .foregroundStyle(.gray03)
+                    .frame(width: 50)
+                    .padding(.horizontal, 5)
             })
         }
     }
