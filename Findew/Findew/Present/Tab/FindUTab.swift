@@ -14,6 +14,7 @@ struct FindUTab: View {
     @State var tabCase: TabCaseEnum = .location
     @Namespace var nameSpace
     @State private var previousTab: TabCaseEnum = .location
+    @State var showSegment: Bool = true
     
     // MARK: - Constants
     fileprivate enum FindUTabConstant {
@@ -28,15 +29,17 @@ struct FindUTab: View {
             .transition(.opacity)
             .animation(.easeInOut(duration: DefaultConstants.defaultAnimation), value: tabCase)
             .safeAreaInset(edge: .top, spacing: DefaultConstants.defaultVerticalPadding, content: {
-                Picker("", selection: $tabCase.animation(.easeInOut(duration: DefaultConstants.defaultAnimation)), content: {
-                    ForEach(TabCaseEnum.allCases, id: \.rawValue) { tab in
-                        label(tab)
-                            .tag(tab)
-                    }
-                })
-                .pickerStyle(.segmented)
-                .frame(width: FindUTabConstant.pickerSize)
-                .controlSize(.large)
+                if showSegment {
+                    Picker("", selection: $tabCase.animation(.easeInOut(duration: DefaultConstants.defaultAnimation)), content: {
+                        ForEach(TabCaseEnum.allCases, id: \.rawValue) { tab in
+                            label(tab)
+                                .tag(tab)
+                        }
+                    })
+                    .pickerStyle(.segmented)
+                    .frame(width: FindUTabConstant.pickerSize)
+                    .controlSize(.large)
+                }
             })
     }
     
@@ -57,7 +60,7 @@ struct FindUTab: View {
     private func content(_ tab: TabCaseEnum) -> some View {
         switch tabCase {
         case .location:
-            PatientsTableView(container: container)
+            PatientsTableView(container: container, showSegment: $showSegment)
                 .id(tab)
         case .device:
             DeviceListView(container: container)

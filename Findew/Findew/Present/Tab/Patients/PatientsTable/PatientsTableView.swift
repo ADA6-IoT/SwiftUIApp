@@ -11,10 +11,11 @@ struct PatientsTableView: View {
     // MARK: - Property
     @State var tabCase: TabCaseEnum = .location
     @State var viewModel: PatientsTableViewModel
-    @State private var columnVisibility: NavigationSplitViewVisibility = .all
+    @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
     @State private var editMode: EditMode = .inactive
     @State private var isRefreshing: Bool = false
     @State private var showDetailSheet: Bool = false
+    @Binding var showSegment: Bool
 
     let container: DIContainer
     
@@ -30,14 +31,16 @@ struct PatientsTableView: View {
     }
     
     // MARK: - Init
-    init(container: DIContainer) {
+    init(container: DIContainer, showSegment: Binding<Bool>) {
         self.container = container
         self.viewModel = .init(container: container)
+        self._showSegment = showSegment
     }
     
     // MARK: - Body
     var body: some View {
-        NavigationSplitView(sidebar: {
+        
+        NavigationSplitView(columnVisibility: $columnVisibility, sidebar: {
             SideBarView(viewModel: viewModel)
         }, detail: {
             tableContents
@@ -89,6 +92,13 @@ struct PatientsTableView: View {
         .onDisappear {
             viewModel.onViewDisappear()
         }
+        .onChange(of: columnVisibility, { old, new in
+            if new == .detailOnly {
+                showSegment = true
+            } else if new == .all {
+                showSegment = false
+            }
+        })
     }
     
     private var navigationTitleText: Text {
@@ -240,8 +250,4 @@ struct PatientsTableView: View {
             await viewModel.refresh()
         }
     }
-}
-
-#Preview {
-    PatientsTableView(container: DIContainer())
 }
