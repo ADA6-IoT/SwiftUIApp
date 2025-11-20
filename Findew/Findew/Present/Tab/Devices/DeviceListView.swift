@@ -77,7 +77,7 @@ struct DeviceListView: View {
                 return false
             }
             
-            return $0.patient?.name ?? "" < $1.patient?.name ?? ""
+            return $0.serialNumber < $1.serialNumber
         })
     }
 }

@@ -11,7 +11,7 @@ struct PatientsTableView: View {
     // MARK: - Property
     @State var tabCase: TabCaseEnum = .location
     @State var viewModel: PatientsTableViewModel
-    @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
+    @State private var columnVisibility: NavigationSplitViewVisibility = .detailOnly
     @State private var editMode: EditMode = .inactive
     @State private var isRefreshing: Bool = false
     @State private var showDetailSheet: Bool = false
@@ -71,17 +71,17 @@ struct PatientsTableView: View {
                     PatientPopOverView(patientType: .registration, patient: .init(name: "", ward: "", bed: 0, departmentId: UUID()), container: container)
                         .presentationDetents([.large])
                 })
-//                .sheet(isPresented: $showDetailSheet) {
-//                    if let selectedId = viewModel.selectionPatient.first,
-//                       let patient = viewModel.patientsData.first(where: { $0.id == selectedId }) {
-//                        PatientDetailView(patient: patient)
-//                    }
-//                }
-//                .onChange(of: viewModel.selectionPatient) { oldValue, newValue in
-//                    if !newValue.isEmpty && editMode == .inactive {
-//                        showDetailSheet = true
-//                    }
-//                }
+                .sheet(isPresented: $showDetailSheet) {
+                    if let selectedId = viewModel.selectionPatient.first,
+                       let patient = viewModel.patientsData.first(where: { $0.id == selectedId }) {
+                        PatientDetailView(patient: patient)
+                    }
+                }
+                .onChange(of: viewModel.selectionPatient) { oldValue, newValue in
+                    if !newValue.isEmpty && editMode == .inactive {
+                        showDetailSheet = true
+                    }
+                }
         })
         .navigationSplitViewStyle(.prominentDetail)
         .task {
