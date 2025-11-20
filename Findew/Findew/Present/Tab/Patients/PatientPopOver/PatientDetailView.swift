@@ -11,7 +11,7 @@ import MapKit
 struct PatientDetailView: View {
     // MARK: - Property
     let detailPatientEnum: PatientEnum = .detail
-    let patient: PatientDetailResponse
+    let patient: PatientDTO
     @Environment(\.dismiss) var dismiss
     @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 104.3235, longitude: 12.5432), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
     
@@ -41,28 +41,17 @@ struct PatientDetailView: View {
         .background {
             RoundedRectangle(cornerRadius: PatientDetailConstant.backgroundRadius)
                 .fill(.white)
-                .frame(width: .infinity, height: .infinity)
+                .frame(maxWidth: .infinity)
         }
-        .overlay(alignment: .topLeading, content: {
-            Button(action: {
-                dismiss()
-            }, label: {
-                Image(systemName: "chevron.left")
-                    .tint(.black)
-            })
-            .padding()
-            .glassEffect(.regular, in: Circle())
-            .padding(PatientDetailConstant.mainPadding)
-        })
-        .ignoresSafeArea()
     }
     
-    // MARK: MAP
+    // MARK: - MAP
     private var MapSection: some View {
         Map(initialPosition: .region(region))
+            .frame(minWidth: 600)
     }
     
-    // MARK: INFO
+    // MARK: - INFO
     private var PatientInfoSection: some View{
         VStack(alignment: .leading) {
             Text(detailPatientEnum.title)
@@ -81,7 +70,6 @@ struct PatientDetailView: View {
             
             Spacer()
         }
-        .frame(maxWidth: 350)
         .padding(PatientDetailConstant.infoPadding)
     }
     
@@ -94,7 +82,11 @@ struct PatientDetailView: View {
                 .frame(width: PatientDetailConstant.titleSize.width, height: PatientDetailConstant.titleSize.height, alignment: .leading)
             
             valueView(for: component)
+                .font(PatientDetailConstant.detailFont)
+                .foregroundStyle(PatientDetailConstant.detailColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(minWidth: 400)
     }
     
     @ViewBuilder
@@ -102,29 +94,25 @@ struct PatientDetailView: View {
         switch component {
         case .name:
             Text(patient.name)
-                .font(PatientDetailConstant.detailFont)
-                .foregroundStyle(PatientDetailConstant.detailColor)
         case .ward:
             Text("\(patient.ward)-\(patient.bed)")
-                .font(PatientDetailConstant.detailFont)
-                .foregroundStyle(PatientDetailConstant.detailColor)
         case .department:
             Text(patient.department.name)
-                .font(PatientDetailConstant.detailFont)
-                .foregroundStyle(PatientDetailConstant.detailColor)
         case .device:
-            Text(patient.device.serialNumber)
-                .font(PatientDetailConstant.detailFont)
-                .foregroundStyle(PatientDetailConstant.detailColor)
+            Text(patient.device?.serialNumber ?? "")
                 .padding(PatientDetailConstant.devicePadding)
                 .background(
                     Capsule()
                         .fill(PatientDetailConstant.deviceColor)
                 )
         case .memo:
-            Text(patient.memo.isEmpty ? "" : patient.memo)
-                .font(PatientDetailConstant.detailFont)
-                .foregroundStyle(PatientDetailConstant.detailColor)
+            Group {
+                if let memo = patient.memo, !memo.isEmpty {
+                    Text(memo)
+                } else {
+                    Text("작성된 기타 사항이 없습니다.")
+                }
+            }
         case .bed:
             Text("")
         }

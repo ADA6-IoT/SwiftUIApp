@@ -24,8 +24,13 @@ class AuthUseCase: AuthUseCaseProtocol {
     func executeGetReissue(token: String) -> AnyPublisher<ResponseData<AuthReissueResponse>, MoyaError> {
         service.getReissue(token: token)
     }
-    /// 병원 계정 생성
+    /// 로그아웃
     func executeLogout(refreshToken: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
         service.logout(refreshToken: refreshToken)
+    }
+    
+    /// 병원 계정 생성
+    func signUp(signUp: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError> {
+        service.signUp(signUp: signUp)
     }
 }

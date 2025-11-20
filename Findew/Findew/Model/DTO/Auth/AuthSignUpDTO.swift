@@ -9,10 +9,10 @@ import Foundation
 
 /// 병원 계정 생성
 struct AuthSignUpRequest: Codable {
-    let email: String
-    let password: String
-    let hospitalName: String
     let businessNumber: String?
+    let email: String
+    let hospitalName: String
+    let password: String
     
     enum CodingKeys: String, CodingKey {
         case email

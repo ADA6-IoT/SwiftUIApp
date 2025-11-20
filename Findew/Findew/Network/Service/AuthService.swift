@@ -36,4 +36,8 @@ class AuthService: AuthServiceProtocol, BaseAPIService {
     func logout(refreshToken: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
         request(.logout(refreshToken: refreshToken))
     }
+    
+    func signUp(signUp: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError> {
+        request(.signUp(signUp: signUp))
+    }
 }

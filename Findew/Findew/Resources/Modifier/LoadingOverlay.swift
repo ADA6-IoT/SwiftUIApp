@@ -25,6 +25,7 @@ struct LoadingOverlay: ViewModifier {
         case loginLoading = "로그인 중입니다. \n잠시만 기다려주세요"
         case createPatients = "환자 생성중입니다. \n잠시만 기다려주세요"
         case updatePatienst = "환자 수정중입니다. \n잠시만 기다려주세요"
+        case signUpLoading = "회원가입 중입니다. \n잠시만 기다려주세요"
     }
     
     // MARK: - Init

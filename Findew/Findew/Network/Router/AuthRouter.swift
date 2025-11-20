@@ -17,6 +17,8 @@ enum AuthRouter {
     case getReissue(token: String)
     /// 로그아웃
     case logout(refreshToken: String)
+    /// 회원가입
+    case signUp(signUp: AuthSignUpRequest)
 }
 
 
@@ -30,18 +32,13 @@ extension AuthRouter: APITargetType {
             return "/api/auth/refresh"
         case .logout:
             return "/api/auth/logout"
+        case .signUp:
+            return "/api/auth/register"
         }
     }
     
     var method: Moya.Method {
-        switch self {
-        case .postLogin:
-            return .post
-        case .getReissue:
-            return .post
-        case .logout:
-            return .post
-        }
+        return .post
     }
 
     var task: Moya.Task {
@@ -56,6 +53,8 @@ extension AuthRouter: APITargetType {
             return .requestParameters(parameters: [
                 "refresh_token": token
             ], encoding: JSONEncoding.default)
+        case .signUp(let signUp):
+            return .requestJSONEncodable(signUp)
         }
     }
     

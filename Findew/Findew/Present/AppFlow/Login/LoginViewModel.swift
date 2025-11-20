@@ -17,6 +17,8 @@ class LoginViewModel {
     var isLoading: Bool = false
     /// 로그인 성공 및 실패
     var isLoginFailure: Bool = false
+    /// 회원가입
+    var isShowSignUp: Bool = false
     
     // MARK: - StoreProperty
     /// 아이디 값

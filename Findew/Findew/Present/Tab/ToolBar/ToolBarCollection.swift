@@ -13,9 +13,8 @@ struct ToolBarCollection {
         let text: String
         
         var body: some ToolbarContent {
-            ToolbarItem(placement: .topBarTrailing, content: {
+            ToolbarItem(placement: .bottomBar, content: {
                 Text(text)
-                    .padding(.horizontal, 5)
                     .font(.caption)
                     .foregroundStyle(.gray03)
             })
@@ -28,7 +27,7 @@ struct ToolBarCollection {
         var isDisabled: Bool = false
         
         var body: some ToolbarContent {
-            ToolbarItem(placement: .topBarTrailing, content: {
+            ToolbarItem(placement: .bottomBar, content: {
                 withAnimation {
                     Button(action: {
                         action()
@@ -46,7 +45,7 @@ struct ToolBarCollection {
         let action: () -> Void
         
         var body: some ToolbarContent {
-            ToolbarItem(placement: .topBarTrailing, content: {
+            ToolbarItem(placement: .bottomBar, content: {
                 Button(role: .cancel, action: {
                     withAnimation {
                         action()
@@ -76,7 +75,7 @@ struct ToolBarCollection {
         @Binding var editMode: EditMode
         
         var body: some ToolbarContent {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .bottomBar) {
                 Button(action: {
                     Task {
                         withAnimation {
@@ -96,7 +95,7 @@ struct ToolBarCollection {
         let action: () -> Void
         
         var body: some ToolbarContent {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .bottomBar) {
                 Button(action: {
                     Task {
                         withAnimation {

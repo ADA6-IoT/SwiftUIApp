@@ -13,11 +13,15 @@ struct LoginView: View {
     @State var viewModel: LoginViewModel
     @FocusState var isFocused: LoginFieldEnum?
     @Environment(\.appFlow) var appFlow
+    @Environment(\.container) var container
     
     // MARK: - Costant
     fileprivate enum LoginConstant {
         static let fieldSpacing: CGFloat = 10
         static let middleVspacing: CGFloat = 20
+        static let portraitContent: CGFloat = 20
+        static let bottomContentSpacing: CGFloat = 40
+        
         static let mainSpacer: (CGFloat, CGFloat) = (56, 29)
         static let mainPadding: EdgeInsets = .init(top: 90, leading: 76, bottom: 120, trailing: 76)
         static let fieldPadding: EdgeInsets = .init(top: 18, leading: 29, bottom: 18, trailing: 29)
@@ -30,6 +34,7 @@ struct LoginView: View {
         static let fieldCornerRadius: CGFloat = 10
         
         static let loginText: String = "Login"
+        static let signUpText: String = "회원가입"
     }
     
     // MARK: - Init
@@ -45,26 +50,36 @@ struct LoginView: View {
             })
             .alertPrompt(item: $viewModel.alertPrompt)
             .loadingOverlay(viewModel.isLoading, loadingTextType: .loginLoading)
+            .sheet(isPresented: $viewModel.isShowSignUp, content: {
+                SignUpLoginView(container: container)
+            })
     }
     
-    /// 상단 로그인 입력 처리
     private var topArea: some View {
-        ViewThatFits {
-            VStack {
-                topContent
-                Spacer().frame(height: LoginConstant.mainSpacer.0)
-                middleContent
-                Spacer().frame(height: LoginConstant.mainSpacer.1)
-                bottomContent
+        GeometryReader { geo in
+            ViewThatFits {
+                deviceFitsContents(geometry: geo, horizon: geo.size.width * 0.25)
+                deviceFitsContents(geometry: geo, horizon: geo.size.width * 0.1)
             }
-            .padding(LoginConstant.mainPadding)
-            .background {
-                RoundedRectangle(cornerRadius: LoginConstant.corenrRadius)
-                    .fill(.white)
-                    .frame(maxWidth: .infinity)
-            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .safeAreaPadding(.horizontal, LoginConstant.safePadding)
+    }
+    
+    private func deviceFitsContents(geometry: GeometryProxy, horizon: CGFloat) -> some View {
+        VStack {
+            topContent
+            Spacer().frame(height: LoginConstant.mainSpacer.0)
+            middleContent
+            Spacer().frame(height: LoginConstant.mainSpacer.1)
+            bottomContent
+        }
+        .padding(LoginConstant.mainPadding)
+        .background {
+            RoundedRectangle(cornerRadius: LoginConstant.corenrRadius)
+                .fill(.white)
+                .frame(maxWidth: .infinity)
+        }
+        .safeAreaPadding(.horizontal, horizon)
     }
     
     // MARK: - Top
@@ -101,6 +116,8 @@ struct LoginView: View {
                 .font(type.loginFieldFont)
                 .foregroundStyle(.black)
                 .keyboardType(type.keyboardStyle)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
                 .submitLabel(submitLabel)
                 .onSubmit {
                     action()
@@ -159,19 +176,25 @@ struct LoginView: View {
     
     /// 로그인 버튼
     private var bottomContent: some View {
-        Button(action: {
-            withAnimation {
-                viewModel.loginAction()
-            }
-        }) {
-            Text(LoginConstant.loginText)
-                .font(.b3)
-                .foregroundStyle(viewModel.isLoginEnabled ? .white : .black)
-                .frame(maxWidth: .infinity)
-                .padding(LoginConstant.btnVerticalPadding)
-        }
-        .buttonStyle(.glassProminent)
-        .tint(viewModel.isLoginEnabled ? .blue02 : .gray01)
-        .disabled(!viewModel.isLoginEnabled)
+        VStack(spacing: LoginConstant.bottomContentSpacing, content: {
+            MainButton(
+                action: {
+                    viewModel.loginAction()
+                },
+                label: LoginConstant.loginText,
+                fontColor: viewModel.isLoginEnabled ? .white : .black,
+                tint: viewModel.isLoginEnabled ? .blue02 : .gray02,
+                disabled: !viewModel.isLoginEnabled
+            )
+            
+            Button(action: {
+                viewModel.isShowSignUp.toggle()
+            }, label: {
+                Text(LoginConstant.signUpText)
+                    .font(.caption)
+                    .foregroundStyle(.black)
+                    .underline()
+            })
+        })
     }
 }

@@ -22,6 +22,10 @@ struct DeviceListView: View {
                     placement: .toolbar,
                     prompt: "이름 또는 병동 번호를 검색하세요"
                 )
+                .alertPrompt(item: $viewModel.alertPrompt)
+                .task {
+                    viewModel.listDevices()
+                }
                 .toolbar(content: {
                     ToolBarCollection.DeviceManagementToolbar(
                         selectedMode: $viewModel.isSelectionMode,
@@ -30,12 +34,10 @@ struct DeviceListView: View {
                         cancel: { viewModel.cancelSelection() }
                     )
                 })
-                .alertPrompt(item: $viewModel.alertPrompt)
-                .onAppear {
-                    viewModel.listDevices()
-                }
         }
-        .transition(.identity)
+        .transaction { transaction in
+            transaction.disablesAnimations = true
+        }
     }
     
     // MARK: - Content
