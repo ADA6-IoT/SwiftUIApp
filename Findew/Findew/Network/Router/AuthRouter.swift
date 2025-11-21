@@ -19,6 +19,8 @@ enum AuthRouter {
     case logout(refreshToken: String)
     /// 회원가입
     case signUp(signUp: AuthSignUpRequest)
+    /// 회원 탈퇴
+    case withdraw(password: String)
 }
 
 
@@ -34,13 +36,20 @@ extension AuthRouter: APITargetType {
             return "/api/auth/logout"
         case .signUp:
             return "/api/auth/register"
+        case .withdraw:
+            return "/api/auth/withdraw"
         }
     }
     
     var method: Moya.Method {
-        return .post
+        switch self {
+        case .withdraw:
+                .delete
+        default:
+                .post
+        }
     }
-
+    
     var task: Moya.Task {
         switch self {
         case .postLogin(let login):
@@ -55,6 +64,10 @@ extension AuthRouter: APITargetType {
             ], encoding: JSONEncoding.default)
         case .signUp(let signUp):
             return .requestJSONEncodable(signUp)
+        case .withdraw(let password):
+            return .requestParameters(parameters: [
+                "password": password
+            ], encoding: JSONEncoding.default)
         }
     }
     

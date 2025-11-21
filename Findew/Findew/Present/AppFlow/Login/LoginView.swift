@@ -96,9 +96,9 @@ struct LoginView: View {
     private var middleContent: some View {
         VStack(spacing: LoginConstant.middleVspacing, content: {
             generateField(type: .id, submitLabel: .next) {
-                isFocused = .password(onOff: viewModel.showPassword)
+                //                isFocused = .password
             }
-            generateField(type: .password(onOff: viewModel.showPassword), submitLabel: .done) {
+            generateField(type: .password, submitLabel: .done) {
                 viewModel.loginAction()
             }
         })
@@ -123,11 +123,9 @@ struct LoginView: View {
                     action()
                 }
             
-            if let image = type.eyeBtnImage {
+            if let image = type.eyeBtnImage(showPassword: viewModel.showPassword) {
                 Button(action: {
-                    withAnimation {
-                        viewModel.showPassword.toggle()
-                    }
+                    viewModel.showPassword.toggle()
                 }, label: {
                     image
                         .tint(.black)
@@ -151,19 +149,17 @@ struct LoginView: View {
         switch type {
         case .id:
             TextField("", text: $viewModel.id, prompt: placeholder(type))
-                .focused($isFocused, equals: .id)
-        case .password(let onOff):
-            if onOff {
+        case .password:
+            ZStack {
                 TextField("", text: $viewModel.password, prompt: placeholder(type))
-                    .focused($isFocused, equals: .password(onOff: onOff))
-            } else {
+                    .opacity(viewModel.showPassword ? 1 : 0)
                 SecureField("", text: $viewModel.password, prompt: placeholder(type))
-                    .focused($isFocused, equals: .password(onOff: onOff))
+                    .opacity(viewModel.showPassword ? 0 : 1)
             }
         }
     }
     
-    /// 필드 내부 placeholder
+    /// 필드 내부 placeholder.
     /// - Parameter type: 필드 타입
     /// - Returns: placeholder 텍스트 반환
     private func placeholder(_ type: LoginFieldEnum) -> Text {

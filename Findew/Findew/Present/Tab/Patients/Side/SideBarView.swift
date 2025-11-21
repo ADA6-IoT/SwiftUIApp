@@ -45,10 +45,10 @@ struct SideBarView: View {
             bottomContent
         })
         .safeAreaPadding(.horizontal, DefaultConstants.defaultHorizonPadding)
-        .contactPrompt(item: $contactAlert)
         .sheet(isPresented: $viewModel.isShowInquiry, content: {
             ReportInquiry(contactType: .inquiry, container: viewModel.container)
         })
+        .drawPrompt(item: $viewModel.deletePrompt)
     }
     
     // MARK: - Top
@@ -87,18 +87,20 @@ struct SideBarView: View {
     /// 하단 옵션 도구 모음 버튼
     private var bottomContent: some View {
         Menu(content: {
-            VStack(spacing: .zero, content: {
-                ForEach(SystemSettingType.allCases, id: \.self) { menu in
+            Section {
+                ForEach(SystemSettingType.allCases.filter { $0.isDestructive }, id: \.self) { menu in
                     generateSystemSetting(menu.title, role: menu.role, action: {
                         systemAction(menu)
                     })
-                    
-                    if menu == .logout {
-                        Divider()
-                            .foregroundStyle(.gray01)
-                    }
                 }
-            })
+            }
+            Section {
+                ForEach(SystemSettingType.allCases.filter { !$0.isDestructive }, id: \.self) { menu in
+                    generateSystemSetting(menu.title, role: menu.role, action: {
+                        systemAction(menu)
+                    })
+                }
+            }
         }, label: {
             Image(systemName: SideBarConstants.systemImage)
                 .resizable()
@@ -195,6 +197,12 @@ struct SideBarView: View {
             Task {
                 viewModel.logout()
                 await appFlow.logout()
+            }
+        case .withdraw:
+            viewModel.deleteAlertPrompt {
+                Task {
+                    await appFlow.logout()
+                }
             }
         }
     }

@@ -40,4 +40,8 @@ class AuthService: AuthServiceProtocol, BaseAPIService {
     func signUp(signUp: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError> {
         request(.signUp(signUp: signUp))
     }
+    
+    func withdraw(password: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
+        request(.withdraw(password: password))
+    }
 }

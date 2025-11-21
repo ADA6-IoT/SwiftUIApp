@@ -18,4 +18,6 @@ protocol AuthUseCaseProtocol {
     func executeLogout(refreshToken: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
     /// 게정 생성
     func signUp(signUp: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError>
+    /// 병원 계정 탈퇴
+    func withdraw(password: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError>
 }
