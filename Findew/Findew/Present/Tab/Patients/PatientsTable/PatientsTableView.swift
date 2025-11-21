@@ -208,7 +208,8 @@ struct PatientsTableView: View {
         case .edit:
             viewModel.editPatient = viewModel.edit(patient)
         case .detail:
-            viewModel.isShowDetail.toggle()
+            self.viewModel.selectionPatient = [patient.id]
+            showDetailSheet = true
         case .delete:
             viewModel.delete(patient)
         }
