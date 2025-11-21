@@ -28,9 +28,12 @@ class AuthUseCase: AuthUseCaseProtocol {
     func executeLogout(refreshToken: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
         service.logout(refreshToken: refreshToken)
     }
-    
     /// 병원 계정 생성
     func signUp(signUp: AuthSignUpRequest) -> AnyPublisher<ResponseData<AuthResponse>, MoyaError> {
         service.signUp(signUp: signUp)
+    }
+    /// 병원 계정 삭제
+    func withdraw(password: String) -> AnyPublisher<ResponseData<EmptyResponse>, MoyaError> {
+        service.withdraw(password: password)
     }
 }

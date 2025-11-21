@@ -8,14 +8,24 @@
 import SwiftUI
 
 enum SystemSettingType: String, CaseIterable {
+    case withdraw = "회원탈퇴"
     case logout = "로그아웃"
-    case inquiry = "문의하기"
+    case inquiry = "문의하기 및 신고하기"
+
+    var isDestructive: Bool {
+        switch self {
+        case .logout, .withdraw:
+            return true
+        default:
+            return false
+        }
+    }
     
     var title: String { rawValue }
     
     var color: Color {
         switch self {
-        case .logout:
+        case .logout, .withdraw:
             return .red
         default:
             return .black
@@ -24,7 +34,7 @@ enum SystemSettingType: String, CaseIterable {
     
     var role: ButtonRole? {
         switch self {
-        case .logout:
+        case .logout, .withdraw:
             return .destructive
         default:
             return .none

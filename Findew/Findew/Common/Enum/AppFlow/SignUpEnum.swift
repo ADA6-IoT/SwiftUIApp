@@ -11,7 +11,6 @@ import SwiftUI
 enum SignUpData: String, CaseIterable, Hashable {
     case id
     case password
-    case business
     case name
     
     var text: String {
@@ -20,8 +19,6 @@ enum SignUpData: String, CaseIterable, Hashable {
             return "아이디"
         case .password:
             return "비밀번호"
-        case .business:
-            return "연락 번호"
         case .name:
             return "이름"
         }
@@ -30,11 +27,9 @@ enum SignUpData: String, CaseIterable, Hashable {
     var placeholder: String {
         switch self {
         case .id:
-            return "아이디를 입력해주세요"
+            return "ex) example123@example.com"
         case .password:
-            return "비밀번호를 입력해주세요"
-        case .business:
-            return "연락처 번호를 입력해주세요"
+            return "최소 8자리의 영문, 숫자, 특수문자를 포함한 비밀번호를 입력해주세요"
         case .name:
             return "이름을 입력해주세요"
         }
@@ -58,8 +53,6 @@ enum SignUpData: String, CaseIterable, Hashable {
             return .emailAddress
         case .password:
             return .default
-        case .business:
-            return .decimalPad
         case .name:
             return .default
         }

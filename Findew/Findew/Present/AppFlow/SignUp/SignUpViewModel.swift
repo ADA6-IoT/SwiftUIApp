@@ -13,7 +13,7 @@ import SwiftUI
 class SignUpViewModel {
     /// 회원가입 성공 및 실패
     var isSignUpEnabled: Bool {
-        !id.isEmpty && !password.isEmpty && !business.isEmpty && !name.isEmpty
+        !id.isEmpty && !password.isEmpty && !name.isEmpty
     }
     
     var isLoading: Bool = false
@@ -68,7 +68,6 @@ class SignUpViewModel {
             .store(in: &cancellables)
     }
 
-    // 각 SignUpData 타입에 맞는 바인딩 반환
     func binding(for type: SignUpData) -> Binding<String> {
         switch type {
         case .id:
@@ -80,11 +79,6 @@ class SignUpViewModel {
             return Binding(
                 get: { self.password },
                 set: { self.password = $0 }
-            )
-        case .business:
-            return Binding(
-                get: { self.business },
-                set: { self.business = $0 }
             )
         case .name:
             return Binding(

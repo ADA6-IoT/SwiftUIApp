@@ -46,15 +46,13 @@ struct SignUpLoginView: View {
     @ViewBuilder
     private func landscapeContent() -> some View {
         VStack(spacing: SignUpLoginConstant.mainSpacing, content: {
+            topController
+            Spacer()
             middleContents
-            Spacer().frame(height: 29)
+            Spacer()
             bottomContent
         })
-        .padding(SignUpLoginConstant.mainPadding)
-        .safeAreaInset(edge: .top, content: {
-            topController
-        })
-        .safeAreaPadding(16)
+        .safeAreaPadding(SignUpLoginConstant.mainPadding)
         .background {
             RoundedRectangle(cornerRadius: SignUpLoginConstant.corenrRadius)
                 .fill(.white)
@@ -69,12 +67,7 @@ struct SignUpLoginView: View {
     /// 상단 버튼 컨트롤러
     private var topController: some View {
         ZStack(alignment: .topLeading) {
-            HStack {
-                Spacer()
-                topTitle
-                Spacer()
-            }
-            
+            topTitle
             closeBtn
         }
     }
@@ -82,7 +75,9 @@ struct SignUpLoginView: View {
     /// 상단 탑 타이틀
     private var topTitle: some View {
         Text(SignUpLoginConstant.title)
-            .font(.h4)
+            .frame(maxWidth: .infinity)
+            .scenePadding()
+            .font(.h3)
             .foregroundStyle(.black)
     }
     

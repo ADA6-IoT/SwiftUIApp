@@ -26,6 +26,7 @@ class PatientsTableViewModel {
     var isShowInquiry: Bool = false
     var isShowReport: Bool = false
     var isLoading: Bool = false
+    var isAvailableDelete: Bool = true
     
     // MARK: - StoreProperty
     let keychain: KeychainSessionStore = .init()
@@ -52,17 +53,25 @@ class PatientsTableViewModel {
     var searchText: String = ""
     /// Alert 데이터
     var alertPrompt: AlertPrompt?
+    /// 탈퇴 데이터
+    var deletePrompt: WithdrawPrompt?
+    /// 탈퇴 패스워드
+    var password: String = ""
     /// 사이드바 층 데이터 API
     var sideFloor: RoomListResponse? = nil
-    
     /// 편집한 환자
     var editPatient: PatientGenerateRequest? = nil
+    /// 병원 삭제 텍스트
+    var deleteAuthText: String {
+        isAvailableDelete ? "계정을 삭제하겠습니까?" : "패스워드가 일치하지 않습니다."
+    }
     
     // MARK: - SideBar
     /// 사이드 바 선택한 층
     var selectedRoom: String? = nil
     /// 사이드 바 전체 층 섹션
     var expandedSection: Set<Int> = .init()
+
     
     // MARK: - Dependency
     let container: DIContainer
@@ -202,6 +211,36 @@ class PatientsTableViewModel {
                 Logger.logDebug("로그아웃 결과", "\(result)")
             })
             .store(in: &cancellables)
+    }
+    
+    // MARK: - LogoutMethod
+    private func withdraw(password: String, onSuccess: (() -> Void)? = nil) {
+        container.usecaseProvider.authUseCase.withdraw(password: password)
+            .validateResult(onFailureAction: {
+                self.isAvailableDelete = false
+            })
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    Logger.logDebug("회원 탈퇴", "회원 탈퇴 성공")
+                case .failure(let failure):
+                    Logger.logDebug("회원 탈퇴 실패", "회원 탈퇴 실패: \(failure)")
+                }
+            }, receiveValue: { [weak self] _ in
+                self?.isAvailableDelete = true
+                self?.keychain.userInfo = nil
+                onSuccess?()
+            })
+            .store(in: &cancellables)
+    }
+    
+    public func deleteAlertPrompt(onSuccess: (() -> Void)? = nil) {
+        self.deletePrompt = .init(
+            title: "회원 탈퇴",
+            message: deleteAuthText,
+            submitAction: { [weak self] password in
+                self?.withdraw(password: password, onSuccess: onSuccess)
+            }, password: self.password)
     }
     
     // MARK: - Refresh Mthod

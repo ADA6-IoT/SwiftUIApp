@@ -25,7 +25,7 @@ extension View {
                     alert.positiveBtnAction?()
                 }
             }
-
+            
             if let negativeBtnTitle = alert.negativeBtnTitle {
                 Button(negativeBtnTitle, role: .cancel) {
                     alert.negativeBtnAction?()
@@ -36,29 +36,29 @@ extension View {
         }
     }
     
-    func contactPrompt(item: Binding<ContactAlertPromprt?>) -> some View {
+    func drawPrompt(item: Binding<WithdrawPrompt?>) -> some View {
         self.alert(
             item.wrappedValue?.title ?? "",
             isPresented: Binding(
                 get: { item.wrappedValue != nil },
-                set: { if !$0 { item.wrappedValue = nil }}
+                set: {if !$0 { item.wrappedValue = nil }}
             ),
-            presenting: item.wrappedValue) { (alert: ContactAlertPromprt) in
-                TextField(alert.contentPlaceholder, text: Binding(
-                    get: { item.wrappedValue?.content ?? "" },
-                    set: { item.wrappedValue?.content = $0 }
-                ), axis: .vertical)
-                .lineLimit(3...6)
-
-                Button("전송", role: .confirm) {
+            presenting: item.wrappedValue) { (alert: WithdrawPrompt) in
+                TextField(alert.placeholder, text: Binding(
+                    get: { item.wrappedValue?.password ?? "" },
+                    set: { item.wrappedValue?.password = $0 }
+                ), axis: .horizontal)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                
+                Button("탈퇴", role: .destructive) {
                     alert.submitAction?(
-                        item.wrappedValue?.content ?? "",
-                        nil
+                        item.wrappedValue?.password ?? ""
                     )
                 }
-                Button("취소", role: .cancel) { }
-
-            } message: { (alert: ContactAlertPromprt) in
+                
+                Button("취소", role: .cancel) {}
+            } message: { (alert: WithdrawPrompt) in
                 if let message = alert.message {
                     Text(message)
                 }

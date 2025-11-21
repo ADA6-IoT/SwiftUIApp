@@ -11,7 +11,7 @@ import SwiftUI
 // 로그인 구역 Enum
 enum LoginFieldEnum: Hashable {
     case id
-    case password(onOff: Bool)
+    case password
     
     var placeholder: String {
         switch self {
@@ -42,16 +42,12 @@ enum LoginFieldEnum: Hashable {
         return .gray03
     }
     
-    var eyeBtnImage: Image? {
+    func eyeBtnImage(showPassword: Bool) -> Image? {
         switch self {
         case .id:
             return nil
-        case .password(let onOff):
-            if onOff {
-                return Image(systemName: "eye.fill")
-            } else {
-                return Image(systemName: "eye.slash")
-            }
+        case .password:
+            return showPassword ? Image(systemName: "eye.fill") : Image(systemName: "eye.slash")
         }
     }
     
