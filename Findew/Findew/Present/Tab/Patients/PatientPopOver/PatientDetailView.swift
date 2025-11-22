@@ -20,7 +20,7 @@ struct PatientDetailView: View {
     fileprivate enum PatientDetailConstant {
         static let backgroundRadius: CGFloat = 34
         static let mainPadding: CGFloat = 30
-        static let offsetPadding: CGFloat = 10
+        static let offsetPadding: (CGFloat,CGFloat) = (30, 20)
         
         static let infoPadding: EdgeInsets = .init(top: 30, leading: 19, bottom: 30, trailing: 30)
         
@@ -50,7 +50,7 @@ struct PatientDetailView: View {
             }
             
             closeBtn
-                .offset(x: PatientDetailConstant.offsetPadding, y: PatientDetailConstant.offsetPadding)
+                .offset(x: PatientDetailConstant.offsetPadding.0, y: PatientDetailConstant.offsetPadding.1)
         }
     }
     
