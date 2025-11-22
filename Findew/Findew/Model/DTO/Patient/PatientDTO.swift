@@ -35,6 +35,17 @@ struct PatientDTO: Codable, Identifiable {
     var wardBedNumber: String {
         "\(ward)-\(bed)"
     }
+    
+    var currentLocationText: String {
+        if let zone = device?.currentZone {
+            if let floor = zone.floor {
+                return "\(floor)층 \(zone.name)"
+            } else {
+                return zone.name
+            }
+        }
+        return "현재 위치 파악 불가"
+    }
 }
 
 /// PatientDevice
@@ -59,7 +70,7 @@ struct PatientDevice: Codable, DeviceInfo {
 }
 
 /// Current Zone
-struct CurrentZone: Codable {
+struct CurrentZone: Codable, Equatable {
     let type: String
     let name: String
     let floor: Int?

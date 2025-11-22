@@ -7,11 +7,19 @@
 
 import SwiftUI
 
-struct DeviceListView: View {
+struct DeviceListView: View, Equatable {
     @State var viewModel: DeviceListViewModel
     
     init(container: DIContainer) {
         self.viewModel = .init(container: container)
+    }
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        // ViewModel의 devices 배열을 비교
+        lhs.viewModel.devices == rhs.viewModel.devices &&
+        lhs.viewModel.searchText == rhs.viewModel.searchText &&
+        lhs.viewModel.isSelectionMode == rhs.viewModel.isSelectionMode &&
+        lhs.viewModel.selectedDeviceIds == rhs.viewModel.selectedDeviceIds
     }
     
     var body: some View {
@@ -35,15 +43,12 @@ struct DeviceListView: View {
                     )
                 })
         }
-        .transaction { transaction in
-            transaction.disablesAnimations = true
-        }
     }
     
     // MARK: - Content
     @ViewBuilder
     private var deviceList: some View {
-        let columns = [GridItem(.adaptive(minimum: 325), spacing:  20)]
+        let columns = [GridItem(.adaptive(minimum: 325), spacing: 20)]
         
         ScrollView(.vertical, content: {
             LazyVGrid(columns: columns, spacing: 20, content: {
@@ -52,9 +57,7 @@ struct DeviceListView: View {
                         get: {
                             viewModel.isSelectionMode && viewModel.selectedDeviceIds.contains(device.serialNumber)
                         },
-                        set: { _ in
-                            // onTap 에서 처리
-                        }
+                        set: { _ in }
                     ),
                                       onTap: viewModel.isSelectionMode ? {
                         viewModel.toggleDeviceSelection(device.serialNumber)

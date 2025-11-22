@@ -30,7 +30,7 @@ struct FindUTab: View {
             .animation(.easeInOut(duration: DefaultConstants.defaultAnimation), value: tabCase)
             .safeAreaInset(edge: .top, spacing: DefaultConstants.defaultVerticalPadding, content: {
                 if showSegment {
-                    Picker("", selection: $tabCase.animation(.easeInOut(duration: DefaultConstants.defaultAnimation)), content: {
+                    Picker("", selection: $tabCase, content: {
                         ForEach(TabCaseEnum.allCases, id: \.rawValue) { tab in
                             label(tab)
                                 .tag(tab)

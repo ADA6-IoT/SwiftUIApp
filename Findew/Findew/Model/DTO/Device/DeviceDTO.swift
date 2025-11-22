@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DeviceDTO: Codable, Identifiable {
+struct DeviceDTO: Codable, Identifiable, Equatable {
     let id: UUID
     let serialNumber: String
     let batteryLevel: Int
@@ -30,7 +30,7 @@ struct DeviceDTO: Codable, Identifiable {
         case updatedAt = "updated_at"
     }
     
-    struct DevicePatient: Codable {
+    struct DevicePatient: Codable, Equatable {
         let id: UUID
         let name: String
         let ward: String

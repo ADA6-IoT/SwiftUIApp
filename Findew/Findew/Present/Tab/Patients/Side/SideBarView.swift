@@ -66,21 +66,23 @@ struct SideBarView: View {
     // MARK: - Middle
     /// 중간 층 섹션 및 층별 병실 버튼
     private var middleContent: some View {
-        VStack(alignment: .leading, spacing: SideBarConstants.floorSpacing, content: {
-            if let floor = viewModel.sideFloor {
-                ForEach(floor.floors, id: \.id) { floor in
-                    VStack(spacing: .zero, content: {
-                        floorHeaderButton(floor.floor)
-                        
-                        if viewModel.expandedSection.contains(floor.floor) {
-                            ForEach(floor.rooms, id: \.id) { room in
-                                roomButton(room: room.roomNumber)
+        ScrollView {
+            VStack(alignment: .leading, spacing: SideBarConstants.floorSpacing, content: {
+                if let floor = viewModel.sideFloor {
+                    ForEach(floor.floors, id: \.id) { floor in
+                        VStack(spacing: .zero, content: {
+                            floorHeaderButton(floor.floor)
+                            
+                            if viewModel.expandedSection.contains(floor.floor) {
+                                ForEach(floor.rooms, id: \.id) { room in
+                                    roomButton(room: room.roomNumber)
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
                 }
-            }
-        })
+            })
+        }
     }
     
     // MARK: - BottomContents

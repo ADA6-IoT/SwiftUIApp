@@ -7,11 +7,16 @@
 
 import SwiftUI
 
-struct DeviceDisplayCard: View {
+struct DeviceDisplayCard: View, Equatable {
     // MARK: - Properties
     let device: DeviceDTO
     @Binding var isSelected: Bool
     var onTap: (() -> Void)?
+
+    // MARK: - Equatable
+    static func == (lhs: DeviceDisplayCard, rhs: DeviceDisplayCard) -> Bool {
+        lhs.device == rhs.device && lhs.isSelected == rhs.isSelected
+    }
     
     // MARK: - DeviceDisplayCardConstants
     fileprivate enum DeviceDisplayCardConstants {

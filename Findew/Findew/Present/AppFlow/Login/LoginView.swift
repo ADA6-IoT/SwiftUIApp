@@ -96,7 +96,6 @@ struct LoginView: View {
     private var middleContent: some View {
         VStack(spacing: LoginConstant.middleVspacing, content: {
             generateField(type: .id, submitLabel: .next) {
-                //                isFocused = .password
             }
             generateField(type: .password, submitLabel: .done) {
                 viewModel.loginAction()
@@ -183,14 +182,15 @@ struct LoginView: View {
                 disabled: !viewModel.isLoginEnabled
             )
             
-            Button(action: {
-                viewModel.isShowSignUp.toggle()
-            }, label: {
-                Text(LoginConstant.signUpText)
-                    .font(.caption)
-                    .foregroundStyle(.black)
-                    .underline()
-            })
+            /* 회원가입 부분 생략 */
+//            Button(action: {
+//                viewModel.isShowSignUp.toggle()
+//            }, label: {
+//                Text(LoginConstant.signUpText)
+//                    .font(.caption)
+//                    .foregroundStyle(.black)
+//                    .underline()
+//            })
         })
     }
 }

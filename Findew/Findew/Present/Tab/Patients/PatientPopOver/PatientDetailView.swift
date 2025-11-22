@@ -14,11 +14,13 @@ struct PatientDetailView: View {
     let patient: PatientDTO
     @Environment(\.dismiss) var dismiss
     @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 104.3235, longitude: 12.5432), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+    @Namespace var namespace
     
     // MARK:  - Constants
     fileprivate enum PatientDetailConstant {
         static let backgroundRadius: CGFloat = 34
         static let mainPadding: CGFloat = 30
+        static let offsetPadding: CGFloat = 10
         
         static let infoPadding: EdgeInsets = .init(top: 30, leading: 19, bottom: 30, trailing: 30)
         
@@ -34,15 +36,38 @@ struct PatientDetailView: View {
     
     // MARK: BODY
     var body: some View {
-        HStack {
-            MapSection
-            PatientInfoSection
+        ZStack(alignment: .topLeading) {
+            
+            
+            HStack {
+                MapSection
+                PatientInfoSection
+            }
+            .background {
+                RoundedRectangle(cornerRadius: PatientDetailConstant.backgroundRadius)
+                    .fill(.white)
+                    .frame(maxWidth: .infinity)
+            }
+            
+            closeBtn
+                .offset(x: PatientDetailConstant.offsetPadding, y: PatientDetailConstant.offsetPadding)
         }
-        .background {
-            RoundedRectangle(cornerRadius: PatientDetailConstant.backgroundRadius)
-                .fill(.white)
-                .frame(maxWidth: .infinity)
-        }
+    }
+    
+    private var closeBtn: some View {
+        Button(action: {
+            dismiss()
+        }, label: {
+            Image(systemName: "xmark")
+                .renderingMode(.template)
+                .resizable()
+                .tint(.black)
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+        })
+        .padding()
+        .glassEffect(.regular.interactive(), in: .circle)
+        .glassEffectID("xmark", in: namespace)
     }
     
     // MARK: - MAP

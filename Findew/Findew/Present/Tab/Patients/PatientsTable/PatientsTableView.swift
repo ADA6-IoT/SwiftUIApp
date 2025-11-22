@@ -99,6 +99,11 @@ struct PatientsTableView: View {
                 showSegment = false
             }
         })
+        .onChange(of: showDetailSheet, { old, new in
+            if !new {
+                viewModel.selectionPatient = []
+            }
+        })
     }
     
     private var navigationTitleText: Text {
@@ -119,42 +124,32 @@ struct PatientsTableView: View {
     private var tableContents: some View {
         Table(of: PatientDTO.self, selection: $viewModel.selectionPatient, sortOrder: $viewModel.sortOrder, columns: {
             /* 이름 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[0])) { patient in
-                let selected = viewModel.selectionPatient.contains(patient.id)
-                Text(patient.name)
-                    .foregroundStyle(selected ? .white : .black)
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[0]), value: \.name) { patient in
+                cellText(patient.name, for: patient)
             }
             .width(max: PatientsTableConstant.columnsSize[0])
-            
+
             /* 병동번호 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[1])) { patient in
-                let selected = viewModel.selectionPatient.contains(patient.id)
-                Text(patient.wardBedNumber)
-                    .foregroundStyle(selected ? .white : .black)
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[1]), value: \.wardBedNumber) { patient in
+                cellText(patient.wardBedNumber, for: patient)
             }
             .width(max: PatientsTableConstant.columnsSize[1])
-            
+
             /* 소속과 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[2])) { patient in
-                let selected = viewModel.selectionPatient.contains(patient.id)
-                Text(patient.department.name)
-                    .foregroundStyle(selected ? .white : .black)
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[2]), value: \.department.name) { patient in
+                cellText(patient.department.name, for: patient)
             }
             .width(max: PatientsTableConstant.columnsSize[2])
-            
+
             /* 현 위치 */
-            TableColumn(tableTitle(PatientsTableConstant.tableColumns[3])) { patient in
-                let selected = viewModel.selectionPatient.contains(patient.id)
-                Text(currentLocationText(for: patient))
-                    .foregroundStyle(selected ? .white : .black)
+            TableColumn(tableTitle(PatientsTableConstant.tableColumns[3]), value: \.currentLocationText) { patient in
+                cellText(patient.currentLocationText, for: patient)
             }
             .width(ideal: PatientsTableConstant.columnsSize[3])
-            
+
             /* 기타 */
             TableColumn(tableTitle(PatientsTableConstant.tableColumns[4])) { patient in
-                let selected = viewModel.selectionPatient.contains(patient.id)
-                Text(patient.memo ?? "")
-                    .foregroundStyle(selected ? .white : .black)
+                cellText(patient.memo ?? "", for: patient)
             }
             .width(ideal: PatientsTableConstant.columnsSize[4])
         }, rows: {
@@ -220,24 +215,24 @@ struct PatientsTableView: View {
     private var placeholderText: Text {
         Text(PatientsTableConstant.placeholder)
     }
-    
+
     /// 테이블 상단 고정 타이틀
     /// - Parameter text: 테이틀 텍스트 값
     /// - Returns: 텍스트 뷰 반환
     private func tableTitle(_ text: String) -> Text {
         Text(text)
     }
-    
-    /// 현 위치 텍스트 생성 (PatientDTO.device.currentZone 사용)
-    private func currentLocationText(for patient: PatientDTO) -> String {
-        if let zone = patient.device?.currentZone {
-            if let floor = zone.floor {
-                return "\(floor)층 \(zone.name)"
-            } else {
-                return zone.name
-            }
-        }
-        return "현재 위치 파악 불가"
+
+    /// 테이블 셀 텍스트 생성 (선택 상태에 따른 색상 적용)
+    /// - Parameters:
+    ///   - text: 표시할 텍스트
+    ///   - patient: 환자 정보
+    /// - Returns: 스타일이 적용된 텍스트 뷰
+    @ViewBuilder
+    private func cellText(_ text: String, for patient: PatientDTO) -> some View {
+        let selected = viewModel.selectionPatient.contains(patient.id)
+        Text(text)
+            .foregroundStyle(selected ? .white : .black)
     }
     
     // MARK: - Delete
