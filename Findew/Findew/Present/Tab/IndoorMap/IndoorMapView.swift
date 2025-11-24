@@ -58,7 +58,6 @@ struct IndoorMapView: View,Equatable {
             )
             cameraPosition = .region(region)
         } else if let venueOverlay = viewModel.venue?.geometry.first as? MKOverlay {
-            // Fallback to venue geometry if building not available
             let region = MKCoordinateRegion(
                 center: venueOverlay.boundingMapRect.center,
                 span: MKCoordinateSpan(

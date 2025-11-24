@@ -182,15 +182,14 @@ struct LoginView: View {
                 disabled: !viewModel.isLoginEnabled
             )
             
-            /* 회원가입 부분 생략 */
-//            Button(action: {
-//                viewModel.isShowSignUp.toggle()
-//            }, label: {
-//                Text(LoginConstant.signUpText)
-//                    .font(.caption)
-//                    .foregroundStyle(.black)
-//                    .underline()
-//            })
+           Button(action: {
+               viewModel.isShowSignUp.toggle()
+           }, label: {
+               Text(LoginConstant.signUpText)
+                   .font(.caption)
+                   .foregroundStyle(.black)
+                   .underline()
+           })
         })
     }
 }
