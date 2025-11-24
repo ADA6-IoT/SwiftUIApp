@@ -39,7 +39,8 @@ struct PatientDTO: Codable, Identifiable {
     var currentLocationText: String {
         if let zone = device?.currentZone {
             if let floor = zone.floor {
-                return "\(floor)층 \(zone.name)"
+                let floorText = floor < 0 ? "지하 \(abs(floor))" : "\(floor)"
+                return "\(floorText)층 \(zone.name)"
             } else {
                 return zone.name
             }
