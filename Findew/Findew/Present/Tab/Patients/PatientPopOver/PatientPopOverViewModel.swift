@@ -15,7 +15,7 @@ class PatientPopOverViewModel {
     var departments: [DepartmentDTO] = .init()
     var devices: [DeviceDTO] = .init()
     let patientType: PatientEnum
-
+    
     // 원본 환자 데이터 (수정 시 비교용)
     private let originalPatient: PatientGenerateRequest
     
@@ -26,17 +26,18 @@ class PatientPopOverViewModel {
         if patientType == .registration {
             // 환자 등록: 모든 필수 데이터가 채워져야 함
             return !patient.name.isEmpty &&
-                   !patient.ward.isEmpty &&
-                   patient.bed > 0 &&
-                   patient.departmentId != UUID()
+            !patient.ward.isEmpty &&
+            patient.bed > 0 &&
+            patient.deviceSerial != nil &&
+            patient.departmentId != UUID()
         } else {
             // 환자 수정: 변경된 데이터가 하나라도 있어야 함
             return patient.name != originalPatient.name ||
-                   patient.ward != originalPatient.ward ||
-                   patient.bed != originalPatient.bed ||
-                   patient.departmentId != originalPatient.departmentId ||
-                   patient.deviceSerial != originalPatient.deviceSerial ||
-                   patient.memo != originalPatient.memo
+            patient.ward != originalPatient.ward ||
+            patient.bed != originalPatient.bed ||
+            patient.departmentId != originalPatient.departmentId ||
+            patient.deviceSerial != originalPatient.deviceSerial ||
+            patient.memo != originalPatient.memo
         }
     }
     

@@ -11,7 +11,7 @@ import SwiftUI
 
 struct OverlayData: Identifiable {
     let id: UUID = .init()
-    let shape: MKShape & MKGeoJSONObject
+    let shape: MKShape & MKOverlay
     let fillColor: Color
     let strokeColor: Color
     let lineWidth: CGFloat

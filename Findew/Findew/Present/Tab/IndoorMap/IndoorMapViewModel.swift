@@ -49,14 +49,24 @@ class IndoorMapViewModel {
             for level in levels {
                 currentLevelFeature.append(level)
                 currentLevelFeature += level.units
+                currentLevelFeature += level.amenities
             }
         }
         
         // Create overlay data for each feature
         for feature in currentLevelFeature {
             for geometry in feature.geometry {
-                guard let overlay = geometry as? MKOverlay else { continue }
-                
+                let overlay: MKOverlay
+
+                // Handle Point geometry by converting to MKCircle
+                if let point = geometry as? MKPointAnnotation {
+                    overlay = MKCircle(center: point.coordinate, radius: 1.5)
+                } else if let existingOverlay = geometry as? MKOverlay {
+                    overlay = existingOverlay
+                } else {
+                    continue
+                }
+
                 let overlayData = createOverlayData(for: feature, overlay: overlay)
                 currentLevelOverlays.append(overlayData)
             }
@@ -67,8 +77,10 @@ class IndoorMapViewModel {
     
     private func createOverlayData(for feature: StylableFeature, overlay: MKOverlay) -> OverlayData {
         let renderer: MKOverlayPathRenderer
-        
+
         switch overlay {
+        case is MKCircle:
+            renderer = MKCircleRenderer(overlay: overlay)
         case is MKMultiPolygon:
             renderer = MKMultiPolygonRenderer(overlay: overlay)
         case is MKPolygon:
@@ -84,7 +96,7 @@ class IndoorMapViewModel {
         feature.configure(overlayRenderer: renderer)
         
         return OverlayData(
-            shape: overlay as! (MKShape & MKGeoJSONObject),
+            shape: overlay as! (MKShape & MKOverlay),
             fillColor: Color(uiColor: renderer.fillColor ?? .clear),
             strokeColor: Color(uiColor: renderer.strokeColor ?? .black),
             lineWidth: renderer.lineWidth

@@ -34,7 +34,7 @@ struct IndoorMapView: View,Equatable {
             
             UserAnnotation()
         }
-        .mapStyle(.standard)
+        .mapStyle(.standard(pointsOfInterest: .excludingAll))
         .mapControls {
             MapUserLocationButton()
             MapCompass()
@@ -42,7 +42,6 @@ struct IndoorMapView: View,Equatable {
         }
         .task {
             viewModel.loadIndoorData(floor: floor)
-            setupIntialCamera()
         }
     }
     

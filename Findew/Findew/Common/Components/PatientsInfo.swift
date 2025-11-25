@@ -87,20 +87,28 @@ struct PatientsInfo: View {
     private var menuItems: some View {
         switch info {
         case .department:
-            ForEach(departments, id: \.id) { department in
-                Button(action: {
-                    value.departmentId = department.id
-                }) {
-                    Text(department.name)
+            if departments.isEmpty {
+                Text("등록된 부서가 없습니다.")
+            } else {
+                ForEach(departments, id: \.id) { department in
+                    Button(action: {
+                        value.departmentId = department.id
+                    }) {
+                        Text(department.name)
+                    }
                 }
             }
         case .device:
-            ForEach(devices, id: \.id) { device in
-                Button(action: {
-                    value.deviceSerial = device.serialNumber
-                }, label: {
-                    Text(device.serialNumber)
-                })
+            if devices.isEmpty {
+                Text("등록된 기기가 없습니다.")
+            } else {
+                ForEach(devices, id: \.id) { device in
+                    Button(action: {
+                        value.deviceSerial = device.serialNumber
+                    }, label: {
+                        Text(device.serialNumber)
+                    })
+                }
             }
         default:
             EmptyView()

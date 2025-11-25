@@ -17,6 +17,7 @@ class IMDFDecoder {
     let buildings = try decodeFeatures(Building.self, from: .building, in: archive)
     let levels = try decodeFeatures(Level.self, from: .level, in: archive)
     let units = try decodeFeatures(Unit.self, from: .unit, in: archive)
+    let amenities = try decodeFeatures(Amenity.self, from: .amenity, in: archive)
 
     if venues.isEmpty {
       throw IMDFError.invalidData
@@ -27,16 +28,35 @@ class IMDFDecoder {
       level.properties.ordinal
     }
 
-    // Associate Units and Opening to levels.
+    // Associate Units and Amenities to levels.
     let unitsByLevel = Dictionary(grouping: units) { unit in
       unit.properties.levelId
     }
 
+    let amenitiesByLevel = Dictionary(grouping: amenities) { amenity in
+      amenity.properties.levelId
+    }
 
-    // Associate each Level with its corresponding Units and Openings.
+    // Create a map of unit ID to level for amenities that don't have level_id
+    let unitIdToLevel = Dictionary(uniqueKeysWithValues: units.map { ($0.id, $0.properties.levelId) })
+
+    // Associate each Level with its corresponding Units and Amenities.
     for level in levels {
       if let unitsInLevel = unitsByLevel[level.id] {
         level.units = unitsInLevel
+      }
+      if let amenitiesInLevel = amenitiesByLevel[level.id] {
+        level.amenities = amenitiesInLevel
+      }
+    }
+
+    // Associate Amenities without level_id to levels via their unit_ids
+    for amenity in amenities where amenity.properties.levelId == nil {
+      if let unitIds = amenity.properties.unitIds, let firstUnitId = unitIds.first,
+         let levelId = unitIdToLevel[firstUnitId] {
+        if let level = levels.first(where: { $0.id == levelId }) {
+          level.amenities.append(amenity)
+        }
       }
     }
 

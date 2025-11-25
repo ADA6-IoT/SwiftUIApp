@@ -12,7 +12,11 @@ struct MapPolygonView: MapContent {
     let overlay: OverlayData
 
     var body: some MapContent {
-        if let polygon = overlay.shape as? MKPolygon {
+        if let circle = overlay.shape as? MKCircle {
+            MapCircle(center: circle.coordinate, radius: circle.radius)
+                .foregroundStyle(overlay.fillColor)
+                .stroke(overlay.strokeColor, lineWidth: overlay.lineWidth)
+        } else if let polygon = overlay.shape as? MKPolygon {
             MapPolygon(polygon)
                 .foregroundStyle(overlay.fillColor)
                 .stroke(overlay.strokeColor, lineWidth: overlay.lineWidth)

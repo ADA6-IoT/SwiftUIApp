@@ -35,7 +35,7 @@ struct DeviceDisplayCard: View, Equatable {
         static let cornerRadius: CGFloat = 24
         static let serialBoxRadius: CGFloat = 6
         
-        static let noExistPatient: String = "환자정보 없음"
+        static let noExistPatient: String = "환자 미할당 기기"
         static let checkMark: String = "checkmark"
     }
     

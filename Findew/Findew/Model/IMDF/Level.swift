@@ -18,6 +18,7 @@ class Level: Feature<Level.Properties> {
   }
 
   var units: [Unit] = []
+  var amenities: [Amenity] = []
 }
 
 extension Level: StylableFeature {

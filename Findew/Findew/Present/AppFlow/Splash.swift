@@ -24,6 +24,9 @@ struct Splash: View {
         ZStack {
             Color.blue03.ignoresSafeArea()
             Image(.logoStick)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 120, height: 120)
         }
         .safeAreaInset(edge: .bottom, content: {
             Text(SplashConstant.title)

@@ -68,6 +68,8 @@ struct PatientDetailView: View {
         .padding()
         .glassEffect(.regular.interactive(), in: .circle)
         .glassEffectID("xmark", in: namespace)
+        .contentShape(.circle)
+        .allowsHitTesting(true)
     }
     
     // MARK: - MAP
