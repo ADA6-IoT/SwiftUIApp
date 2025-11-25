@@ -55,7 +55,20 @@ struct ToolBarCollection {
                 })
             })
         }
+    }
+    
+    struct ReeportCancell: ToolbarContent {
+        let action: () -> Void
         
+        var body: some ToolbarContent {
+            ToolbarItem(placement: .topBarTrailing, content: {
+                Button(role: .cancel, action: {
+                    withAnimation {
+                        action()
+                    }
+                })
+            })
+        }
     }
     
     struct AddButton: ToolbarContent {
@@ -122,7 +135,7 @@ struct ToolBarCollection {
                 Button(action: {
                     Task {
                         withAnimation {
-                            selectedMode.toggle()
+                            selectedMode = true
                         }
                     }
                 }, label: {
@@ -189,7 +202,7 @@ extension ToolBarCollection {
         
         var body: some ToolbarContent {
             if selectedMode {
-                CancellButton(action: cancel)
+                ReeportCancell(action: cancel)
                 SendReportButton(selectedMode: $selectedMode, isAvailable: isAvailable, action: send)
             } else {
                 DeviceReportButton(selectedMode: $selectedMode)

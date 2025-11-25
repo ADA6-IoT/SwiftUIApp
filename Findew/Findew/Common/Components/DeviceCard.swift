@@ -12,7 +12,7 @@ struct DeviceDisplayCard: View, Equatable {
     let device: DeviceDTO
     @Binding var isSelected: Bool
     var onTap: (() -> Void)?
-
+    
     // MARK: - Equatable
     static func == (lhs: DeviceDisplayCard, rhs: DeviceDisplayCard) -> Bool {
         lhs.device == rhs.device && lhs.isSelected == rhs.isSelected
@@ -70,7 +70,7 @@ struct DeviceDisplayCard: View, Equatable {
                 leftContent
                 Spacer()
                 centerContent
-                Spacer()
+                Spacer().frame(maxWidth: 10)
                 batteryInfoProgress
             }
             .padding(DeviceDisplayCardConstants.cardPadding)
@@ -146,7 +146,7 @@ struct DeviceDisplayCard: View, Equatable {
             Text("\(device.batteryLevel)%")
                 .font(batteryType.iconFont)
                 .foregroundStyle(.gray06)
-
+            
         }
         .frame(height: DeviceDisplayCardConstants.batterySize.height)
         .padding(DeviceDisplayCardConstants.batteryPadding)

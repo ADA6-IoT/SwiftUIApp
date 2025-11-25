@@ -15,7 +15,6 @@ struct DeviceListView: View, Equatable {
     }
     
     static func == (lhs: Self, rhs: Self) -> Bool {
-        // ViewModel의 devices 배열을 비교
         lhs.viewModel.devices == rhs.viewModel.devices &&
         lhs.viewModel.searchText == rhs.viewModel.searchText &&
         lhs.viewModel.isSelectionMode == rhs.viewModel.isSelectionMode &&
@@ -59,9 +58,11 @@ struct DeviceListView: View, Equatable {
                         },
                         set: { _ in }
                     ),
-                                      onTap: viewModel.isSelectionMode ? {
-                        viewModel.toggleDeviceSelection(device.serialNumber)
-                    } : nil
+                                      onTap: {
+                        if viewModel.isSelectionMode {
+                            viewModel.toggleDeviceSelection(device.serialNumber)
+                        }
+                    }
                     )
                 }
             })
@@ -73,13 +74,13 @@ struct DeviceListView: View, Equatable {
         viewModel.devices.sorted(by: {
             let isLowBatteryA = $0.batteryLevel <= 10
             let isLowBatteryB = $1.batteryLevel <= 10
-            
-            if isLowBatteryA && !isLowBatteryA {
+
+            if isLowBatteryA && !isLowBatteryB {
                 return true
             } else if !isLowBatteryA && isLowBatteryB {
                 return false
             }
-            
+
             return $0.serialNumber < $1.serialNumber
         })
     }
